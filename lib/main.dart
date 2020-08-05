@@ -79,7 +79,7 @@ class AppPage extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ), //just a plain text
             SizedBox.shrink(),
-            Text('IIUM'),
+            Text('IIUM di hati'),
             SizedBox(
               height: 34.0,
             ),
