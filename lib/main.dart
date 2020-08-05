@@ -97,6 +97,9 @@ class AppPage extends StatelessWidget {
                 'LinkedIn',
                 'https://www.linkedin.com/in/muhammad-iqfareez/', //addmelol
                 Colors.blue.shade900),
+            SizedBox(
+              height: 50.0,
+            ),
           ],
         ),
       ),
