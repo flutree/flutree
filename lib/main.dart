@@ -54,7 +54,7 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.fromLTRB(30.0, 0, 30.0, 0),
+        padding: EdgeInsets.fromLTRB(32.0, 0, 32.0, 0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,15 +62,17 @@ class AppPage extends StatelessWidget {
             SizedBox(
               height: 30.0,
             ),
-            CircleAvatar(
-              radius: 50.0,
-              backgroundColor: Colors.transparent,
-              backgroundImage: NetworkImage(
-                  //can also use assetImage, replace NetworkImage widget by with 'AssetImage('images/sample.jpg')' . Also replace sample.jpg with our own file. Edit pubspec.yaml if necessary
-                  'https://firebasestorage.googleapis.com/v0/b/linktree-clone-flutter.appspot.com/o/IMG_20190927_135510.jpg?alt=media&token=254a96dd-c270-4f21-96f4-9f9261827aa7'),
+            PressableDough(
+              child: CircleAvatar(
+                radius: 50.0,
+                backgroundColor: Colors.transparent,
+                backgroundImage: NetworkImage(
+                    //can also use assetImage, replace NetworkImage widget by with 'AssetImage('images/sample.jpg')' . Also replace sample.jpg with our own file. Edit pubspec.yaml if necessary
+                    'https://firebasestorage.googleapis.com/v0/b/linktree-clone-flutter.appspot.com/o/IMG_20190927_135510.jpg?alt=media&token=254a96dd-c270-4f21-96f4-9f9261827aa7'),
+              ),
             ),
             SizedBox(
-              height: 30.0,
+              height: 28.0,
             ),
             Text(
               '@fareeziqmal',
@@ -79,7 +81,7 @@ class AppPage extends StatelessWidget {
             SizedBox.shrink(),
             Text('IIUM'),
             SizedBox(
-              height: 35.0,
+              height: 34.0,
             ),
             linkCard(FontAwesomeIcons.whatsapp, 'WhatsApp',
                 'https://api.whatsapp.com/', Colors.teal.shade800),
@@ -98,7 +100,7 @@ class AppPage extends StatelessWidget {
                 'https://www.linkedin.com/in/muhammad-iqfareez/', //addmelol
                 Colors.blue.shade900),
             SizedBox(
-              height: 50.0,
+              height: 60.0,
             ),
           ],
         ),
