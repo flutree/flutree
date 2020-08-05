@@ -29,7 +29,9 @@ class BasicPage extends StatelessWidget {
       body: AppPage(),
       floatingActionButton: PressableDough(
         child: FloatingActionButton(
-          onPressed: null,
+          onPressed: () {
+            launchURL('https://github.com/fareezMaple/linktree-clone-flutter');
+          },
           backgroundColor: Colors.purple.shade800,
           tooltip: 'Open GitHub',
           child: Icon(
@@ -64,7 +66,7 @@ class AppPage extends StatelessWidget {
               radius: 50.0,
               backgroundColor: Colors.transparent,
               backgroundImage: NetworkImage(
-                  //can also use assetImage
+                  //can also use assetImage, replace NetworkImage widget by with 'AssetImage('images/sample.jpg')' . Also replace sample.jpg with our own file. Edit pubspec.yaml if necessary
                   'https://firebasestorage.googleapis.com/v0/b/linktree-clone-flutter.appspot.com/o/IMG_20190927_135510.jpg?alt=media&token=254a96dd-c270-4f21-96f4-9f9261827aa7'),
             ),
             SizedBox(
