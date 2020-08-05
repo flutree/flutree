@@ -1,6 +1,6 @@
 {
-  "name": "linktree clone iqfareez flutter",
-  "short_name": "linktree iqfareez",
+  "name": "linktree_iqfareez_flutter",
+  "short_name": "linktree_iqfareez_flutter",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
