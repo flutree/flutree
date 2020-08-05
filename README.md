@@ -1,16 +1,13 @@
 # linktree_iqfareez_flutter
 
-A new Flutter project.
+I made linktree clone. But with dough
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Fork or clone this repository to use it on your own.
 
-A few resources to get you started if this is your first Flutter project:
+## Modification
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+ - Icon is from [Font Awesome package](https://fontawesome.com/icons?d=gallery)
+ - Font is from [Google Fonts](https://fonts.google.com/)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
