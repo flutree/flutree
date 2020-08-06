@@ -1,4 +1,4 @@
-# linktree_iqfareez_flutter
+# linktree flutter clone
 
 I made linktree clone. But with dough
 
@@ -14,4 +14,4 @@ Fork or clone this repository to use it on your own.
 
 ## Deploy
 
-Deployed using firebase
+Deployed using firebase hosting

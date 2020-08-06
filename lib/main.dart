@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Linktree Clone',
       theme: ThemeData(
         primarySwatch: Colors.pink,
+        //karla is font use in real linktree
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       home: BasicPage(),
@@ -83,6 +84,7 @@ class AppPage extends StatelessWidget {
             SizedBox(
               height: 34.0,
             ),
+            //change or remove this part accordingliy
             linkCard(FontAwesomeIcons.whatsapp, 'WhatsApp',
                 'https://api.whatsapp.com/', Colors.teal.shade800),
             linkCard(FontAwesomeIcons.telegram, 'Telegram',
