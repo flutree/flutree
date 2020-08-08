@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Linktree Clone',
       theme: ThemeData(
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.lime,
         //karla is font use in real linktree
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
@@ -44,7 +44,7 @@ class BasicPage extends StatelessWidget {
       bottomNavigationBar: Text(
         'Made with Flutter\n© Fareez Iqmal 2020\n',
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 11),
       ),
     );
   }
@@ -86,7 +86,7 @@ class AppPage extends StatelessWidget {
             ),
             //change or remove this part accordingliy
             linkCard(FontAwesomeIcons.whatsapp, 'WhatsApp',
-                'https://api.whatsapp.com/', Colors.teal.shade800),
+                'https://api.whatsapp.com/60193988482', Colors.teal.shade800),
             linkCard(FontAwesomeIcons.telegram, 'Telegram',
                 'https://telegram.org/', Colors.blue.shade800),
             linkCard(
@@ -121,7 +121,7 @@ Widget linkCard(IconData icon, String title, String url, Color color) {
           launchURL(url);
         },
         child: ListTile(
-          leading: Icon(
+          leading: FaIcon(
             icon,
             color: Colors.white,
           ),
