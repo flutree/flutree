@@ -6,6 +6,10 @@ I made linktree clone. But with dough
 
 Fork or clone this repository to use it on your own.
 
+## Watch speedcoding
+
+https://youtu.be/oANqiYLuK9U - Subscribe and like!
+
 ## Web demo
 
 https://linktree-clone-flutter.web.app/
