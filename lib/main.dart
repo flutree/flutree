@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'CONSTANTS.dart' as Constants;
 
 void main() {
   runApp(MyApp());
@@ -42,7 +43,7 @@ class BasicPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: Text(
-        'Made with Flutter\n© Fareez Iqmal 2020\n',
+        'Made with Flutter\n${Constants.COPYRIGHT}\n',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 11),
       ),
@@ -69,37 +70,34 @@ class AppPage extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 backgroundImage: NetworkImage(
                     //can also use assetImage, replace NetworkImage widget by with 'AssetImage('images/sample.jpg')' . Also replace sample.jpg with our own file. Edit pubspec.yaml if necessary
-                    'https://firebasestorage.googleapis.com/v0/b/linktree-clone-flutter.appspot.com/o/IMG_20190927_135510.jpg?alt=media&token=254a96dd-c270-4f21-96f4-9f9261827aa7'),
+                    Constants.IMAGE_URL),
               ),
             ),
             SizedBox(
               height: 28.0,
             ),
             Text(
-              '@fareeziqmal',
+              '@${Constants.NICKNAME}',
               style: TextStyle(fontSize: 20),
             ), //just a plain text
             SizedBox.shrink(),
-            Text('IIUM'),
+            Text(Constants.SUBTITLE),
             SizedBox(
               height: 34.0,
             ),
             //change or remove this part accordingliy
             linkCard(FontAwesomeIcons.whatsapp, 'WhatsApp',
-                'https://api.whatsapp.com/60193988482', Colors.teal.shade800),
+                Constants.LINK_WHATSHAPP, Colors.teal.shade800),
             linkCard(FontAwesomeIcons.telegram, 'Telegram',
-                'https://telegram.org/', Colors.blue.shade800),
-            linkCard(
-                FontAwesomeIcons.instagram,
-                'Instagram',
-                'https://www.instagram.com/maple.cat/?hl=en',
-                Colors.orange.shade700),
+                Constants.LINK_TELEGRAM, Colors.blue.shade800),
+            linkCard(FontAwesomeIcons.instagram, 'Instagram',
+                Constants.LINK_INSTAGRAM, Colors.orange.shade700),
             linkCard(FontAwesomeIcons.youtube, 'YouTube',
-                'https://www.youtube.com/', hexToColor('#F80000')),
+                Constants.LINK_YOUTUBE, hexToColor('#F80000')),
             linkCard(
                 FontAwesomeIcons.linkedin,
                 'LinkedIn',
-                'https://www.linkedin.com/in/muhammad-iqfareez/', //addmelol
+                Constants.LINK_LINKEDIN, //addmelol
                 Colors.blue.shade900),
             SizedBox(
               height: 60.0,
