@@ -14,6 +14,7 @@ https://youtu.be/oANqiYLuK9U - Subscribe and like! :heart:
 ## Web demo
 
 https://linktree-clone-flutter.web.app/
+Check also https://itsallwidgets.com/linktree-clone
 
 ## Screenshots
 
