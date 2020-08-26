@@ -7,6 +7,8 @@ Fully customizeable.
 
 Fork or clone this repository to use it on your own.
 
+You can do whatever you want, (optional: you can tag me on Twitter @iqfareez2)
+
 ## Watch speedcoding
 
 https://youtu.be/oANqiYLuK9U - Subscribe and like! :heart:
