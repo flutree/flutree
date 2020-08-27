@@ -43,7 +43,7 @@ class BasicPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: Text(
-        'Made with Flutter\n${Constants.COPYRIGHT}\n',
+        'Made with Flutter\n${Constants.kCopyright}\n',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 11),
       ),
@@ -70,34 +70,34 @@ class AppPage extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 backgroundImage: NetworkImage(
                     //can also use assetImage, replace NetworkImage widget by with 'AssetImage('images/sample.jpg')' . Also replace sample.jpg with our own file. Edit pubspec.yaml if necessary
-                    Constants.IMAGE_URL),
+                    Constants.kImageUrl),
               ),
             ),
             SizedBox(
               height: 28.0,
             ),
             Text(
-              '@${Constants.NICKNAME}',
+              '@${Constants.kNickname}',
               style: TextStyle(fontSize: 20),
             ), //just a plain text
             SizedBox.shrink(),
-            Text(Constants.SUBTITLE),
+            Text(Constants.kSubtitle),
             SizedBox(
               height: 34.0,
             ),
             //change or remove this part accordingliy
             linkCard(FontAwesomeIcons.whatsapp, 'WhatsApp',
-                Constants.LINK_WHATSHAPP, Colors.teal.shade800),
+                Constants.kLinkWhatsapp, Colors.teal.shade800),
             linkCard(FontAwesomeIcons.telegram, 'Telegram',
-                Constants.LINK_TELEGRAM, Colors.blue.shade800),
+                Constants.kLinkTelegram, Colors.blue.shade800),
             linkCard(FontAwesomeIcons.instagram, 'Instagram',
-                Constants.LINK_INSTAGRAM, Colors.orange.shade700),
+                Constants.kLinkInstagram, Colors.orange.shade700),
             linkCard(FontAwesomeIcons.youtube, 'YouTube',
-                Constants.LINK_YOUTUBE, hexToColor('#F80000')),
+                Constants.kLinkYoutube, hexToColor('#F80000')),
             linkCard(
                 FontAwesomeIcons.linkedin,
                 'LinkedIn',
-                Constants.LINK_LINKEDIN, //addmelol
+                Constants.kLinkLinkedin, //addmelol
                 Colors.blue.shade900),
             SizedBox(
               height: 60.0,

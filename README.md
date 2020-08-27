@@ -13,6 +13,10 @@ You can do whatever you want, (optional: you can tag me on Twitter @iqfareez2)
 
 https://youtu.be/oANqiYLuK9U - Subscribe and like! :heart:
 
+## App release
+
+- Google Play Store _(coming soon)_
+
 ## Web demo
 
 https://linktree-clone-flutter.web.app/
