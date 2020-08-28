@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class BasicPage extends StatelessWidget {
+  final bool showCopyrightText = Constants.kShowCopyrightText;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,14 +38,18 @@ class BasicPage extends StatelessWidget {
           },
           backgroundColor: Colors.purple.shade800,
           tooltip: 'Open GitHub',
+          mini: true,
           child: Icon(
             FontAwesomeIcons.github,
+            color: Colors.white,
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: Text(
-        'Made with Flutter\n${Constants.kCopyright}\n',
+        showCopyrightText
+            ? 'Made with Flutter\n${Constants.kCopyright}\n'
+            : 'Made with Flutter\n\n',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 11),
       ),
