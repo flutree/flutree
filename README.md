@@ -20,6 +20,7 @@ https://youtu.be/oANqiYLuK9U - Subscribe and like! :heart:
 ## Web demo
 
 https://linktree-clone-flutter.web.app/
+
 Check also https://itsallwidgets.com/linktree-clone
 
 ## Screenshots
@@ -33,7 +34,7 @@ Check also https://itsallwidgets.com/linktree-clone
 - Modify or/and add your own links in `lib\CONSTANTS.dart`
 - Icon is from [Font Awesome package](https://fontawesome.com/icons?d=gallery)
 - Font is from [Google Fonts](https://fonts.google.com/)
-- Replace profile picture with your own picture. There are two type you can use, NetworkImage or AssetImage, you can use AssetImage by replacing /images/sample.jpg with your own picture (keep the filename same). Then make some changes with the dart code if necessary.
+- Replace profile picture with your own picture. There are two type you can use, NetworkImage or AssetImage, you can use AssetImage by replacing `/images/sample.jpg` with your own picture (keep the filename same). Then make some changes with the dart code if necessary.
 
 ## Deploy
 
