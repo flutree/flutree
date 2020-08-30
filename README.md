@@ -15,7 +15,7 @@ https://youtu.be/oANqiYLuK9U - Subscribe and like! :heart:
 
 ## App release
 
-- Google Play Store _(coming soon)_
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter)
 
 ## Web demo
 
