@@ -23,7 +23,6 @@ class AppPage extends StatelessWidget {
               ),
               PressableDough(
                 child: CircleAvatar(
-                  //TODO:check if web 50, klw android kecik skit
                   radius: 50.0,
                   backgroundColor: Colors.transparent,
                   backgroundImage: AssetImage('images/sample.jpg'),
@@ -52,6 +51,12 @@ class AppPage extends StatelessWidget {
                   title: 'Telegram',
                   url: Constants.kLinkTelegram,
                   color: Colors.blue.shade800),
+              LinkCard(
+                icon: FontAwesomeIcons.twitter,
+                title: 'Twitter',
+                url: Constants.kLinkTwitter,
+                color: hexToColor('#1DA1F2'),
+              ),
               LinkCard(
                   icon: FontAwesomeIcons.instagram,
                   title: 'Instagram',

@@ -17,6 +17,7 @@ const kLinkTelegram = 'https://t.me/Thisismaple';
 const kLinkInstagram = 'https://www.instagram.com/maple.cat/?hl=en';
 const kLinkYoutube = 'https://www.youtube.com/channel/UC1CZMI7-GYVGdgbpcRsimWg';
 const kLinkLinkedin = 'https://www.linkedin.com/in/muhammad-iqfareez/';
+const kLinkTwitter = 'https://twitter.com/iqfareez2';
 const kLinkOthers = "Add more";
 
 //copyright information
