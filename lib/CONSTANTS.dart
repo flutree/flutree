@@ -4,7 +4,7 @@ library constants;
 const kNickname = 'fareeziqmal';
 
 //subtitle (eg: places, company etc.)
-const kShowSubtitleText = false;
+const kShowSubtitleText = false; //change to our liking
 const kSubtitle = 'IIUM';
 
 //Network image link
@@ -21,5 +21,5 @@ const kLinkTwitter = 'https://twitter.com/iqfareez2';
 const kLinkOthers = "Add more";
 
 //copyright information
-const kShowCopyrightText = false;
+const kShowCopyrightText = false; //change to your liking.
 const kCopyright = '© Fareez Iqmal 2020';

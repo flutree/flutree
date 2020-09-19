@@ -45,3 +45,6 @@ app.*.map.json
 
 # password
 key.properties
+
+# some private key (admob etc)
+PRIVATE.dart

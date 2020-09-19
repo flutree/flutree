@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "385807044061",
+    "firebase_url": "https://linktree-clone-flutter.firebaseio.com",
+    "project_id": "linktree-clone-flutter",
+    "storage_bucket": "linktree-clone-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385807044061:android:808d9708102b404d6eba34",
+        "android_client_info": {
+          "package_name": "com.iqmal.linktreeflutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "385807044061-kjd473kqfiieva6ni8om6v2lu17t5hac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iqmal.linktreeflutter",
+            "certificate_hash": "4ea89d8775af60e3b1f6247a9e1bfb9e69314380"
+          }
+        },
+        {
+          "client_id": "385807044061-o8aupgo6sirg8624nho36r451p4s14vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa2FJHbZ1bea-1RWte_1PQv0SY7fv8UDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "385807044061-o8aupgo6sirg8624nho36r451p4s14vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-1896379146653594~3119205556"
+    }
+  ],
+  "configuration_version": "1"
+}
