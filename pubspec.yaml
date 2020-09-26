@@ -31,6 +31,7 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   url_launcher: ^5.5.0
   dough: ^0.2.3
+  fluttertoast: ^7.1.1
   firebase_admob: ^0.9.3+4
 
 dev_dependencies:
