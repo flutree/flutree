@@ -14,12 +14,8 @@ const kImageUrl =
 //Social media links
 const kLinkWhatsapp = 'https://api.whatsapp.com/60193988482';
 const kLinkTelegram = 'https://t.me/Thisismaple';
-const kLinkInstagram = 'https://www.instagram.com/maple.cat/?hl=en';
+const kLinkInstagram = 'https://www.instagram.com/iqfareez';
 const kLinkYoutube = 'https://www.youtube.com/channel/UC1CZMI7-GYVGdgbpcRsimWg';
-const kLinkLinkedin = 'https://www.linkedin.com/in/muhammad-iqfareez/';
+const kLinkLinkedin = 'https://www.linkedin.com/';
 const kLinkTwitter = 'https://twitter.com/iqfareez2';
 const kLinkOthers = "Add more";
-
-//copyright information
-const kShowCopyrightText = false; //change to your liking.
-const kCopyright = '© Fareez Iqmal 2020';

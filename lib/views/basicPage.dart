@@ -5,7 +5,6 @@ import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import '../utils/ad_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 
 import 'appPage.dart';
 
@@ -58,8 +57,6 @@ class _BasicPageState extends State<BasicPage> {
     }
   }
 
-  final bool showCopyrightText = Constants.kShowCopyrightText;
-
   @override
   void initState() {
     super.initState();
@@ -71,6 +68,7 @@ class _BasicPageState extends State<BasicPage> {
     WidgetsBinding.instance
         .addPostFrameCallback((_) => interstitialAd = myInterstitial()..load());
     print('builded');
+    //TODO: Giffy dialog here??
     return Scaffold(
       body: AppPage(),
       floatingActionButton: PressableDough(
@@ -92,14 +90,6 @@ class _BasicPageState extends State<BasicPage> {
             color: Colors.white,
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: Text(
-        showCopyrightText
-            ? 'Made with Flutter\n${Constants.kCopyright}\n'
-            : 'Made with Flutter\n\n',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 11),
       ),
     );
   }
