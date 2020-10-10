@@ -1,12 +1,14 @@
 import 'package:dough/dough.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
-import '../utils/ad_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'appPage.dart';
+
+const firstRunKey = 'firstRun';
 
 class BasicPage extends StatefulWidget {
   @override
@@ -14,73 +16,18 @@ class BasicPage extends StatefulWidget {
 }
 
 class _BasicPageState extends State<BasicPage> {
-  InterstitialAd interstitialAd;
-  InterstitialAd myInterstitial() {
-    return InterstitialAd(
-      listener: onInterstitialAdEvent,
-      adUnitId: AdManager.interstitialAdUnitId,
-      targetingInfo: MobileAdTargetingInfo(
-          testDevices: ['F06A8878E42F61AC050B40215172FBB9']),
-    );
-  }
-
-  bool isInterstitialAdReady;
-
-  void loadInterstitialAd() {
-    interstitialAd = myInterstitial()..load();
-  }
-
-  void onInterstitialAdEvent(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
-        isInterstitialAdReady = true;
-        print('ads loaded');
-        break;
-      case MobileAdEvent.failedToLoad:
-        isInterstitialAdReady = false;
-        interstitialAd..load();
-        print('ads failed to load');
-        break;
-      case MobileAdEvent.closed:
-        print('ads closed');
-        interstitialAd = myInterstitial()..load();
-        openGithubLink();
-        break;
-      case MobileAdEvent.opened:
-        print('opened ads');
-        break;
-      case MobileAdEvent.leftApplication:
-        print('ads left application');
-        break;
-      default:
-        print('ads default case');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    isInterstitialAdReady = false;
-  }
-
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => interstitialAd = myInterstitial()..load());
-    print('builded');
-    //TODO: Giffy dialog here??
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      GetStorage().read(firstRunKey) ?? showDialogIfFirstLoaded(context);
+    });
+
     return Scaffold(
       body: AppPage(),
       floatingActionButton: PressableDough(
         child: FloatingActionButton(
           onPressed: () {
-            print('fareez here $isInterstitialAdReady');
-
-            if (isInterstitialAdReady) {
-              interstitialAd.show();
-            } else {
-              openGithubLink();
-            }
+            //TODO: Add Gumroad is here
           },
           backgroundColor: Colors.purple.shade800,
           tooltip: 'Open GitHub',
@@ -94,14 +41,24 @@ class _BasicPageState extends State<BasicPage> {
     );
   }
 
-  @override
-  void dispose() {
-    interstitialAd?.dispose();
-    super.dispose();
+  void openGumroadLink() {
+    Fluttertoast.showToast(msg: 'Opening Gumroad');
+    launchURL('//TODO');
   }
 
-  void openGithubLink() {
-    Fluttertoast.showToast(msg: 'Opening GitHub');
-    launchURL('https://github.com/fareezMaple/linktree-clone-flutter');
+  showDialogIfFirstLoaded(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AssetGiffyDialog(
+        onlyOkButton: true,
+        onOkButtonPressed: () {
+          GetStorage().write(firstRunKey, false);
+          Navigator.pop(context);
+        },
+        image: Image.asset('images/intro.gif'),
+        title: Text('Try this!\nSquishable, doughy UI elements'),
+      ),
+      barrierDismissible: false,
+    );
   }
 }
