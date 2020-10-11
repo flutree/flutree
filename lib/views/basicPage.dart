@@ -5,8 +5,8 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'appPage.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 
 const firstRunKey = 'firstRun';
 
@@ -30,7 +30,7 @@ class _BasicPageState extends State<BasicPage> {
             //TODO: Add Gumroad is here
           },
           backgroundColor: Colors.purple.shade800,
-          tooltip: 'Open GitHub',
+          tooltip: 'Get source code',
           mini: true,
           child: Icon(
             FontAwesomeIcons.github,
@@ -42,8 +42,8 @@ class _BasicPageState extends State<BasicPage> {
   }
 
   void openGumroadLink() {
-    Fluttertoast.showToast(msg: 'Opening Gumroad');
-    launchURL('//TODO');
+    Fluttertoast.showToast(msg: 'Great!');
+    launchURL(Constants.kLinkGumroad);
   }
 
   showDialogIfFirstLoaded(BuildContext context) {

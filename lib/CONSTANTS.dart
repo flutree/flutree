@@ -19,3 +19,5 @@ const kLinkYoutube = 'https://www.youtube.com/channel/UC1CZMI7-GYVGdgbpcRsimWg';
 const kLinkLinkedin = 'https://www.linkedin.com/';
 const kLinkTwitter = 'https://twitter.com/iqfareez2';
 const kLinkOthers = "Add more";
+
+const kLinkGumroad = 'https://gum.co/YHweV';
