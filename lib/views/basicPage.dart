@@ -26,9 +26,7 @@ class _BasicPageState extends State<BasicPage> {
       body: AppPage(),
       floatingActionButton: PressableDough(
         child: FloatingActionButton(
-          onPressed: () {
-            //TODO: Add Gumroad is here
-          },
+          onPressed: openGumroadLink,
           backgroundColor: Colors.purple.shade800,
           tooltip: 'Get source code',
           mini: true,
@@ -41,7 +39,7 @@ class _BasicPageState extends State<BasicPage> {
     );
   }
 
-  void openGumroadLink() {
+  openGumroadLink() {
     Fluttertoast.showToast(msg: 'Great!');
     launchURL(Constants.kLinkGumroad);
   }
