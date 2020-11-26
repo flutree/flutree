@@ -1,7 +1,9 @@
 import 'package:dough/dough.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,10 +18,61 @@ class BasicPage extends StatefulWidget {
 }
 
 class _BasicPageState extends State<BasicPage> {
+  InterstitialAd interstitialAd;
+  InterstitialAd myInterstitial() {
+    return InterstitialAd(
+      listener: onInterstitialAdEvent,
+      adUnitId: AdManager.interstitialAdUnitId,
+      targetingInfo: MobileAdTargetingInfo(
+          testDevices: ['9CF5B0E63E5D5EAF720A3F499C6A75D3']),
+    );
+  }
+
+  bool isInterstitialAdReady;
+
+  void loadInterstitialAd() {
+    interstitialAd = myInterstitial()..load();
+  }
+
+  void onInterstitialAdEvent(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        isInterstitialAdReady = true;
+        print('ads loaded');
+        break;
+      case MobileAdEvent.failedToLoad:
+        isInterstitialAdReady = false;
+        interstitialAd..load();
+        print('ads failed to load');
+        break;
+      case MobileAdEvent.closed:
+        print('ads closed');
+        interstitialAd = myInterstitial()..load();
+        // openGumroadLink();
+        launchURL(Constants.kLinkGumroad);
+        break;
+      case MobileAdEvent.opened:
+        print('opened ads');
+        break;
+      case MobileAdEvent.leftApplication:
+        print('ads left application');
+        break;
+      default:
+        print('ads default case');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isInterstitialAdReady = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       GetStorage().read(firstRunKey) ?? showDialogIfFirstLoaded(context);
+      interstitialAd = myInterstitial()..load();
     });
 
     return Scaffold(
@@ -40,8 +93,14 @@ class _BasicPageState extends State<BasicPage> {
   }
 
   openGumroadLink() {
-    Fluttertoast.showToast(msg: 'Great!');
-    launchURL(Constants.kLinkGumroad);
+    Fluttertoast.showToast(msg: 'Opening Gumroad!');
+    if (isInterstitialAdReady) {
+      print('Ads showing');
+      interstitialAd.show();
+    } else {
+      print('else part');
+      launchURL(Constants.kLinkGumroad);
+    }
   }
 
   showDialogIfFirstLoaded(BuildContext context) {
@@ -58,5 +117,11 @@ class _BasicPageState extends State<BasicPage> {
       ),
       barrierDismissible: false,
     );
+  }
+
+  @override
+  void dispose() {
+    interstitialAd?.dispose();
+    super.dispose();
   }
 }
