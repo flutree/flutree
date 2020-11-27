@@ -1,5 +1,6 @@
 import 'package:dough/dough.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -48,8 +49,8 @@ class _BasicPageState extends State<BasicPage> {
       case MobileAdEvent.closed:
         print('ads closed');
         interstitialAd = myInterstitial()..load();
-        // openGumroadLink();
-        launchURL(Constants.kLinkGumroad);
+        launchURL(Constants.kGumroadDiscountLink);
+        Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
         break;
       case MobileAdEvent.opened:
         print('opened ads');
@@ -72,7 +73,9 @@ class _BasicPageState extends State<BasicPage> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       GetStorage().read(firstRunKey) ?? showDialogIfFirstLoaded(context);
-      interstitialAd = myInterstitial()..load();
+      if (!kIsWeb) {
+        interstitialAd = myInterstitial()..load();
+      }
     });
 
     return Scaffold(
@@ -83,8 +86,8 @@ class _BasicPageState extends State<BasicPage> {
           backgroundColor: Colors.purple.shade800,
           tooltip: 'Get source code',
           mini: true,
-          child: Icon(
-            FontAwesomeIcons.github,
+          child: FaIcon(
+            FontAwesomeIcons.code,
             color: Colors.white,
           ),
         ),
@@ -93,12 +96,15 @@ class _BasicPageState extends State<BasicPage> {
   }
 
   openGumroadLink() {
-    Fluttertoast.showToast(msg: 'Opening Gumroad!');
-    if (isInterstitialAdReady) {
-      print('Ads showing');
-      interstitialAd.show();
+    if (!kIsWeb) {
+      if (isInterstitialAdReady) {
+        print('Ads showing');
+        interstitialAd.show();
+      } else {
+        Fluttertoast.showToast(msg: 'Coupon code applied');
+        launchURL(Constants.kGumroadDiscountLink);
+      }
     } else {
-      print('else part');
       launchURL(Constants.kLinkGumroad);
     }
   }
@@ -121,7 +127,10 @@ class _BasicPageState extends State<BasicPage> {
 
   @override
   void dispose() {
-    interstitialAd?.dispose();
+    if (!kIsWeb) {
+      interstitialAd?.dispose();
+    }
+
     super.dispose();
   }
 }

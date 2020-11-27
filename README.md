@@ -38,4 +38,4 @@ Check also https://itsallwidgets.com/linktree-clone
 
 ## Deploy
 
-Deployed using free firebase hosting
+Deployed using [firebase hosting](web.app)

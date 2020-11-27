@@ -1,4 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +8,11 @@ import 'package:linktree_iqfareez_flutter/views/basicPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+
+  if (!kIsWeb) {
+    FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
+
   await GetStorage.init();
   runApp(MyApp());
 }

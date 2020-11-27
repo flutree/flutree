@@ -21,3 +21,4 @@ const kLinkTwitter = 'https://twitter.com/iqfareez2';
 const kLinkOthers = "Add more";
 
 const kLinkGumroad = 'https://gum.co/YHweV';
+const kGumroadDiscountLink = 'https://gumroad.com/l/YHweV/8t2062d';
