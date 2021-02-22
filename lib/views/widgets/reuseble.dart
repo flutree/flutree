@@ -38,3 +38,57 @@ class HorizontalOrLine extends StatelessWidget {
     );
   }
 }
+
+class EmailTextField extends StatelessWidget {
+  const EmailTextField({
+    Key key,
+    @required TextEditingController emailController,
+  })  : _emailController = emailController,
+        super(key: key);
+
+  final TextEditingController _emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _emailController,
+      decoration: InputDecoration(
+        isDense: true,
+        labelText: 'Email',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.emailAddress,
+    );
+  }
+}
+
+class PasswordTextField extends StatelessWidget {
+  const PasswordTextField({
+    Key key,
+    @required TextEditingController passwordController,
+  })  : _passwordController = passwordController,
+        super(key: key);
+
+  final TextEditingController _passwordController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _passwordController,
+      validator: (value) =>
+          value.length < 7 ? 'Please enter more than 7 character' : null,
+      decoration: InputDecoration(
+        isDense: true,
+        labelText: 'Password',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+      obscureText: true,
+      keyboardType: TextInputType.visiblePassword,
+    );
+  }
+}

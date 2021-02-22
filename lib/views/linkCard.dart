@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 
-///This linkcard will be the one showing in appPage
 class LinkCard extends StatelessWidget {
+  ///This linkcard will be the one showing in appPage
   LinkCard({this.icon, this.title, this.url, this.color, this.isSample});
   final IconData icon;
   final String title;
