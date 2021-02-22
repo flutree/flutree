@@ -13,8 +13,14 @@ class LinkCard extends StatelessWidget {
   final bool isSample;
 
   final snackbar = SnackBar(
+    action: SnackBarAction(
+      label: 'Info',
+      onPressed: () {
+        //TODO: put guide link
+      },
+    ),
     content: Text(
-        'Put your own social media link. Source files are available on GitHub.'),
+        'To fully customize the app. Get the source code on for free Gumroad.'),
     // behavior: SnackBarBehavior.floating,
   );
 
@@ -28,7 +34,7 @@ class LinkCard extends StatelessWidget {
           onTap: () {
             !isSample
                 ? launchURL(url)
-                : Scaffold.of(context).showSnackBar(snackbar);
+                : ScaffoldMessenger.of(context).showSnackBar(snackbar);
           },
           child: ListTile(
             leading: FaIcon(

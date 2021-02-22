@@ -24,8 +24,10 @@ class _BasicPageState extends State<BasicPage> {
     return InterstitialAd(
       listener: onInterstitialAdEvent,
       adUnitId: AdManager.interstitialAdUnitId,
-      targetingInfo: MobileAdTargetingInfo(
-          testDevices: ['9CF5B0E63E5D5EAF720A3F499C6A75D3']),
+      targetingInfo: MobileAdTargetingInfo(testDevices: [
+        '9CF5B0E63E5D5EAF720A3F499C6A75D3',
+        '544FB3234D373268D3A6DB803850CDFB'
+      ]),
     );
   }
 
@@ -72,7 +74,8 @@ class _BasicPageState extends State<BasicPage> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      GetStorage().read(firstRunKey) ?? showDialogIfFirstLoaded(context);
+      showWelcomeDialog(context);
+
       if (!kIsWeb) {
         interstitialAd = myInterstitial()..load();
       }
@@ -109,7 +112,7 @@ class _BasicPageState extends State<BasicPage> {
     }
   }
 
-  showDialogIfFirstLoaded(BuildContext context) {
+  showWelcomeDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) => AssetGiffyDialog(

@@ -1,10 +1,12 @@
 import 'package:dough/dough.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 import 'package:linktree_iqfareez_flutter/utils/HexToColour.dart';
+import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 
-import 'linkCard.dart';
+import '../linkCard.dart';
 
 class AppPage extends StatelessWidget {
   final bool isShowSubtitle = Constants.kShowSubtitleText;
@@ -60,7 +62,7 @@ class AppPage extends StatelessWidget {
                 title: 'Twitter',
                 url: Constants.kLinkTwitter,
                 color: hexToColor('#1DA1F2'),
-                isSample: true,
+                isSample: false,
               ),
               LinkCard(
                 icon: FontAwesomeIcons.instagram,
@@ -74,7 +76,7 @@ class AppPage extends StatelessWidget {
                 title: 'YouTube',
                 url: Constants.kLinkYoutube,
                 color: hexToColor('#F80000'),
-                isSample: true,
+                isSample: false,
               ),
               LinkCard(
                 icon: FontAwesomeIcons.linkedin,
@@ -83,8 +85,39 @@ class AppPage extends StatelessWidget {
                 color: Colors.blue.shade900,
                 isSample: true,
               ),
-              SizedBox(
-                height: 60.0,
+              SizedBox(height: 60.0),
+              TextButton(
+                onPressed: () async {
+                  int response = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Exit preview?'),
+                        content: Text('You will be returned to sign in page'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(0);
+                              },
+                              child: Text('Yes, proceed.')),
+                        ],
+                      );
+                    },
+                  );
+                  if (response == 0) {
+                    //TODO: Show ads
+                    FirebaseAuth.instance.signOut().then((_) => {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => SignIn()))
+                        });
+                  }
+                },
+                child: Text('Exit preview'),
               ),
             ],
           ),
