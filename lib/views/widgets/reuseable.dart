@@ -65,6 +65,62 @@ class EmailTextField extends StatelessWidget {
   }
 }
 
+class NameTextField extends StatelessWidget {
+  const NameTextField(
+      {Key key,
+      @required TextEditingController nameController,
+      TextInputAction keyboardAction = TextInputAction.next})
+      : _nameController = nameController,
+        _keyboardAction = keyboardAction,
+        super(key: key);
+
+  final TextEditingController _nameController;
+  final TextInputAction _keyboardAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      validator: (value) => value.isEmpty ? 'Please enter your name' : null,
+      controller: _nameController,
+      decoration: InputDecoration(
+        isDense: true,
+        labelText: 'Nickname',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+      textInputAction: _keyboardAction,
+      keyboardType: TextInputType.name,
+    );
+  }
+}
+
+class SubtitleTextField extends StatelessWidget {
+  const SubtitleTextField({
+    Key key,
+    @required TextEditingController subsController,
+  })  : _subsController = subsController,
+        super(key: key);
+
+  final TextEditingController _subsController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _subsController,
+      decoration: InputDecoration(
+        isDense: true,
+        hintText: 'Enter your address, bio, etc.',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.text,
+    );
+  }
+}
+
 class PasswordTextField extends StatelessWidget {
   const PasswordTextField({
     Key key,
@@ -89,6 +145,23 @@ class PasswordTextField extends StatelessWidget {
       ),
       obscureText: true,
       keyboardType: TextInputType.visiblePassword,
+    );
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 10,
+      height: 10,
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+      ),
     );
   }
 }

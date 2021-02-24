@@ -7,18 +7,17 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/app_page.dart';
-import 'package:linktree_iqfareez_flutter/views/preview/basicPage.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/edit_page.dart';
+import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  if (!kIsWeb) {
-    FirebaseAdMob.instance.initialize(appId: AdManager.appId);
-  }
+  // if (!kIsWeb) {
+  //   FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  // }
 
-  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -32,19 +31,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
-      home: Builder(
-        builder: (context) {
-          if (_auth == null) {
-            return SignIn();
-          } else {
-            if (_auth.isAnonymous) {
-              return BasicPage();
-            } else {
-              return AppPage();
-            }
-          }
-        },
-      ),
+      home: _auth == null
+          ? SignIn()
+          : (_auth.isAnonymous ? PreviewPage() : EditPage()),
     );
   }
 }

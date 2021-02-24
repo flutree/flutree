@@ -1,16 +1,20 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
+import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
+import 'package:linktree_iqfareez_flutter/utils/social_model.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
-  LinkCard({this.icon, this.title, this.url, this.color, this.isSample});
-  final IconData icon;
-  final String title;
-  final String url;
-  final Color color;
+  LinkCard(
+      {@required this.linkcardModel, this.isSample, this.isEditing = false});
+  final LinkcardModel linkcardModel;
   final bool isSample;
+
+  /// Block onPressed method. Enable overriding gesture from other widget. Defaulted to false
+  final bool isEditing;
 
   final snackbar = SnackBar(
     action: SnackBarAction(
@@ -26,23 +30,26 @@ class LinkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SocialModel socialModel = SocialLists.getSocial(linkcardModel.exactName);
     return PressableDough(
       child: Card(
-        color: color,
+        color: socialModel.colour,
         child: InkWell(
           splashColor: Colors.pink.withAlpha(10),
-          onTap: () {
-            !isSample
-                ? launchURL(url)
-                : ScaffoldMessenger.of(context).showSnackBar(snackbar);
-          },
+          onTap: !isEditing
+              ? () {
+                  !isSample
+                      ? launchURL(linkcardModel.link)
+                      : ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                }
+              : null,
           child: ListTile(
             leading: FaIcon(
-              icon,
+              socialModel.icon,
               color: Colors.white,
             ),
             title: Text(
-              title,
+              linkcardModel.displayName,
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white),
             ),

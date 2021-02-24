@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 import 'package:linktree_iqfareez_flutter/utils/HexToColour.dart';
+import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
+import 'package:linktree_iqfareez_flutter/utils/social_model.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
+import 'package:linktree_iqfareez_flutter/views/preview/mock_data.dart';
 
-import '../linkCard.dart';
+import '../widgets/linkCard.dart';
 
-class AppPage extends StatelessWidget {
+class PreviewAppPage extends StatelessWidget {
   final bool isShowSubtitle = Constants.kShowSubtitleText;
   @override
   Widget build(BuildContext context) {
@@ -42,49 +45,19 @@ class AppPage extends StatelessWidget {
               SizedBox(
                 height: 25.0,
               ),
-              //change or remove this part accordingliy
-              LinkCard(
-                icon: FontAwesomeIcons.whatsapp,
-                title: 'WhatsApp',
-                url: Constants.kLinkWhatsapp,
-                color: Colors.teal.shade800,
-                isSample: true, //make this to false to open link when clicked
+              //change or remove this part accordingly
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: PreviewMockData.mockData.length,
+                itemBuilder: (context, index) {
+                  return LinkCard(
+                    linkcardModel: PreviewMockData.mockData[index],
+                    isSample: index.isEven,
+                  );
+                },
               ),
-              LinkCard(
-                icon: FontAwesomeIcons.telegram,
-                title: 'Telegram',
-                url: Constants.kLinkTelegram,
-                color: Colors.blue.shade800,
-                isSample: true,
-              ),
-              LinkCard(
-                icon: FontAwesomeIcons.twitter,
-                title: 'Twitter',
-                url: Constants.kLinkTwitter,
-                color: hexToColor('#1DA1F2'),
-                isSample: false,
-              ),
-              LinkCard(
-                icon: FontAwesomeIcons.instagram,
-                title: 'Instagram',
-                url: Constants.kLinkInstagram,
-                color: Colors.orange.shade700,
-                isSample: true,
-              ),
-              LinkCard(
-                icon: FontAwesomeIcons.youtube,
-                title: 'YouTube',
-                url: Constants.kLinkYoutube,
-                color: hexToColor('#F80000'),
-                isSample: false,
-              ),
-              LinkCard(
-                icon: FontAwesomeIcons.linkedin,
-                title: 'LinkedIn',
-                url: Constants.kLinkLinkedin, //addmelol
-                color: Colors.blue.shade900,
-                isSample: true,
-              ),
+
               SizedBox(height: 60.0),
               TextButton(
                 onPressed: () async {

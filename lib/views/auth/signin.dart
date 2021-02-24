@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/app_page.dart';
-import 'package:linktree_iqfareez_flutter/views/preview/basicPage.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseble.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/edit_page.dart';
+import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
+import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 
 import 'register.dart';
 
@@ -19,6 +19,9 @@ class _SignInState extends State<SignIn> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
+  bool _isPreviewLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +54,7 @@ class _SignInState extends State<SignIn> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AppPage(),
+                            builder: (context) => EditPage(),
                           ));
                     }).catchError(() {
                       setState(() {
@@ -61,15 +64,7 @@ class _SignInState extends State<SignIn> {
                     });
                   }
                 },
-                child: _isLoading
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                        ),
-                      )
-                    : Text('Sign in'),
+                child: _isLoading ? LoadingIndicator() : Text('Sign in'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
@@ -101,40 +96,41 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       onPressed: () async {
-                        int response = await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text(
-                                  'You are entering preview mode. No edit access unless you signed in.'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: Text('Cancel')),
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(0),
-                                    child: Text('I\'m okay with it')),
-                              ],
-                            );
-                          },
-                        );
-
-                        if (response == 0) {
+                        setState(() {
+                          _isPreviewLoading = true;
+                        });
+                        try {
                           await _authInstance.signInAnonymously().then((value) {
                             print('UserCredential is $value');
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => BasicPage(),
+                                builder: (context) => PreviewPage(),
                               ),
                             );
                           });
+                        } on FirebaseAuthException catch (e) {
+                          setState(() => _isPreviewLoading = false);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('ERROR: ${e.message}'),
+                            backgroundColor: Colors.red,
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        } catch (e) {
+                          setState(() => _isPreviewLoading = false);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Unknown error occured'),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
                         }
                       },
                       icon: FaIcon(FontAwesomeIcons.eye, size: 15),
-                      label: Text('Preview only')),
+                      label: _isPreviewLoading
+                          ? LoadingIndicator()
+                          : Text('Preview only')),
                   SizedBox(width: 10),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -142,18 +138,47 @@ class _SignInState extends State<SignIn> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      onPressed: () {
-                        GoogleSignIn().signIn().then((value) {
-                          print('Sign in google complete');
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AppPage(),
-                              ));
-                        });
+                      onPressed: () async {
+                        setState(() => _isGoogleLoading = true);
+                        try {
+                          // Trigger the authentication flow
+                          final GoogleSignInAccount googleUser =
+                              await GoogleSignIn().signIn();
+
+                          // Obtain the auth details from the request
+                          final GoogleSignInAuthentication googleAuth =
+                              await googleUser.authentication;
+
+                          // Create a new credential
+                          final GoogleAuthCredential credential =
+                              GoogleAuthProvider.credential(
+                            accessToken: googleAuth.accessToken,
+                            idToken: googleAuth.idToken,
+                          );
+
+                          // Once signed in, return the UserCredential
+                          await FirebaseAuth.instance
+                              .signInWithCredential(credential)
+                              .then((value) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditPage(),
+                                ));
+                          });
+                        } on FirebaseAuthException catch (e) {
+                          setState(() => _isGoogleLoading = false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('ERROR: ${e.message}')));
+                        } catch (e) {
+                          print('UNKNOWN ERROR CAUGHT GOOGLE SIGN IN: $e');
+                          setState(() => _isGoogleLoading = false);
+                        }
                       },
                       icon: FaIcon(FontAwesomeIcons.google, size: 15),
-                      label: Text('Sign in with Google'))
+                      label: _isGoogleLoading
+                          ? LoadingIndicator()
+                          : Text('Sign in with Google'))
                 ],
               ),
             ],

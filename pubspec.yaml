@@ -24,6 +24,8 @@ dependencies:
   firebase_auth: ^0.20.1
   google_sign_in: ^4.5.9
   cloud_firestore: ^0.16.0+1
+  image_picker: ^0.6.7+22
+  dotted_border: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,7 @@ flutter:
     - images/sample.jpg
     - images/intro.gif
     - images/logo/
+    - images/na.png
 
   # fonts:
   #   - family: Schyler

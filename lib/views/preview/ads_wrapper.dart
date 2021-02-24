@@ -8,17 +8,17 @@ import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'appPage.dart';
+import 'preview_app_page.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 
 const firstRunKey = 'firstRun';
 
-class BasicPage extends StatefulWidget {
+class PreviewPage extends StatefulWidget {
   @override
-  _BasicPageState createState() => _BasicPageState();
+  _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _BasicPageState extends State<BasicPage> {
+class _PreviewPageState extends State<PreviewPage> {
   InterstitialAd interstitialAd;
   InterstitialAd myInterstitial() {
     return InterstitialAd(
@@ -82,7 +82,7 @@ class _BasicPageState extends State<BasicPage> {
     });
 
     return Scaffold(
-      body: AppPage(),
+      body: PreviewAppPage(),
       floatingActionButton: PressableDough(
         child: FloatingActionButton(
           onPressed: openGumroadLink,
