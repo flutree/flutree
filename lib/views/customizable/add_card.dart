@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
 import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AddCard extends StatefulWidget {
   /// If linkcardModel is not null, edit mode is triggered
@@ -24,14 +24,18 @@ class _AddCardState extends State<AddCard> {
   Map<String, String> _urlTextBox = {
     'Profile link': 'http://example.com/',
     'Phone number': '601939xxxxx',
-    'Email Address': 'name@example.com'
+    'Email Address': 'name@example.com',
+    'SMS': '60182xxxxxxx'
   };
 
   Map<int, String> _prefixUrlText = {
     0: null,
     1: 'tel:',
     2: 'mailto:',
+    3: 'sms:'
   };
+
+  List<String> _dropdownType = ['URL', 'Phone', 'Email', 'SMS'];
 
   @override
   void initState() {
@@ -51,6 +55,9 @@ class _AddCardState extends State<AddCard> {
       } else if (_urlController.text.contains(RegExp(r'mailto:'))) {
         _inputType = 2;
         _urlController.text = _urlController.text.substring(7);
+      } else if (_urlController.text.contains(RegExp(r'sms:'))) {
+        _inputType = 3;
+        _urlController.text = _urlController.text.substring(4);
       } else {
         _inputType = 0;
       }
@@ -140,32 +147,16 @@ class _AddCardState extends State<AddCard> {
                                 borderRadius: BorderRadius.circular(18),
                               ),
                             ),
-                            items: [
-                              DropdownMenuItem(
-                                value: 0,
+                            items: _dropdownType.map((value) {
+                              return DropdownMenuItem(
+                                value: _dropdownType.indexOf(value),
                                 child: Center(
                                     child: Text(
-                                  'URL',
+                                  value,
                                   style: TextStyle(color: Colors.black87),
                                 )),
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Center(
-                                    child: Text(
-                                  'Phone',
-                                  style: TextStyle(color: Colors.black87),
-                                )),
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Center(
-                                    child: Text(
-                                  'Email',
-                                  style: TextStyle(color: Colors.black87),
-                                )),
-                              )
-                            ]),
+                              );
+                            }).toList()),
                       ),
                     ),
                     Expanded(
@@ -173,6 +164,8 @@ class _AddCardState extends State<AddCard> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
+                          validator: (value) =>
+                              value.isEmpty ? 'Cannot be empty' : null,
                           controller: _urlController,
                           decoration: InputDecoration(
                             isDense: true,
@@ -213,21 +206,42 @@ class _AddCardState extends State<AddCard> {
                   icon: FaIcon(FontAwesomeIcons.check, size: 14),
                   style: OutlinedButton.styleFrom(
                       primary: Colors.white, backgroundColor: Colors.blueGrey),
-                  onPressed: () {
-                    var urlBuilder;
-                    switch (_inputType) {
-                      case 1:
-                        urlBuilder = 'tel:${_urlController.text.trim()}';
-                        break;
-                      case 2:
-                        urlBuilder = 'mailto:${_urlController.text.trim()}';
-                        break;
-                      default:
-                        urlBuilder = _urlController.text.trim();
-                        break;
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      String urlBuilder;
+                      switch (_inputType) {
+                        case 1:
+                          urlBuilder = Uri.encodeFull(
+                              'tel:${_urlController.text.trim()}');
+                          break;
+                        case 2:
+                          urlBuilder = Uri.encodeFull(
+                              'mailto:${_urlController.text.trim()}');
+                          break;
+                        case 3:
+                          urlBuilder = Uri.encodeFull(
+                              'sms:${_urlController.text.trim()}');
+                          break;
+                        default:
+                          try {
+                            urlBuilder =
+                                Uri.http(_urlController.text.trim(), "")
+                                    .toString();
+                          } catch (e) {
+                            print('Error: $e');
+                            urlBuilder = _urlController.text.trim();
+                          }
+
+                          break;
+                      }
+                      if (!await canLaunch(urlBuilder)) {
+                        urlBuilder = 'http://' + urlBuilder;
+                      }
+
+                      Navigator.of(context).pop(LinkcardModel(_socialModelName,
+                          displayName: _titleController.text,
+                          link: urlBuilder));
                     }
-                    Navigator.of(context).pop(LinkcardModel(_socialModelName,
-                        displayName: _titleController.text, link: urlBuilder));
                   },
                   label: Text('Add'),
                 ),
