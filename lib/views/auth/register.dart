@@ -47,8 +47,8 @@ class _RegisterState extends State<Register> {
                               email: _emailController.text,
                               password: _passwordController.text);
 
-                      await user.user
-                          .updateProfile(displayName: _nameController.text);
+                      await user.user.updateProfile(
+                          displayName: _nameController.text.trim());
 
                       Navigator.push(
                           context,

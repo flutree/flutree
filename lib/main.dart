@@ -22,18 +22,18 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final _auth = FirebaseAuth.instance.currentUser;
+  final _authUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fluttree',
+      title: 'Flutree',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
-      home: _auth == null
+      home: _authUser == null
           ? SignIn()
-          : (_auth.isAnonymous ? PreviewPage() : EditPage()),
+          : (_authUser.isAnonymous ? PreviewPage() : EditPage()),
     );
   }
 }

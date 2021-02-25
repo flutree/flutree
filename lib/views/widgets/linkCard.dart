@@ -9,7 +9,9 @@ import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
   LinkCard(
-      {@required this.linkcardModel, this.isSample, this.isEditing = false});
+      {@required this.linkcardModel,
+      this.isSample = false,
+      this.isEditing = false});
   final LinkcardModel linkcardModel;
   final bool isSample;
 
@@ -39,7 +41,7 @@ class LinkCard extends StatelessWidget {
           onTap: !isEditing
               ? () {
                   !isSample
-                      ? launchURL(linkcardModel.link)
+                      ? launchURL(context, linkcardModel.link)
                       : ScaffoldMessenger.of(context).showSnackBar(snackbar);
                 }
               : null,

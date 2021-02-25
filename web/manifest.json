@@ -1,11 +1,11 @@
 {
-  "name": "linktree_iqfareez_flutter",
-  "short_name": "linktree_iqfareez_flutter",
+  "name": "Flutree - LinkTree clone",
+  "short_name": "Flutree",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0175C2",
-  "theme_color": "#0175C2",
-  "description": "A new Flutter project.",
+  "background_color": "#D0D9DA",
+  "theme_color": "#637F8A",
+  "description": "Quick access to your socials.",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [

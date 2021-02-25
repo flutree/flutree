@@ -1,9 +1,5 @@
 void main() {
-  String txt = 'mailto:883888';
+  String uid = 'AcpMQyE5NCO9wcAheFQw';
 
-  int index = txt.indexOf(':') + 1;
-  print(index);
-
-  print(txt.substring(0, index));
-  print(txt.substring(index));
+  print(uid.substring(0, 5));
 }

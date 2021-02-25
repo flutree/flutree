@@ -51,7 +51,7 @@ class _PreviewPageState extends State<PreviewPage> {
       case MobileAdEvent.closed:
         print('ads closed');
         interstitialAd = myInterstitial()..load();
-        launchURL(Constants.kGumroadDiscountLink);
+        launchURL(context, Constants.kGumroadDiscountLink);
         Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
         break;
       case MobileAdEvent.opened:
@@ -105,10 +105,10 @@ class _PreviewPageState extends State<PreviewPage> {
         interstitialAd.show();
       } else {
         Fluttertoast.showToast(msg: 'Coupon code applied');
-        launchURL(Constants.kGumroadDiscountLink);
+        launchURL(context, Constants.kGumroadDiscountLink);
       }
     } else {
-      launchURL(Constants.kLinkGumroad);
+      launchURL(context, Constants.kLinkGumroad);
     }
   }
 
