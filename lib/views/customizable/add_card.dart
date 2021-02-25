@@ -36,6 +36,12 @@ class _AddCardState extends State<AddCard> {
   };
 
   List<String> _dropdownType = ['URL', 'Phone', 'Email', 'SMS'];
+  List<TextInputType> _keyboardType = [
+    TextInputType.url,
+    TextInputType.phone,
+    TextInputType.emailAddress,
+    TextInputType.phone
+  ];
 
   @override
   void initState() {
@@ -178,7 +184,7 @@ class _AddCardState extends State<AddCard> {
                             ),
                           ),
                           textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: _keyboardType[_inputType],
                         ),
                       ),
                     ),
@@ -208,39 +214,27 @@ class _AddCardState extends State<AddCard> {
                       primary: Colors.white, backgroundColor: Colors.blueGrey),
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      String urlBuilder;
+                      String inputUrl = _urlController.text.trim();
                       switch (_inputType) {
                         case 1:
-                          urlBuilder = Uri.encodeFull(
-                              'tel:${_urlController.text.trim()}');
+                          inputUrl = 'tel:$inputUrl';
                           break;
                         case 2:
-                          urlBuilder = Uri.encodeFull(
-                              'mailto:${_urlController.text.trim()}');
+                          inputUrl = 'mailto:$inputUrl';
                           break;
                         case 3:
-                          urlBuilder = Uri.encodeFull(
-                              'sms:${_urlController.text.trim()}');
+                          inputUrl = 'sms:$inputUrl';
                           break;
                         default:
-                          try {
-                            urlBuilder =
-                                Uri.http(_urlController.text.trim(), "")
-                                    .toString();
-                          } catch (e) {
-                            print('Error: $e');
-                            urlBuilder = _urlController.text.trim();
+                          inputUrl = inputUrl;
+                          if (!await canLaunch(inputUrl)) {
+                            inputUrl = 'http://$inputUrl';
                           }
-
                           break;
-                      }
-                      if (!await canLaunch(urlBuilder)) {
-                        urlBuilder = 'http://' + urlBuilder;
                       }
 
                       Navigator.of(context).pop(LinkcardModel(_socialModelName,
-                          displayName: _titleController.text,
-                          link: urlBuilder));
+                          displayName: _titleController.text, link: inputUrl));
                     }
                   },
                   label: Text('Add'),
