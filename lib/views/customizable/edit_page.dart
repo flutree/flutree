@@ -605,11 +605,17 @@ class _EditPageState extends State<EditPage> {
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10),
+                      Text('Loading')
+                    ]),
               );
             } else {
               return Center(
-                child: Text(snapshot.toString()),
+                child: CircularProgressIndicator(),
               );
             }
           },

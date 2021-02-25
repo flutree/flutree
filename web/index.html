@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Flutree - Linktree Clone">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="linktree_iqfareez_flutter">
+  <meta name="apple-mobile-web-app-title" content="flutree">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
@@ -30,9 +30,33 @@
       });
     }
   </script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+  <!-- https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-analytics.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "AIzaSyAJygwdQgzuR2xEf53BZOCQ_NMZWNNrU0I",
+      authDomain: "linktree-clone-flutter.firebaseapp.com",
+      databaseURL: "https://linktree-clone-flutter.firebaseio.com",
+      projectId: "linktree-clone-flutter",
+      storageBucket: "linktree-clone-flutter.appspot.com",
+      messagingSenderId: "385807044061",
+      appId: "1:385807044061:web:2b097f5fc775a5496eba34",
+      measurementId: "G-52F563EKRW"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
 
 </body>
 
