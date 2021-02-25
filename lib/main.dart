@@ -9,6 +9,7 @@ import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 import 'package:linktree_iqfareez_flutter/views/customizable/edit_page.dart';
 import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
+import 'package:linktree_iqfareez_flutter/views/view/enter_code.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +32,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
-      home: _authUser == null
-          ? SignIn()
-          : (_authUser.isAnonymous ? PreviewPage() : EditPage()),
+      home: kIsWeb
+          ? EnterCode()
+          : _authUser == null
+              ? SignIn()
+              : _authUser.isAnonymous
+                  ? PreviewPage()
+                  : EditPage(),
     );
   }
 }

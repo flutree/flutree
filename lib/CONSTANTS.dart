@@ -1,5 +1,7 @@
 library constants;
 
+const kWebappUrl = 'https://linktree-clone-flutter.web.app/';
+
 //nickname (Show below profile image)
 const kNickname = 'fareeziqmal';
 

@@ -17,6 +17,7 @@ import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
 import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 import 'package:linktree_iqfareez_flutter/views/customizable/add_card.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/live_guide.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 
@@ -38,7 +39,7 @@ class _EditPageState extends State<EditPage> {
   final _authInstance = FirebaseAuth.instance;
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
-
+  String _userCode;
   bool _isdpLoading = false;
   String _subtitleText;
   DocumentReference userDocument;
@@ -48,9 +49,8 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
     mode = Mode.edit;
-    userDocument = _firestoreInstance
-        .collection('users')
-        .doc(_authInstance.currentUser.uid.substring(0, 5));
+    _userCode = _authInstance.currentUser.uid.substring(0, 5);
+    userDocument = _firestoreInstance.collection('users').doc(_userCode);
 
     initFirestore();
   }
@@ -62,6 +62,7 @@ class _EditPageState extends State<EditPage> {
       print('Document not exist. Creating...');
       // Document with id == docId doesn't exist.
       userDocument.set({
+        'creationDate': FieldValue.serverTimestamp(),
         'authUid': _authInstance.currentUser.uid,
         'dpUrl': _authInstance.currentUser.photoURL ??
             'https://picsum.photos/seed/${_authInstance.currentUser.uid.substring(1, 6)}/200',
@@ -169,11 +170,15 @@ class _EditPageState extends State<EditPage> {
             ),
             TextButton.icon(
               onPressed: () {
-                //TODO: Goto preview
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => LiveGuide(_userCode)));
               },
-              label: Text('Guide'),
+              label: Text('Live'),
               icon: FaIcon(
-                FontAwesomeIcons.question,
+                FontAwesomeIcons.rocket,
               ),
             ),
           ],
@@ -206,7 +211,7 @@ class _EditPageState extends State<EditPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 25.0),
+                      SizedBox(height: 30.0),
                       GestureDetector(
                         onTap: mode == Mode.edit
                             ? () async {
