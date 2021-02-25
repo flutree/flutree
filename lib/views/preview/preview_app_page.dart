@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
-import 'package:linktree_iqfareez_flutter/utils/HexToColour.dart';
 import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import 'package:linktree_iqfareez_flutter/utils/social_model.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
