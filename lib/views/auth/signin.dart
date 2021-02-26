@@ -32,9 +32,12 @@ class _SignInState extends State<SignIn> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'images/logo/applogo.png',
-                width: 100,
+              Hero(
+                tag: 'dpImage',
+                child: Image.asset(
+                  'images/logo/applogo.png',
+                  width: 100,
+                ),
               ),
               SizedBox(height: 20),
               EmailTextField(emailController: _emailController),

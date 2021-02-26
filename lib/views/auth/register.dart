@@ -26,9 +26,12 @@ class _RegisterState extends State<Register> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'images/logo/applogo.png',
-                width: 100,
+              Hero(
+                tag: 'dpImage',
+                child: Image.asset(
+                  'images/logo/applogo.png',
+                  width: 100,
+                ),
               ),
               SizedBox(height: 20),
               NameTextField(nameController: _nameController),
@@ -50,7 +53,7 @@ class _RegisterState extends State<Register> {
                       await user.user.updateProfile(
                           displayName: _nameController.text.trim());
 
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => EditPage(),

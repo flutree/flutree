@@ -19,5 +19,18 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "hosting": {
+    "headers": [
+      {
+        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      }
+    ]
+  }
 }

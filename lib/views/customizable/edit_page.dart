@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
@@ -10,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
 import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 import 'package:linktree_iqfareez_flutter/views/customizable/add_card.dart';
 import 'package:linktree_iqfareez_flutter/views/customizable/live_guide.dart';
@@ -195,12 +192,10 @@ class _EditPageState extends State<EditPage> {
               _isShowSubtitle = snapshot.data.data()['showSubtitle'] ?? false;
 
               List<dynamic> socialsList = snapshot.data.data()['socials'];
-              List<LinkCard> datas = [];
+              List<LinkcardModel> datas = [];
               for (var item in socialsList ?? []) {
-                datas.add(LinkCard(
-                    isEditing: mode == Mode.edit,
-                    linkcardModel: LinkcardModel(item['exactName'],
-                        displayName: item['displayName'], link: item['link'])));
+                datas.add(LinkcardModel(item['exactName'],
+                    displayName: item['displayName'], link: item['link']));
               }
 
               return SingleChildScrollView(
@@ -446,7 +441,7 @@ class _EditPageState extends State<EditPage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          'Delete ${linkcard.linkcardModel.displayName} ?',
+                                          'Delete ${linkcard.displayName} ?',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -496,13 +491,13 @@ class _EditPageState extends State<EditPage> {
 
                               if (response ?? false) {
                                 userDocument.update({
-                                  'socials': FieldValue.arrayRemove(
-                                      [linkcard.linkcardModel.toMap()])
+                                  'socials':
+                                      FieldValue.arrayRemove([linkcard.toMap()])
                                 });
                               }
                             },
                             onTap: () async {
-                              LinkcardModel temp = linkcard.linkcardModel;
+                              LinkcardModel temp = linkcard;
 
                               dynamic result = await showModalBottomSheet(
                                 isScrollControlled: true,
@@ -517,8 +512,8 @@ class _EditPageState extends State<EditPage> {
                                 print('Editing ${result.toMap()}');
 
                                 await userDocument.update({
-                                  'socials': FieldValue.arrayRemove(
-                                      [linkcard.linkcardModel.toMap()])
+                                  'socials':
+                                      FieldValue.arrayRemove([linkcard.toMap()])
                                 });
                                 userDocument.update({
                                   'socials':
@@ -533,7 +528,7 @@ class _EditPageState extends State<EditPage> {
                               }
                             },
                             child: LinkCard(
-                              linkcardModel: linkcard.linkcardModel,
+                              linkcardModel: linkcard,
                               isEditing: mode == Mode.edit,
                             ),
                           );

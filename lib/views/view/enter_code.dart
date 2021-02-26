@@ -2,7 +2,13 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
+import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
+import 'package:linktree_iqfareez_flutter/views/view/user_card.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import 'package:lottie/lottie.dart';
 
 class EnterCode extends StatefulWidget {
   @override
@@ -59,17 +65,25 @@ class _EnterCodeState extends State<EnterCode> {
                         setState(() => isLoading = true);
                         String code = _codeController.text.trim();
                         print('pressed');
-                        DocumentSnapshot snapshot = await _usersCollection
-                            .doc(code)
-                            .get()
-                            .then((value) {
-                          setState(() => isLoading = false);
+                        _usersCollection.doc(code).get().then((value) {
                           print('snapshot is ${value.data()}');
+                          setState(() => isLoading = false);
+                          if (value.exists) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => UserCard(value)));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  child: NotFoundDialog(),
+                                );
+                              },
+                            );
+                          }
                         }).catchError((Object error) {
                           print('Error: $error');
-                          setState(() {
-                            isLoading = false;
-                          });
+                          setState(() => isLoading = false);
                         });
                       }
                     },
@@ -87,15 +101,84 @@ class _EnterCodeState extends State<EnterCode> {
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Want to make your own?',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.orange.shade700,
-                          decorationStyle: TextDecorationStyle.dotted,
-                          decoration: TextDecoration.underline)),
+                  child: TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            height: 170,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: SizedBox.expand(
+                                    child: TextButton.icon(
+                                        icon:
+                                            FaIcon(FontAwesomeIcons.googlePlay),
+                                        onPressed: () {
+                                          launchURL(context, kPlayStoreUrl);
+                                        },
+                                        label: Text(
+                                          'Get app from Google Play Store\n(Recommended)',
+                                          maxLines: 3,
+                                        )),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: SizedBox.expand(
+                                    child: TextButton.icon(
+                                        icon: FaIcon(FontAwesomeIcons.chrome),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SignIn()));
+                                        },
+                                        label: Text(
+                                          'Continue on browser\n(Beta)',
+                                          maxLines: 3,
+                                        )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text('Want to make your own?',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.orange.shade700,
+                            decorationStyle: TextDecorationStyle.dotted,
+                            decoration: TextDecoration.underline)),
+                  ),
                 )),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class NotFoundDialog extends StatelessWidget {
+  const NotFoundDialog({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Lottie.asset(
+            'images/4958-404-not-found.json',
+          ),
+          Text(
+              'User not found. Please try again or check the code if entered correctly.')
+        ],
       ),
     );
   }

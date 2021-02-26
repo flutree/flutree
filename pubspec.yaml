@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 3.0.0-pre.1+6
+version: 3.0.0-pre.2+7
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -27,6 +27,8 @@ dependencies:
   firebase_storage: ^7.0.0
   image_picker: ^0.6.7+22
   dotted_border: ^1.0.7
+  share_plus: ^1.2.0
+  lottie: ^0.7.0+1
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +41,8 @@ flutter:
     - images/sample.jpg
     - images/intro.gif
     - images/logo/
+    - images/devices.png
+    - images/4958-404-not-found.json
 
   # fonts:
   #   - family: Schyler
