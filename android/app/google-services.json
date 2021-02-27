@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "385807044061-hjtua7qsgr4eb9t05cfud81o084m9baj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iqmal.linktreeflutter",
+            "certificate_hash": "9c38892f9c8bd2b3f2587c51728ca72da61c3301"
+          }
+        },
+        {
           "client_id": "385807044061-kjd473kqfiieva6ni8om6v2lu17t5hac.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
