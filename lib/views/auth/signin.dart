@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/edit_page.dart';
+import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
 import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 
@@ -50,19 +51,21 @@ class _SignInState extends State<SignIn> {
                     setState(() => _isLoading = true);
                     _authInstance
                         .signInWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text)
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim())
                         .then((value) {
                       print('Sign in email password done');
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => EditPage(),
                           ));
-                    }).catchError(() {
+                    }).catchError((error) {
+                      print('ERROR: $error');
                       setState(() {
                         _isLoading = false;
-                        print('WE HAVE ERROR SIGN IN');
+                        CustomSnack.showErrorSnack(context,
+                            message: 'Error: ${error.message}');
                       });
                     });
                   }
@@ -105,14 +108,16 @@ class _SignInState extends State<SignIn> {
                         try {
                           await _authInstance.signInAnonymously().then((value) {
                             print('UserCredential is $value');
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PreviewPage(),
                               ),
-                            );
+                            ).then((value) =>
+                                setState(() => _isPreviewLoading = false));
                           });
                         } on FirebaseAuthException catch (e) {
+                          print('AUth error: $e');
                           setState(() => _isPreviewLoading = false);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('ERROR: ${e.message}'),
@@ -121,7 +126,7 @@ class _SignInState extends State<SignIn> {
                           ));
                         } catch (e) {
                           setState(() => _isPreviewLoading = false);
-
+                          print('Error: $e');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Unknown error occured'),
@@ -170,6 +175,7 @@ class _SignInState extends State<SignIn> {
                                 ));
                           });
                         } on FirebaseAuthException catch (e) {
+                          print('Error: $e');
                           setState(() => _isGoogleLoading = false);
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('ERROR: ${e.message}')));

@@ -18,6 +18,7 @@ class _AddCardState extends State<AddCard> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _urlController = TextEditingController();
+  bool _isNew;
   int _inputType;
   String _socialModelName;
 
@@ -46,8 +47,9 @@ class _AddCardState extends State<AddCard> {
   @override
   void initState() {
     super.initState();
+    _isNew = widget.linkcardModel == null; //is not editing
     // initial Value
-    if (widget.linkcardModel == null) {
+    if (_isNew) {
       _titleController.text =
           _socialModelName = SocialLists.socialList.first.name;
       _inputType = 0; // url by default
@@ -78,7 +80,7 @@ class _AddCardState extends State<AddCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            widget.linkcardModel == null ? 'Add card' : 'Edit card',
+            _isNew ? 'Add card' : 'Edit card',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           SizedBox(height: 10),
@@ -93,7 +95,7 @@ class _AddCardState extends State<AddCard> {
                         padding: const EdgeInsets.all(8.0),
                         child: DropdownButtonFormField<String>(
                           isExpanded: true,
-                          value: _titleController.text,
+                          value: _socialModelName,
                           onChanged: (value) {
                             setState(() {
                               _titleController.text = _socialModelName = value;
@@ -237,7 +239,7 @@ class _AddCardState extends State<AddCard> {
                           displayName: _titleController.text, link: inputUrl));
                     }
                   },
-                  label: Text('Add'),
+                  label: Text(_isNew ? 'Add' : 'Done'),
                 ),
               ),
             ],

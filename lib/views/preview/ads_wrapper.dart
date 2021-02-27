@@ -2,7 +2,6 @@ import 'package:dough/dough.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
@@ -117,10 +116,7 @@ class _PreviewPageState extends State<PreviewPage> {
       context: context,
       builder: (_) => AssetGiffyDialog(
         onlyOkButton: true,
-        onOkButtonPressed: () {
-          GetStorage().write(firstRunKey, false);
-          Navigator.pop(context);
-        },
+        onOkButtonPressed: () => Navigator.pop(context),
         image: Image.asset('images/intro.gif'),
         title: Text('Try this!\nSquishable, doughy UI elements'),
       ),

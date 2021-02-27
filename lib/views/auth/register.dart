@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/edit_page.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 
 class Register extends StatefulWidget {
@@ -47,8 +47,8 @@ class _RegisterState extends State<Register> {
                     try {
                       UserCredential user =
                           await _authInstance.createUserWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text);
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim());
 
                       await user.user.updateProfile(
                           displayName: _nameController.text.trim());

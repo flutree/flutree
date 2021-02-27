@@ -8,7 +8,8 @@ import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 import 'package:linktree_iqfareez_flutter/views/view/user_card.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
-import 'package:lottie/lottie.dart';
+
+enum PlatformTarget { Browser, PlayStore }
 
 class EnterCode extends StatefulWidget {
   @override
@@ -102,51 +103,17 @@ class _EnterCodeState extends State<EnterCode> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: 170,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: SizedBox.expand(
-                                    child: TextButton.icon(
-                                        icon:
-                                            FaIcon(FontAwesomeIcons.googlePlay),
-                                        onPressed: () {
-                                          launchURL(context, kPlayStoreUrl);
-                                        },
-                                        label: Text(
-                                          'Get app from Google Play Store\n(Recommended)',
-                                          maxLines: 3,
-                                        )),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SizedBox.expand(
-                                    child: TextButton.icon(
-                                        icon: FaIcon(FontAwesomeIcons.chrome),
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SignIn()));
-                                        },
-                                        label: Text(
-                                          'Continue on browser\n(Beta)',
-                                          maxLines: 3,
-                                        )),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                    onPressed: () async {
+                      PlatformTarget target = await platformChooser(context);
+
+                      if (target == PlatformTarget.Browser) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignIn()));
+                      } else {
+                        launchURL(context, kPlayStoreUrl);
+                      }
                     },
-                    child: Text('Want to make your own?',
+                    child: Text('Make your own Flutree profile!',
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.orange.shade700,
@@ -157,6 +124,45 @@ class _EnterCodeState extends State<EnterCode> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<PlatformTarget> platformChooser(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 170,
+          child: Column(
+            children: [
+              Expanded(
+                child: SizedBox.expand(
+                  child: TextButton.icon(
+                      icon: FaIcon(FontAwesomeIcons.googlePlay),
+                      onPressed: () =>
+                          Navigator.of(context).pop(PlatformTarget.PlayStore),
+                      label: Text(
+                        'Get app from Google Play Store\n(Recommended)',
+                        maxLines: 3,
+                      )),
+                ),
+              ),
+              Expanded(
+                child: SizedBox.expand(
+                  child: TextButton.icon(
+                      icon: FaIcon(FontAwesomeIcons.chrome),
+                      onPressed: () =>
+                          Navigator.of(context).pop(PlatformTarget.Browser),
+                      label: Text(
+                        'Continue on browser\n(Beta)',
+                        maxLines: 3,
+                      )),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -173,8 +179,12 @@ class NotFoundDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Lottie.asset(
-            'images/4958-404-not-found.json',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              'images/undraw_page_not_found_su7k.png',
+              width: 400,
+            ),
           ),
           Text(
               'User not found. Please try again or check the code if entered correctly.')

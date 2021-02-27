@@ -19,12 +19,12 @@ class LinkCard extends StatelessWidget {
   final bool isEditing;
 
   final snackbar = SnackBar(
-    action: SnackBarAction(
-      label: 'Info',
-      onPressed: () {
-        //TODO: put guide link
-      },
-    ),
+    // action: SnackBarAction(
+    //   label: 'Info',
+    //   onPressed: () {
+    //     //TODO: put guide link
+    //   },
+    // ),
     content: Text(
         'To fully customize the app. Get the source code on for free Gumroad.'),
     // behavior: SnackBarBehavior.floating,

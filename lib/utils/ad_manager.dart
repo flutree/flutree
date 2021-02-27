@@ -26,4 +26,14 @@ class AdManager {
       throw new UnsupportedError("Unsupported platform");
     }
   }
+
+  static String get bannerAdUnitIdEditPage {
+    if (Platform.isAndroid) {
+      return BANNER_UNIT_ID;
+    } else if (Platform.isIOS) {
+      return "<YOUR_IOS_INTERSTITIAL_AD_UNIT_ID>";
+    } else {
+      throw new UnsupportedError("Unsupported platform");
+    }
+  }
 }

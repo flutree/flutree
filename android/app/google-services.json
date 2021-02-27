@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "385807044061-9na8gh1gassno2nlgj73kuk9rmctsdgq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iqmal.linktreeflutter",
+            "certificate_hash": "ad238b8986d5ce71d156456e1cb1d7cbe61487ca"
+          }
+        },
+        {
           "client_id": "385807044061-hjtua7qsgr4eb9t05cfud81o084m9baj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.iqmal.linktreeflutter",
             "certificate_hash": "9c38892f9c8bd2b3f2587c51728ca72da61c3301"
-          }
-        },
-        {
-          "client_id": "385807044061-kjd473kqfiieva6ni8om6v2lu17t5hac.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.iqmal.linktreeflutter",
-            "certificate_hash": "4ea89d8775af60e3b1f6247a9e1bfb9e69314380"
           }
         },
         {

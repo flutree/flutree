@@ -5,14 +5,17 @@ import 'package:dough/dough.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
 import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
 import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
+import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/add_card.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/add_edit_card.dart';
 import 'package:linktree_iqfareez_flutter/views/customizable/live_guide.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
@@ -164,17 +167,20 @@ class _EditPageState extends State<EditPage> {
               },
               child: Text(mode == Mode.edit ? 'EDIT MODE' : 'PREVIEW'),
             ),
-            TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        fullscreenDialog: true,
-                        builder: (context) => LiveGuide(_userCode)));
-              },
-              label: Text('Live'),
-              icon: FaIcon(
-                FontAwesomeIcons.rocket,
+            Padding(
+              padding: const EdgeInsets.all(kIsWeb ? 4.0 : 0.0),
+              child: TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => LiveGuide(_userCode)));
+                },
+                label: Text('Live'),
+                icon: FaIcon(
+                  FontAwesomeIcons.rocket,
+                ),
               ),
             ),
           ],
@@ -207,50 +213,29 @@ class _EditPageState extends State<EditPage> {
                     children: [
                       SizedBox(height: 30.0),
                       GestureDetector(
-                        onTap: mode == Mode.edit
-                            ? () async {
-                                int response = await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      child: ListView(
-                                        shrinkWrap: true,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4.0),
-                                            child: Text(
-                                              'Choose source',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ),
-                                          ListTile(
-                                            title: Text(
-                                              'Camera',
-                                            ),
-                                            trailing:
-                                                FaIcon(FontAwesomeIcons.camera),
-                                            onTap: () =>
-                                                Navigator.of(context).pop(0),
-                                          ),
-                                          ListTile(
-                                            title: Text('Gallery'),
-                                            trailing:
-                                                FaIcon(FontAwesomeIcons.images),
-                                            onTap: () =>
-                                                Navigator.of(context).pop(1),
-                                          ),
-                                        ],
-                                      ),
+                        onTap: kIsWeb
+                            ? () => CustomSnack.showSnack(context,
+                                message:
+                                    'Change image available only in Android App',
+                                barAction: SnackBarAction(
+                                    textColor: Colors.blueGrey.shade200,
+                                    label: 'Get the app',
+                                    onPressed: () {
+                                      launchURL(context, kPlayStoreUrl);
+                                    }))
+                            : mode == Mode.edit
+                                ? () async {
+                                    int response = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return ChooseImageDialog();
+                                      },
                                     );
-                                  },
-                                );
-                                if (response != null) {
-                                  getImage(response);
-                                }
-                              }
-                            : null,
+                                    if (response != null) {
+                                      getImage(response);
+                                    }
+                                  }
+                                : null,
                         child: PressableDough(
                           child: CircleAvatar(
                             radius: 50.0,
@@ -410,7 +395,7 @@ class _EditPageState extends State<EditPage> {
                                                               false);
                                                     });
                                                   } else {
-                                                    return;
+                                                    Navigator.pop(context);
                                                   }
                                                 },
                                                 child: Text('Save')),
@@ -435,57 +420,7 @@ class _EditPageState extends State<EditPage> {
                                 shape: _bottomSheetStyle,
                                 context: context,
                                 builder: (context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Delete ${linkcard.displayName} ?',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: OutlinedButton.icon(
-                                                  icon: FaIcon(
-                                                      FontAwesomeIcons.times,
-                                                      size: 14),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  label: Text('Cancel')),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: OutlinedButton.icon(
-                                                  icon: FaIcon(
-                                                      FontAwesomeIcons.trashAlt,
-                                                      size: 14),
-                                                  style:
-                                                      OutlinedButton.styleFrom(
-                                                          primary: Colors.white,
-                                                          backgroundColor:
-                                                              Colors.redAccent),
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                  },
-                                                  label: Text('Delete')),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  );
+                                  return DeleteCardWidget(linkcard);
                                 },
                               );
 
@@ -623,5 +558,94 @@ class _EditPageState extends State<EditPage> {
     _nameController.dispose();
     _subtitleController.dispose();
     super.dispose();
+  }
+}
+
+class DeleteCardWidget extends StatelessWidget {
+  const DeleteCardWidget(
+    this.linkcard, {
+    Key key,
+  }) : super(key: key);
+
+  final LinkcardModel linkcard;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Delete ${linkcard.displayName} ?',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton.icon(
+                    icon: FaIcon(FontAwesomeIcons.times, size: 14),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    label: Text('Cancel')),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton.icon(
+                    icon: FaIcon(FontAwesomeIcons.trashAlt, size: 14),
+                    style: OutlinedButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.redAccent),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    label: Text('Delete')),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ChooseImageDialog extends StatelessWidget {
+  const ChooseImageDialog({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Text(
+              'Choose source',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              'Camera',
+            ),
+            trailing: FaIcon(FontAwesomeIcons.camera),
+            onTap: () => Navigator.of(context).pop(0),
+          ),
+          ListTile(
+            title: Text('Gallery'),
+            trailing: FaIcon(FontAwesomeIcons.images),
+            onTap: () => Navigator.of(context).pop(1),
+          ),
+        ],
+      ),
+    );
   }
 }
