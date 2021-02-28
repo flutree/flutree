@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 import 'package:share_plus/share_plus.dart';
@@ -133,7 +133,7 @@ class _LiveGuideState extends State<LiveGuide> {
             onTap: () {
               Clipboard.setData(ClipboardData(text: widget.userCode))
                   .then((value) {
-                CustomSnack.showSnack(context, message: 'Copied code');
+                Fluttertoast.showToast(msg: 'Copied');
               });
             },
             textAlign: TextAlign.center,

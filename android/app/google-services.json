@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "385807044061-ffaatjgpu1ru06hbfhmusgadfhmvhev6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iqmal.linktreeflutter",
+            "certificate_hash": "4ea89d8775af60e3b1f6247a9e1bfb9e69314380"
+          }
+        },
+        {
           "client_id": "385807044061-hjtua7qsgr4eb9t05cfud81o084m9baj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

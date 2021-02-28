@@ -121,8 +121,10 @@ class _EnterCodeState extends State<EnterCode> {
                       if (target == PlatformTarget.Browser) {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => SignIn()));
-                      } else {
+                      } else if (target == PlatformTarget.PlayStore) {
                         launchURL(context, kPlayStoreUrl);
+                      } else {
+                        return;
                       }
                     },
                     child: Text('Make your own Flutree profile!',
