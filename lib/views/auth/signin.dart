@@ -21,7 +21,6 @@ class _SignInState extends State<SignIn> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isGoogleLoading = false;
-  bool _isPreviewLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,17 +76,84 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => Register()));
-                },
-                child: Text(
-                  'Didn\'t have an account? Register here.',
-                  style: TextStyle(
-                      decorationStyle: TextDecorationStyle.dotted,
-                      decoration: TextDecoration.underline),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            bool _isResetPasswordLoading = false;
+
+                            return StatefulBuilder(
+                              builder: (context, setDialogState) {
+                                return AlertDialog(
+                                  title: Text(
+                                      'Enter email you used to register with Flutree'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      EmailTextField(
+                                        emailController: _emailController,
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'A reset password link will be sent to your email.',
+                                      )
+                                    ],
+                                  ),
+                                  actions: [
+                                    _isResetPasswordLoading
+                                        ? LoadingIndicator()
+                                        : SizedBox.shrink(),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (_emailController.text.isNotEmpty) {
+                                          setDialogState(() =>
+                                              _isResetPasswordLoading = true);
+                                          await _authInstance
+                                              .sendPasswordResetEmail(
+                                                  email: _emailController.text
+                                                      .trim());
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      child: Text('Submit'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          });
+                    },
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                          color: Colors.redAccent,
+                          decorationStyle: TextDecorationStyle.dotted,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Register()));
+                    },
+                    child: Text(
+                      'Register',
+                      style: TextStyle(
+                          decorationStyle: TextDecorationStyle.dotted,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ],
               ),
               HorizontalOrLine(label: 'OR'),
               Row(
@@ -101,44 +167,15 @@ class _SignInState extends State<SignIn> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      onPressed: () async {
-                        setState(() {
-                          _isPreviewLoading = true;
-                        });
-                        try {
-                          await _authInstance.signInAnonymously().then((value) {
-                            print('UserCredential is $value');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PreviewPage(),
-                              ),
-                            ).then((value) =>
-                                setState(() => _isPreviewLoading = false));
-                          });
-                        } on FirebaseAuthException catch (e) {
-                          print('AUth error: $e');
-                          setState(() => _isPreviewLoading = false);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('ERROR: ${e.message}'),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                          ));
-                        } catch (e) {
-                          setState(() => _isPreviewLoading = false);
-                          print('Error: $e');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Unknown error occured'),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PreviewPage(),
+                            ));
                       },
                       icon: FaIcon(FontAwesomeIcons.eye, size: 15),
-                      label: _isPreviewLoading
-                          ? LoadingIndicator()
-                          : Text('Preview only')),
+                      label: Text('Preview only')),
                   SizedBox(width: 10),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(

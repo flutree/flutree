@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 import 'package:linktree_iqfareez_flutter/views/view/user_card.dart';
@@ -64,6 +66,7 @@ class _EnterCodeState extends State<EnterCode> {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState.validate()) {
                         setState(() => isLoading = true);
+                        await FirebaseAuth.instance.signInAnonymously();
                         String code = _codeController.text.trim();
                         print('pressed');
                         _usersCollection.doc(code).get().then((value) {
@@ -84,6 +87,8 @@ class _EnterCodeState extends State<EnterCode> {
                           }
                         }).catchError((Object error) {
                           print('Error: $error');
+                          CustomSnack.showErrorSnack(context,
+                              message: 'Error: $error');
                           setState(() => isLoading = false);
                         });
                       }

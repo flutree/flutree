@@ -3,14 +3,13 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:linktree_iqfareez_flutter/utils/ad_manager.dart';
+import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
+import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'preview_app_page.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
-
-const firstRunKey = 'firstRun';
 
 class PreviewPage extends StatefulWidget {
   @override
@@ -18,25 +17,22 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-  InterstitialAd interstitialAd;
-  InterstitialAd myInterstitial() {
+  InterstitialAd gumroadAd;
+  InterstitialAd exitAd;
+  bool alreadyShowAd = false;
+  bool alreadyShowDialog = false;
+  InterstitialAd createAdReference(
+      void Function(MobileAdEvent) registerListener) {
     return InterstitialAd(
-      listener: onInterstitialAdEvent,
-      adUnitId: AdManager.interstitialAdUnitId,
-      targetingInfo: MobileAdTargetingInfo(testDevices: [
-        '9CF5B0E63E5D5EAF720A3F499C6A75D3',
-        '544FB3234D373268D3A6DB803850CDFB'
-      ]),
+      listener: registerListener,
+      adUnitId: kInterstitialUnitId,
+      targetingInfo: AdsHelper.targetingInfo,
     );
   }
 
   bool isInterstitialAdReady;
 
-  void loadInterstitialAd() {
-    interstitialAd = myInterstitial()..load();
-  }
-
-  void onInterstitialAdEvent(MobileAdEvent event) {
+  void gumroadAdListener(MobileAdEvent event) {
     switch (event) {
       case MobileAdEvent.loaded:
         isInterstitialAdReady = true;
@@ -44,14 +40,42 @@ class _PreviewPageState extends State<PreviewPage> {
         break;
       case MobileAdEvent.failedToLoad:
         isInterstitialAdReady = false;
-        interstitialAd..load();
+        gumroadAd..load();
         print('ads failed to load');
         break;
       case MobileAdEvent.closed:
         print('ads closed');
-        interstitialAd = myInterstitial()..load();
-        launchURL(context, Constants.kGumroadDiscountLink);
+        setState(() => alreadyShowAd = true);
         Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
+        launchURL(context, Constants.kGumroadDiscountLink);
+        break;
+      case MobileAdEvent.opened:
+        print('opened ads');
+        break;
+      case MobileAdEvent.leftApplication:
+        print('ads left application');
+        break;
+      default:
+        print('ads default case');
+    }
+  }
+
+  void exitAdListener(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        isInterstitialAdReady = true;
+        print('ads loaded');
+        break;
+      case MobileAdEvent.failedToLoad:
+        isInterstitialAdReady = false;
+        gumroadAd..load();
+        print('ads failed to load');
+        break;
+      case MobileAdEvent.closed:
+        print('ads closed');
+        setState(() => alreadyShowAd = true);
+        Fluttertoast.showToast(msg: 'Exitting...');
+        Navigator.pop(context);
         break;
       case MobileAdEvent.opened:
         print('opened ads');
@@ -72,36 +96,89 @@ class _PreviewPageState extends State<PreviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('alreadyShowAd is $alreadyShowAd');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showWelcomeDialog(context);
+      if (!alreadyShowDialog) {
+        showWelcomeDialog(context);
+      }
 
       if (!kIsWeb) {
-        interstitialAd = myInterstitial()..load();
+        gumroadAd = createAdReference(gumroadAdListener)..load();
+        exitAd = createAdReference(exitAdListener)..load();
       }
     });
 
-    return Scaffold(
-      body: PreviewAppPage(),
-      floatingActionButton: PressableDough(
-        child: FloatingActionButton(
-          onPressed: openGumroadLink,
-          backgroundColor: Colors.purple.shade800,
-          tooltip: 'Get source code',
-          mini: true,
-          child: FaIcon(
-            FontAwesomeIcons.code,
-            color: Colors.white,
+    return WillPopScope(
+      onWillPop: () async {
+        onExitPreview();
+        return false;
+      },
+      child: Scaffold(
+        body: PreviewAppPage(),
+        bottomNavigationBar: Container(
+          child: TextButton(
+            onPressed: () => onExitPreview(),
+            child: Text('Exit preview'),
+          ),
+        ),
+        floatingActionButton: PressableDough(
+          child: FloatingActionButton(
+            onPressed: openGumroadLink,
+            backgroundColor: Colors.purple.shade800,
+            tooltip: 'Get source code',
+            mini: true,
+            child: FaIcon(
+              FontAwesomeIcons.code,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
     );
   }
 
+  onExitPreview() async {
+    bool wantToExit = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Exit preview'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+    if (wantToExit ?? false) {
+      if (!kIsWeb) {
+        if (isInterstitialAdReady && !alreadyShowAd) {
+          print('Ads showing');
+          exitAd.show();
+        } else {
+          Navigator.pop(context);
+        }
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
+
   openGumroadLink() {
     if (!kIsWeb) {
       if (isInterstitialAdReady) {
         print('Ads showing');
-        interstitialAd.show();
+        gumroadAd.show();
       } else {
         Fluttertoast.showToast(msg: 'Coupon code applied');
         launchURL(context, Constants.kGumroadDiscountLink);
@@ -116,7 +193,10 @@ class _PreviewPageState extends State<PreviewPage> {
       context: context,
       builder: (_) => AssetGiffyDialog(
         onlyOkButton: true,
-        onOkButtonPressed: () => Navigator.pop(context),
+        onOkButtonPressed: () {
+          setState(() => alreadyShowDialog = true);
+          Navigator.pop(context);
+        },
         image: Image.asset('images/intro.gif'),
         title: Text('Try this!\nSquishable, doughy UI elements'),
       ),
@@ -127,7 +207,7 @@ class _PreviewPageState extends State<PreviewPage> {
   @override
   void dispose() {
     if (!kIsWeb) {
-      interstitialAd?.dispose();
+      gumroadAd?.dispose();
     }
 
     super.dispose();

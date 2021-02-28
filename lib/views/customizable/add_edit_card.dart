@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
 import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
 import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,6 +22,7 @@ class _AddCardState extends State<AddCard> {
   bool _isNew;
   int _inputType;
   String _socialModelName;
+  bool _keyboardVisible = false;
 
   Map<String, String> _urlTextBox = {
     'Profile link': 'http://example.com/',
@@ -74,6 +76,7 @@ class _AddCardState extends State<AddCard> {
 
   @override
   Widget build(BuildContext context) {
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -243,6 +246,11 @@ class _AddCardState extends State<AddCard> {
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: _keyboardVisible
+                ? 0.0
+                : AdsHelper.bannerAdsSize().height.toDouble(),
           )
         ],
       ),

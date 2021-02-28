@@ -59,15 +59,23 @@ class _UserCardState extends State<UserCard> {
                 ),
 
                 SizedBox(height: 25.0),
+                // datas.length != 0
+                // ?
                 ListView(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  children: datas.map((linkcard) {
-                    return LinkCard(
-                      linkcardModel: linkcard.linkcardModel,
-                    );
-                  }).toList(),
+                  children: datas.isNotEmpty
+                      ? datas.map((linkcard) {
+                          return linkcard;
+                        }).toList()
+                      : [
+                          Text(
+                            'Krik krik... Empty here.. 👀',
+                            textAlign: TextAlign.center,
+                          )
+                        ],
                 ),
+                // : Text('Krik krik...'),
                 SizedBox(height: 10),
               ],
             ),

@@ -2,13 +2,16 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
 import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
@@ -19,6 +22,7 @@ import 'package:linktree_iqfareez_flutter/views/customizable/add_edit_card.dart'
 import 'package:linktree_iqfareez_flutter/views/customizable/live_guide.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
@@ -43,6 +47,7 @@ class _EditPageState extends State<EditPage> {
   String _subtitleText;
   DocumentReference userDocument;
   File _image;
+  String _userImageUrl;
 
   @override
   void initState() {
@@ -52,6 +57,7 @@ class _EditPageState extends State<EditPage> {
     userDocument = _firestoreInstance.collection('users').doc(_userCode);
 
     initFirestore();
+    AdsHelper.showBannerAd(AnchorType.bottom);
   }
 
   void initFirestore() async {
@@ -140,51 +146,142 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   startBannerAd();
+    // });
+
     return Scaffold(
-      bottomNavigationBar: Container(
-        color: Colors.blueGrey.shade100,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton.icon(
-              onPressed: () {
-                FirebaseAuth.instance.signOut().then((value) {
+      persistentFooterButtons: [
+        SizedBox(
+          height: AdsHelper.bannerAdsSize().height.toDouble() - 12.0,
+        )
+      ],
+      appBar: AppBar(
+        foregroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.blueGrey.withAlpha(70),
+        toolbarHeight: 40,
+        title: Material(
+          color: Colors.transparent,
+          child: CupertinoSlidingSegmentedControl(
+            groupValue: mode,
+            padding: EdgeInsets.zero,
+            children: {
+              Mode.edit: Text('EDITING'),
+              Mode.preview: Text('PREVIEW'),
+            },
+            onValueChanged: (value) {
+              setState(() => mode = value);
+            },
+          ),
+        ),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LiveGuide(_userCode)));
+            },
+            label: Text('Share profile'),
+            icon: FaIcon(
+              FontAwesomeIcons.share,
+            ),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (value) async {
+              switch (value) {
+                case 'Logout':
+                  await FirebaseAuth.instance.signOut();
+                  await GoogleSignIn().signOut();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => SignIn()));
-                });
-              },
-              label: Text('Log out'),
-              icon: FaIcon(
-                FontAwesomeIcons.signOutAlt,
-              ),
+                  break;
+                case 'DeleteAcc':
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      bool isLoading = false;
+                      return StatefulBuilder(
+                        builder: (context, setDialogState) {
+                          return AlertDialog(
+                            title: Text('Reset all data in this account'),
+                            content:
+                                Text('You\'ll be signed out automatically'),
+                            actions: [
+                              isLoading
+                                  ? LoadingIndicator()
+                                  : SizedBox.shrink(),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Cancel')),
+                              TextButton(
+                                  onPressed: () async {
+                                    setDialogState(() => isLoading = true);
+                                    try {
+                                      _storageInstance
+                                          .refFromURL(_userImageUrl)
+                                          .delete();
+                                    } catch (e) {
+                                      print('Err: $e');
+                                    }
+
+                                    try {
+                                      await userDocument.delete();
+                                      Navigator.pop(context); //pop the dialog
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SignIn()));
+                                    } on FirebaseException catch (e) {
+                                      print('Firebase err: $e');
+                                      CustomSnack.showErrorSnack(context,
+                                          message: 'Error: ${e.message}');
+                                      setDialogState(() => isLoading = false);
+                                    } catch (e) {
+                                      print('Unknown err: $e');
+                                      CustomSnack.showErrorSnack(context,
+                                          message: 'Error. Please try again');
+                                      setDialogState(() => isLoading = false);
+                                    }
+                                  },
+                                  child: Text(
+                                    'Confirm',
+                                    style: TextStyle(color: Colors.red),
+                                  ))
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
+                  break;
+              }
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.ellipsisV,
+              size: 14,
+              color: Colors.blueGrey,
             ),
-            TextButton(
-              style: TextButton.styleFrom(primary: Colors.black87),
-              onPressed: () {
-                setState(() {
-                  mode = mode == Mode.edit ? Mode.preview : Mode.edit;
-                });
-              },
-              child: Text(mode == Mode.edit ? 'EDIT MODE' : 'PREVIEW'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(kIsWeb ? 4.0 : 0.0),
-              child: TextButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) => LiveGuide(_userCode)));
-                },
-                label: Text('Live'),
-                icon: FaIcon(
-                  FontAwesomeIcons.rocket,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: Text('Logout'),
+                  value: 'Logout',
                 ),
-              ),
-            ),
-          ],
-        ),
+                PopupMenuItem(
+                  value: 'DeleteAcc',
+                  child: Text(
+                    'Delete account data...',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              ];
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: StreamBuilder(
@@ -196,6 +293,7 @@ class _EditPageState extends State<EditPage> {
               _subtitleText = snapshot.data.data()['subtitle'] ??
                   'Something about yourself';
               _isShowSubtitle = snapshot.data.data()['showSubtitle'] ?? false;
+              _userImageUrl = snapshot.data.data()['dpUrl'];
 
               List<dynamic> socialsList = snapshot.data.data()['socials'];
               List<LinkcardModel> datas = [];
@@ -211,7 +309,7 @@ class _EditPageState extends State<EditPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 30.0),
+                      SizedBox(height: 25.0),
                       GestureDetector(
                         onTap: kIsWeb
                             ? () => CustomSnack.showSnack(context,
@@ -250,12 +348,11 @@ class _EditPageState extends State<EditPage> {
                                   )
                                 : null,
                             backgroundColor: Colors.transparent,
-                            backgroundImage:
-                                NetworkImage(snapshot.data.data()['dpUrl']),
+                            backgroundImage: NetworkImage(_userImageUrl),
                           ),
                         ),
                       ),
-                      SizedBox(height: 28.0),
+                      SizedBox(height: 24.0),
                       GestureDetector(
                         onTap: mode == Mode.edit
                             ? () {
@@ -526,6 +623,9 @@ class _EditPageState extends State<EditPage> {
                         child: datas.isNotEmpty && (mode == Mode.edit)
                             ? Text('Tap to edit, long press to delete')
                             : Container(),
+                      ),
+                      SizedBox(
+                        height: AdsHelper.bannerAdsSize().height.toDouble(),
                       )
                     ],
                   ),
@@ -540,6 +640,17 @@ class _EditPageState extends State<EditPage> {
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
                       Text('Loading')
+                    ]),
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10),
+                      Text('We have trouble connecting....')
                     ]),
               );
             } else {
@@ -557,6 +668,7 @@ class _EditPageState extends State<EditPage> {
   void dispose() {
     _nameController.dispose();
     _subtitleController.dispose();
+    AdsHelper.hideBannerAd();
     super.dispose();
   }
 }
@@ -606,6 +718,9 @@ class DeleteCardWidget extends StatelessWidget {
                     label: Text('Delete')),
               ),
             ],
+          ),
+          SizedBox(
+            height: AdsHelper.bannerAdsSize().height.toDouble(),
           )
         ],
       ),
