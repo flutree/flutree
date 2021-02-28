@@ -66,31 +66,38 @@ class _EnterCodeState extends State<EnterCode> {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState.validate()) {
                         setState(() => isLoading = true);
-                        await FirebaseAuth.instance.signInAnonymously();
-                        String code = _codeController.text.trim();
-                        print('pressed');
-                        _usersCollection.doc(code).get().then((value) {
-                          print('snapshot is ${value.data()}');
-                          setState(() => isLoading = false);
-                          if (value.exists) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => UserCard(value)));
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  child: NotFoundDialog(),
-                                );
-                              },
-                            );
-                          }
-                        }).catchError((Object error) {
+                        try {
+                          await FirebaseAuth.instance.signInAnonymously();
+                          String code = _codeController.text.trim();
+                          print('pressed');
+                          _usersCollection.doc(code).get().then((value) {
+                            print('snapshot is ${value.data()}');
+                            setState(() => isLoading = false);
+                            if (value.exists) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => UserCard(value)));
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: NotFoundDialog(),
+                                  );
+                                },
+                              );
+                            }
+                          });
+                        } on FirebaseAuthException catch (error) {
                           print('Error: $error');
                           CustomSnack.showErrorSnack(context,
-                              message: 'Error: $error');
+                              message: 'Error: ${error.message}');
                           setState(() => isLoading = false);
-                        });
+                        } catch (e) {
+                          print('Unknown error: $e');
+                          setState(() => isLoading = false);
+                          CustomSnack.showErrorSnack(context,
+                              message: 'Unknown err.');
+                        }
                       }
                     },
                     child: !isLoading ? Text('Go') : LoadingIndicator(),

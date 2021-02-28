@@ -5,6 +5,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
 import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
+import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LiveGuide extends StatefulWidget {
@@ -18,17 +19,6 @@ class LiveGuide extends StatefulWidget {
 class _LiveGuideState extends State<LiveGuide> {
   final containerTextColour = Colors.blueGrey.shade100.withAlpha(105);
 
-  Future<bool> _onWillPop() async {
-    return true;
-    // if (DateTime.now().second.isEven) {
-    //   print('will pop');
-    //   return true;
-    // } else {
-    //   print('will show ads');
-    //   return false;
-    // }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -36,72 +26,69 @@ class _LiveGuideState extends State<LiveGuide> {
         //to dismiss selectable text
         FocusScope.of(context).unfocus();
       },
-      child: WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          appBar: AppBar(
-            shadowColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            iconTheme: IconThemeData(color: Colors.blueGrey),
-            actionsIconTheme: IconThemeData(color: Colors.blueGrey),
-            elevation: 0.0,
-            title: Text(
-              'Share your Flutree profile',
-              style: TextStyle(color: Colors.blueGrey.shade700),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                  icon: FaIcon(FontAwesomeIcons.shareAlt),
-                  onPressed: () {
-                    Share.share(
-                        'Open $kWebappUrl on browser and enter the code: ${widget.userCode}',
-                        subject: 'My Flutree code');
-                  })
-            ],
+      child: Scaffold(
+        appBar: AppBar(
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          iconTheme: IconThemeData(color: Colors.blueGrey),
+          actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+          elevation: 0.0,
+          title: Text(
+            'Share your Flutree profile',
+            style: TextStyle(color: Colors.blueGrey.shade700),
           ),
-          body: SafeArea(
-            child: Container(
-              width: double.infinity,
-              child: OrientationBuilder(
-                builder: (context, orientation) {
-                  if (orientation == Orientation.portrait) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        infoWidget(),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 24, horizontal: 36),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                icon: FaIcon(FontAwesomeIcons.shareAlt),
+                onPressed: () {
+                  Share.share(
+                      'Open $kWebappUrl on browser and enter the code: ${widget.userCode}',
+                      subject: 'My Flutree code');
+                })
+          ],
+        ),
+        body: SafeArea(
+          child: Container(
+            width: double.infinity,
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                if (orientation == Orientation.portrait) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      infoWidget(),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 24, horizontal: 36),
+                        child: Image.asset(
+                          'images/devices.png',
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: infoWidget()),
+                      Expanded(
+                        child: Padding(
+                          // padding: const EdgeInsets.symmetric(
+                          //     vertical: 24, horizontal: 36),
+                          padding: EdgeInsets.all(8.0),
                           child: Image.asset(
                             'images/devices.png',
                           ),
                         ),
-                      ],
-                    );
-                  } else {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(child: infoWidget()),
-                        Expanded(
-                          child: Padding(
-                            // padding: const EdgeInsets.symmetric(
-                            //     vertical: 24, horizontal: 36),
-                            padding: EdgeInsets.all(8.0),
-                            child: Image.asset(
-                              'images/devices.png',
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
           ),
         ),
@@ -180,9 +167,7 @@ class _LiveGuideState extends State<LiveGuide> {
             },
             child: Text(
               'Ask others to squish the cards 👀',
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  decorationStyle: TextDecorationStyle.dotted),
+              style: dottedUnderlinedStyle(),
             ),
           ),
         ),

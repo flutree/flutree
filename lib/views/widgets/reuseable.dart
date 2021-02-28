@@ -39,6 +39,11 @@ class HorizontalOrLine extends StatelessWidget {
   }
 }
 
+TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
+    color: color,
+    decorationStyle: TextDecorationStyle.dotted,
+    decoration: TextDecoration.underline);
+
 class EmailTextField extends StatelessWidget {
   const EmailTextField({
     Key key,

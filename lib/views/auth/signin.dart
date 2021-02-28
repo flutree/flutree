@@ -118,11 +118,35 @@ class _SignInState extends State<SignIn> {
                                         if (_emailController.text.isNotEmpty) {
                                           setDialogState(() =>
                                               _isResetPasswordLoading = true);
-                                          await _authInstance
-                                              .sendPasswordResetEmail(
-                                                  email: _emailController.text
-                                                      .trim());
-                                          Navigator.pop(context);
+                                          try {
+                                            await _authInstance
+                                                .sendPasswordResetEmail(
+                                                    email: _emailController.text
+                                                        .trim());
+                                            setDialogState(() =>
+                                                _isResetPasswordLoading =
+                                                    false);
+                                            Navigator.pop(context);
+                                            CustomSnack.showSnack(context,
+                                                message: 'Email sent');
+                                          } on FirebaseAuthException catch (e) {
+                                            print('Err: $e');
+
+                                            setDialogState(() =>
+                                                _isResetPasswordLoading =
+                                                    false);
+                                            Navigator.pop(context);
+                                            CustomSnack.showErrorSnack(context,
+                                                message: e.message);
+                                          } catch (e) {
+                                            print('Unknown err: $e');
+                                            setDialogState(() =>
+                                                _isResetPasswordLoading =
+                                                    false);
+                                            CustomSnack.showErrorSnack(context,
+                                                message: 'Unknown err');
+                                            Navigator.pop(context);
+                                          }
                                         }
                                       },
                                       child: Text('Submit'),
@@ -135,10 +159,7 @@ class _SignInState extends State<SignIn> {
                     },
                     child: Text(
                       'Forgot password?',
-                      style: TextStyle(
-                          color: Colors.redAccent,
-                          decorationStyle: TextDecorationStyle.dotted,
-                          decoration: TextDecoration.underline),
+                      style: dottedUnderlinedStyle(color: Colors.redAccent),
                     ),
                   ),
                   TextButton(
@@ -148,9 +169,7 @@ class _SignInState extends State<SignIn> {
                     },
                     child: Text(
                       'Register',
-                      style: TextStyle(
-                          decorationStyle: TextDecorationStyle.dotted,
-                          decoration: TextDecoration.underline),
+                      style: dottedUnderlinedStyle(),
                     ),
                   ),
                 ],

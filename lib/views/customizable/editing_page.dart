@@ -57,6 +57,7 @@ class _EditPageState extends State<EditPage> {
     userDocument = _firestoreInstance.collection('users').doc(_userCode);
 
     initFirestore();
+
     AdsHelper.showBannerAd(AnchorType.bottom);
   }
 
@@ -227,7 +228,6 @@ class _EditPageState extends State<EditPage> {
                                     } catch (e) {
                                       print('Err: $e');
                                     }
-
                                     try {
                                       await userDocument.delete();
                                       Navigator.pop(context); //pop the dialog
@@ -620,9 +620,14 @@ class _EditPageState extends State<EditPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: datas.isNotEmpty && (mode == Mode.edit)
-                            ? Text('Tap to edit, long press to delete')
-                            : Container(),
+                        child: datas.isNotEmpty
+                            ? Text(
+                                (mode == Mode.edit)
+                                    ? 'Tap to edit, long press to delete'
+                                    : 'Tap card to test link',
+                                style: TextStyle(color: Colors.black87),
+                              )
+                            : SizedBox.shrink(),
                       ),
                       SizedBox(
                         height: AdsHelper.bannerAdsSize().height.toDouble(),

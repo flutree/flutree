@@ -90,9 +90,7 @@ class _RegisterState extends State<Register> {
                 },
                 child: Text(
                   'Already have an account? Login here.',
-                  style: TextStyle(
-                      decorationStyle: TextDecorationStyle.dotted,
-                      decoration: TextDecoration.underline),
+                  style: dottedUnderlinedStyle(),
                 ),
               ),
             ],
