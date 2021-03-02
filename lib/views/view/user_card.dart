@@ -61,10 +61,10 @@ class _UserCardState extends State<UserCard> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(32.0, 0, 32.0, 0),
+              padding: EdgeInsets.fromLTRB(34.0, 0, 34.0, 0),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  if (constraints.maxWidth < 950) {
+                  if (constraints.maxWidth < 730) {
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
