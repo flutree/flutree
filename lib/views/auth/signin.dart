@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
-import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
-
+import '../../utils/snackbar.dart';
+import '../customizable/editing_page.dart';
+import '../preview/ads_wrapper.dart';
+import '../widgets/reuseable.dart';
 import 'register.dart';
 
 class SignIn extends StatefulWidget {

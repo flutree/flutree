@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HorizontalOrLine extends StatelessWidget {
   /// In auth page
@@ -37,6 +38,18 @@ class HorizontalOrLine extends StatelessWidget {
       ]),
     );
   }
+}
+
+Container buildChangeDpIcon() {
+  return Container(
+    padding: const EdgeInsets.all(5.0),
+    decoration: BoxDecoration(color: Colors.blueGrey, shape: BoxShape.circle),
+    child: FaIcon(
+      FontAwesomeIcons.camera,
+      color: Colors.white,
+      size: 12,
+    ),
+  );
 }
 
 TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(

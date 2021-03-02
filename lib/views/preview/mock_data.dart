@@ -1,4 +1,4 @@
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
+import '../../utils/linkcard_model.dart';
 
 class PreviewMockData {
   static List<LinkcardModel> mockData = [

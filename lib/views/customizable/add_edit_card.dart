@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../utils/ads_helper.dart';
+import '../../utils/linkcard_model.dart';
+import '../../utils/social_list.dart';
 
 class AddCard extends StatefulWidget {
   /// If linkcardModel is not null, edit mode is triggered

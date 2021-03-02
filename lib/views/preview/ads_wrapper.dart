@@ -1,15 +1,15 @@
 import 'package:dough/dough.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
-import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
+import '../../CONSTANTS.dart' as Constants;
+import '../../PRIVATE.dart';
+import '../../utils/ads_helper.dart';
+import '../../utils/urlLauncher.dart';
 import 'preview_app_page.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart' as Constants;
 
 class PreviewPage extends StatefulWidget {
   @override

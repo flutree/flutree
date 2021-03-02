@@ -13,16 +13,16 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
-import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/add_edit_card.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/live_guide.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
-import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/ads_helper.dart';
+import '../../utils/linkcard_model.dart';
+import '../../utils/snackbar.dart';
+import '../../utils/urlLauncher.dart';
+import '../auth/signin.dart';
+import '../widgets/linkCard.dart';
+import '../widgets/reuseable.dart';
+import 'add_edit_card.dart';
+import 'live_guide.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
@@ -57,8 +57,7 @@ class _EditPageState extends State<EditPage> {
     userDocument = _firestoreInstance.collection('users').doc(_userCode);
 
     initFirestore();
-
-    AdsHelper.showBannerAd(AnchorType.bottom);
+    if (!kIsWeb) AdsHelper.showBannerAd(AnchorType.bottom);
   }
 
   void initFirestore() async {
@@ -309,7 +308,7 @@ class _EditPageState extends State<EditPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 25.0),
+                      SizedBox(height: 15.0),
                       GestureDetector(
                         onTap: kIsWeb
                             ? () => CustomSnack.showSnack(context,
@@ -335,20 +334,28 @@ class _EditPageState extends State<EditPage> {
                                   }
                                 : null,
                         child: PressableDough(
-                          child: CircleAvatar(
-                            radius: 50.0,
-                            child: _isdpLoading
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : null,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: NetworkImage(_userImageUrl),
+                          child: Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              CircleAvatar(
+                                radius: 50.0,
+                                child: _isdpLoading
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : null,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: NetworkImage(_userImageUrl),
+                              ),
+                              mode == Mode.edit
+                                  ? buildChangeDpIcon()
+                                  : SizedBox.shrink(),
+                            ],
                           ),
                         ),
                       ),
@@ -405,23 +412,27 @@ class _EditPageState extends State<EditPage> {
                                 );
                               }
                             : null,
-                        child: Text('@${snapshot.data.data()['nickname']}',
-                            style: TextStyle(fontSize: 22)),
+                        child: Text(
+                          '@${snapshot.data.data()['nickname']}',
+                          style: mode == Mode.preview
+                              ? TextStyle(fontSize: 22)
+                              : TextStyle(
+                                  fontSize: 22,
+                                  decoration: TextDecoration.underline,
+                                  decorationStyle: TextDecorationStyle.dotted),
+                        ),
                       ), //just a plain text
                       SizedBox(height: 5),
                       Visibility(
                         visible: (mode == Mode.edit) || _isShowSubtitle,
                         child: GestureDetector(
                           child: _isShowSubtitle
-                              ? Text(_subtitleText)
-                              : Text(
-                                  'Add subtitle',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.w100,
-                                      decorationStyle:
-                                          TextDecorationStyle.dotted),
-                                ),
+                              ? Text(_subtitleText,
+                                  style: mode == Mode.edit
+                                      ? dottedUnderlinedStyle()
+                                      : null)
+                              : Text('Add subtitle',
+                                  style: dottedUnderlinedStyle()),
                           onTap: mode == Mode.edit
                               ? () {
                                   showDialog(
@@ -655,7 +666,11 @@ class _EditPageState extends State<EditPage> {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
-                      Text('We have trouble connecting....')
+                      Text(
+                        'We have trouble connecting....\nIf the problem still persist, try log out and log in again',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.red),
+                      )
                     ]),
               );
             } else {

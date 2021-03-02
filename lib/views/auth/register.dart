@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import '../customizable/editing_page.dart';
+import '../widgets/reuseable.dart';
+import 'signin.dart';
 
 class Register extends StatefulWidget {
   @override

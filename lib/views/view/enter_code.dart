@@ -1,15 +1,14 @@
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
-import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/view/user_card.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/snackbar.dart';
+import '../../utils/urlLauncher.dart';
+import '../auth/signin.dart';
+import '../widgets/reuseable.dart';
+import 'user_card.dart';
 
 enum PlatformTarget { Browser, PlayStore }
 

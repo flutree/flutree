@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/linkCard.dart';
+import '../../utils/linkcard_model.dart';
+import '../widgets/linkCard.dart';
 
 class UserCard extends StatefulWidget {
   UserCard(this.snapshot);

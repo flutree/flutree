@@ -3,11 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
-import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
-import 'package:linktree_iqfareez_flutter/views/preview/ads_wrapper.dart';
-import 'package:linktree_iqfareez_flutter/views/view/enter_code.dart';
+import 'utils/ads_helper.dart';
+import 'views/auth/signin.dart';
+import 'views/customizable/editing_page.dart';
+import 'views/preview/ads_wrapper.dart';
+import 'views/view/enter_code.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

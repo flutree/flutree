@@ -1,10 +1,10 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_model.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
+import '../../utils/linkcard_model.dart';
+import '../../utils/social_list.dart';
+import '../../utils/social_model.dart';
+import '../../utils/urlLauncher.dart';
 
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
@@ -27,7 +27,7 @@ class LinkCard extends StatelessWidget {
     // ),
     content: Text(
         'To fully customize the app. Get the source code on for free Gumroad.'),
-    // behavior: SnackBarBehavior.floating,
+    behavior: SnackBarBehavior.floating,
   );
 
   @override
@@ -55,7 +55,7 @@ class LinkCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white),
             ),
-            trailing: Icon(null),
+            trailing: Icon(null), //to keep the text centered
           ),
         ),
       ),

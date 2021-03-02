@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_model.dart';
+import 'social_model.dart';
 
 class SocialLists {
   static List<SocialModel> socialList = [

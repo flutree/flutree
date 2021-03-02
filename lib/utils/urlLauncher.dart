@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'snackbar.dart';
 
 ///lauch URL to a new web browser
 launchURL(BuildContext context, String url) async {

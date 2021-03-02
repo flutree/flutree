@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/urlLauncher.dart';
+import '../widgets/reuseable.dart';
 
 class LiveGuide extends StatefulWidget {
   LiveGuide(this.userCode);
@@ -43,7 +43,7 @@ class _LiveGuideState extends State<LiveGuide> {
                 icon: FaIcon(FontAwesomeIcons.shareAlt),
                 onPressed: () {
                   Share.share(
-                      'Open $kWebappUrl on browser and enter the code: ${widget.userCode}',
+                      'Open http://$kWebappUrl on browser and enter the code: ${widget.userCode}',
                       subject: 'My Flutree code');
                 })
           ],
@@ -63,27 +63,24 @@ class _LiveGuideState extends State<LiveGuide> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 24, horizontal: 36),
-                        child: Image.asset(
-                          'images/devices.png',
-                        ),
+                        child: buildDevicesImage(),
                       ),
                     ],
                   );
                 } else {
-                  return Row(
+                  return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(child: infoWidget()),
-                      Expanded(
-                        child: Padding(
-                          // padding: const EdgeInsets.symmetric(
-                          //     vertical: 24, horizontal: 36),
-                          padding: EdgeInsets.all(8.0),
-                          child: Image.asset(
-                            'images/devices.png',
+                      Row(
+                        children: [
+                          Expanded(child: infoWidget()),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: buildDevicesImage(),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   );
@@ -93,6 +90,12 @@ class _LiveGuideState extends State<LiveGuide> {
           ),
         ),
       ),
+    );
+  }
+
+  Image buildDevicesImage() {
+    return Image.asset(
+      'images/devices.png',
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
-import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
+import '../PRIVATE.dart';
 
 const String testDevice = '544FB3234D373268D3A6DB803850CDFB';
 

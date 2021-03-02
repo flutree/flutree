@@ -1,7 +1,7 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/views/preview/mock_data.dart';
 import '../widgets/linkCard.dart';
+import 'mock_data.dart';
 
 class PreviewAppPage extends StatefulWidget {
   @override
