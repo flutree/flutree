@@ -19,6 +19,12 @@ class _AddCardState extends State<AddCard> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _urlController = TextEditingController();
+  final dropdownInputDecoration = InputDecoration(
+    contentPadding: EdgeInsets.zero,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+    ),
+  );
   bool _isNew;
   int _inputType;
   String _socialModelName;
@@ -77,6 +83,7 @@ class _AddCardState extends State<AddCard> {
   @override
   Widget build(BuildContext context) {
     _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -100,16 +107,10 @@ class _AddCardState extends State<AddCard> {
                           isExpanded: true,
                           value: _socialModelName,
                           onChanged: (value) {
-                            setState(() {
-                              _titleController.text = _socialModelName = value;
-                            });
+                            setState(() => _titleController.text =
+                                _socialModelName = value);
                           },
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                          ),
+                          decoration: dropdownInputDecoration,
                           items: SocialLists.socialList.map((element) {
                             return DropdownMenuItem<String>(
                               value: element.name,
@@ -147,17 +148,9 @@ class _AddCardState extends State<AddCard> {
                         child: DropdownButtonFormField(
                             isExpanded: true,
                             value: _inputType,
-                            onChanged: (value) {
-                              setState(() {
-                                _inputType = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.zero,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                            ),
+                            onChanged: (value) =>
+                                setState(() => _inputType = value),
+                            decoration: dropdownInputDecoration,
                             items: _dropdownType.map((value) {
                               return DropdownMenuItem(
                                 value: _dropdownType.indexOf(value),
