@@ -133,7 +133,7 @@ class _AddCardState extends State<AddCard> {
                             ),
                           ),
                           textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
                         ),
                       ),
                     ),
@@ -188,7 +188,7 @@ class _AddCardState extends State<AddCard> {
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           keyboardType: _keyboardType[_inputType],
                         ),
                       ),
@@ -239,7 +239,8 @@ class _AddCardState extends State<AddCard> {
                       }
 
                       Navigator.of(context).pop(LinkcardModel(_socialModelName,
-                          displayName: _titleController.text, link: inputUrl));
+                          displayName: _titleController.text.trim(),
+                          link: inputUrl));
                     }
                   },
                   label: Text(_isNew ? 'Add' : 'Done'),
