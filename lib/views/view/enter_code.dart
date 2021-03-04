@@ -24,6 +24,8 @@ class _EnterCodeState extends State<EnterCode> {
 
   final _codeController = TextEditingController();
 
+  final _authInstance = FirebaseAuth.instance;
+
   bool isLoading = false;
 
   @override
@@ -48,7 +50,7 @@ class _EnterCodeState extends State<EnterCode> {
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         validator: (value) =>
-                            value.length != 5 ? 'Code must be 5 digit' : null,
+                            value.length < 5 ? 'Not enough character' : null,
                         controller: _codeController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -66,7 +68,11 @@ class _EnterCodeState extends State<EnterCode> {
                       if (_formKey.currentState.validate()) {
                         setState(() => isLoading = true);
                         try {
-                          await FirebaseAuth.instance.signInAnonymously();
+                          if (_authInstance.currentUser == null) {
+                            await _authInstance.signInAnonymously();
+                          } else {
+                            print('Using previous credential');
+                          }
                           String code = _codeController.text.trim();
                           print('pressed');
                           _usersCollection.doc(code).get().then((value) {

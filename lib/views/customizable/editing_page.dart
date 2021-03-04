@@ -151,16 +151,19 @@ class _EditPageState extends State<EditPage> {
     // });
 
     return Scaffold(
-      persistentFooterButtons: [
-        SizedBox(
-          height: AdsHelper.bannerAdsSize().height.toDouble() - 12.0,
-        )
-      ],
+      persistentFooterButtons: !kIsWeb
+          ? [
+              SizedBox(
+                height: AdsHelper.bannerAdsSize().height.toDouble() - 12.0,
+              )
+            ]
+          : null,
       appBar: AppBar(
         foregroundColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.blueGrey.withAlpha(70),
         toolbarHeight: 40,
+        automaticallyImplyLeading: false,
         title: Material(
           color: Colors.transparent,
           child: CupertinoSlidingSegmentedControl(
@@ -218,44 +221,49 @@ class _EditPageState extends State<EditPage> {
                                   },
                                   child: Text('Cancel')),
                               TextButton(
-                                  onPressed: () async {
-                                    setDialogState(() => isLoading = true);
-                                    try {
-                                      _storageInstance
-                                          .refFromURL(_userImageUrl)
-                                          .delete();
-                                    } catch (e) {
-                                      print('Err: $e');
-                                    }
-                                    try {
-                                      await userDocument.delete();
-                                      Navigator.pop(context); //pop the dialog
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => SignIn()));
-                                    } on FirebaseException catch (e) {
-                                      print('Firebase err: $e');
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Error: ${e.message}');
-                                      setDialogState(() => isLoading = false);
-                                    } catch (e) {
-                                      print('Unknown err: $e');
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Error. Please try again');
-                                      setDialogState(() => isLoading = false);
-                                    }
-                                  },
-                                  child: Text(
-                                    'Confirm',
-                                    style: TextStyle(color: Colors.red),
-                                  ))
+                                onPressed: () async {
+                                  setDialogState(() => isLoading = true);
+                                  try {
+                                    _storageInstance
+                                        .refFromURL(_userImageUrl)
+                                        .delete();
+                                  } catch (e) {
+                                    print('Err: $e');
+                                  }
+                                  try {
+                                    await userDocument.delete();
+                                    Navigator.pop(context); //pop the dialog
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SignIn()));
+                                  } on FirebaseException catch (e) {
+                                    print('Firebase err: $e');
+                                    CustomSnack.showErrorSnack(context,
+                                        message: 'Error: ${e.message}');
+                                    setDialogState(() => isLoading = false);
+                                  } catch (e) {
+                                    print('Unknown err: $e');
+                                    CustomSnack.showErrorSnack(context,
+                                        message: 'Error. Please try again');
+                                    setDialogState(() => isLoading = false);
+                                  }
+                                },
+                                child: Text(
+                                  'Confirm',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              )
                             ],
                           );
                         },
                       );
                     },
                   );
+                  break;
+                case 'report':
+                  print('Report');
+                  //TODO: Report feature
                   break;
               }
             },
@@ -264,6 +272,7 @@ class _EditPageState extends State<EditPage> {
               size: 14,
               color: Colors.blueGrey,
             ),
+            tooltip: 'Your account',
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
@@ -276,7 +285,8 @@ class _EditPageState extends State<EditPage> {
                     'Delete account data...',
                     style: TextStyle(color: Colors.red),
                   ),
-                )
+                ),
+                //TODO: Add report item
               ];
             },
           ),
@@ -641,7 +651,9 @@ class _EditPageState extends State<EditPage> {
                             : SizedBox.shrink(),
                       ),
                       SizedBox(
-                        height: AdsHelper.bannerAdsSize().height.toDouble(),
+                        height: !kIsWeb
+                            ? AdsHelper.bannerAdsSize().height.toDouble()
+                            : 2,
                       )
                     ],
                   ),
@@ -740,7 +752,7 @@ class DeleteCardWidget extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: AdsHelper.bannerAdsSize().height.toDouble(),
+            height: !kIsWeb ? AdsHelper.bannerAdsSize().height.toDouble() : 5,
           )
         ],
       ),

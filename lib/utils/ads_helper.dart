@@ -26,7 +26,7 @@ class AdsHelper {
   }
 
   static AdSize bannerAdsSize() {
-    return _bannerAd.size;
+    return _bannerAd?.size;
   }
 
   static void showBannerAd(AnchorType type) {
