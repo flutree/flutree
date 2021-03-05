@@ -106,7 +106,7 @@ class _UserCardState extends State<UserCard> {
               return linkcard;
             }).toList()
           : [
-              Text(
+              SelectableText(
                 'Krik krik... Empty here.. 👀',
                 textAlign: TextAlign.center,
               )
@@ -126,13 +126,13 @@ class _UserCardState extends State<UserCard> {
           ),
         ),
         SizedBox(height: 28.0),
-        Text('@${widget.snapshot.data()['nickname']}',
+        SelectableText('@${widget.snapshot.data()['nickname']}',
             style: TextStyle(fontSize: 22)), //just a plain text
         SizedBox(height: 5),
         Visibility(
           visible: widget.snapshot.data()['showSubtitle'] ?? false,
           child: GestureDetector(
-              child: Text(widget.snapshot.data()['subtitle'] ??
+              child: SelectableText(widget.snapshot.data()['subtitle'] ??
                   'Something about yourself')),
         ),
       ],
