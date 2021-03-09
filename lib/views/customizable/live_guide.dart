@@ -1,4 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,6 +39,7 @@ class _LiveGuideState extends State<LiveGuide> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if (kIsWeb) return true;
         if (await _interstitialAd.isLoaded()) {
           _interstitialAd.show();
           return false;
