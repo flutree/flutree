@@ -22,6 +22,7 @@ import '../widgets/linkCard.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
 import 'live_guide.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
@@ -256,6 +257,8 @@ class _EditPageState extends State<EditPage> {
                   );
                   break;
                 case 'ProbReport':
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -264,6 +267,8 @@ class _EditPageState extends State<EditPage> {
                       return StatefulBuilder(
                         builder: (context, setDialogState) {
                           return AlertDialog(
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                24.0, 20.0, 24.0, 1.0),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -291,21 +296,18 @@ class _EditPageState extends State<EditPage> {
                                 onPressed: () async {
                                   setDialogState(() => _isReportLoading = true);
                                   try {
-                                    await _reportCollection
-                                        .doc()
-                                        .set(_includeEmail
-                                            ? {
-                                                'messsage: ': _reportController
-                                                    .text
-                                                    .trim(),
-                                                'email': _authInstance
-                                                    .currentUser.email
-                                              }
-                                            : {
-                                                'message': _reportController
-                                                    .text
-                                                    .trim(),
-                                              });
+                                    await _reportCollection.doc().set({
+                                      'date reported':
+                                          FieldValue.serverTimestamp(),
+                                      'App Version': packageInfo.version,
+                                      'Build Number': int.parse(
+                                          packageInfo.buildNumber ?? '0'),
+                                      'messsage: ':
+                                          _reportController.text.trim(),
+                                      'email': _includeEmail
+                                          ? _authInstance.currentUser.email
+                                          : null
+                                    });
                                     setDialogState(
                                         () => _reportController.clear());
                                     Fluttertoast.showToast(msg: 'Report sent.');
