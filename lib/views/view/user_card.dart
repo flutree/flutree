@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
 import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
-import 'package:linktree_iqfareez_flutter/views/view/enter_code.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
 
