@@ -25,7 +25,7 @@ class _PreviewPageState extends State<PreviewPage> {
       void Function(MobileAdEvent) registerListener) {
     return InterstitialAd(
       listener: registerListener,
-      adUnitId: kInterstitialUnitId,
+      adUnitId: kInterstitialGithubUnitId,
       targetingInfo: AdsHelper.targetingInfo,
     );
   }
