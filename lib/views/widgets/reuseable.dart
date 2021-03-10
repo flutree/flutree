@@ -83,6 +83,34 @@ class EmailTextField extends StatelessWidget {
   }
 }
 
+class ReportTextField extends StatelessWidget {
+  const ReportTextField(
+      {Key key,
+      @required TextEditingController reportController,
+      this.showAnonymousMessage})
+      : _reportController = reportController,
+        super(key: key);
+
+  final TextEditingController _reportController;
+  final bool showAnonymousMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      maxLines: 4,
+      controller: _reportController,
+      decoration: InputDecoration(
+        labelText: 'Report a bug or problem',
+        helperText: showAnonymousMessage ? 'Your message is anonymous' : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+      ),
+      keyboardType: TextInputType.multiline,
+    );
+  }
+}
+
 class NameTextField extends StatelessWidget {
   const NameTextField(
       {Key key,

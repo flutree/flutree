@@ -34,15 +34,14 @@ class _PreviewAppPageState extends State<PreviewAppPage> {
               SizedBox(
                 height: 28.0,
               ),
-              Text(
-                '@fareeziqmal',
-                style: TextStyle(fontSize: 20),
+              PressableDough(
+                child: Text('@fareeziqmal', style: TextStyle(fontSize: 20)),
               ), //just a plain text
               SizedBox.shrink(),
-              isShowSubtitle ? Text('IIUM') : SizedBox.shrink(),
-              SizedBox(
-                height: 25.0,
-              ),
+              isShowSubtitle
+                  ? PressableDough(child: Text('IIUM'))
+                  : SizedBox.shrink(),
+              SizedBox(height: 25.0),
               //change or remove this part accordingly
               ListView.builder(
                 shrinkWrap: true,

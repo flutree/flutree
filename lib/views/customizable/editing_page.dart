@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,11 +9,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../CONSTANTS.dart';
-import '../../utils/ads_helper.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/urlLauncher.dart';
@@ -23,6 +22,7 @@ import '../widgets/linkCard.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
 import 'live_guide.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
@@ -42,10 +42,12 @@ class _EditPageState extends State<EditPage> {
   final _authInstance = FirebaseAuth.instance;
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
+  final _reportController = TextEditingController();
   String _userCode;
   bool _isdpLoading = false;
   String _subtitleText;
-  DocumentReference userDocument;
+  DocumentReference _userDocument;
+  CollectionReference _reportCollection;
   File _image;
   String _userImageUrl;
 
@@ -54,23 +56,23 @@ class _EditPageState extends State<EditPage> {
     super.initState();
     mode = Mode.edit;
     _userCode = _authInstance.currentUser.uid.substring(0, 5);
-    userDocument = _firestoreInstance.collection('users').doc(_userCode);
+    _userDocument = _firestoreInstance.collection('users').doc(_userCode);
+    _reportCollection = _firestoreInstance.collection('reports');
 
     initFirestore();
-    if (!kIsWeb) AdsHelper.showBannerAd(AnchorType.bottom);
   }
 
   void initFirestore() async {
-    var snapshot = await userDocument.get();
+    var snapshot = await _userDocument.get();
 
     if (snapshot == null || !snapshot.exists) {
       print('Document not exist. Creating...');
       // Document with id == docId doesn't exist.
-      userDocument.set({
+      _userDocument.set({
         'creationDate': FieldValue.serverTimestamp(),
         'authUid': _authInstance.currentUser.uid,
         'dpUrl': _authInstance.currentUser.photoURL ??
-            'https://picsum.photos/seed/${_authInstance.currentUser.uid.substring(1, 6)}/200',
+            'https://picsum.photos/seed/$_userCode/200',
         'nickname': _authInstance.currentUser.displayName,
       });
     }
@@ -99,7 +101,7 @@ class _EditPageState extends State<EditPage> {
     }
 
     try {
-      userDocument.update({'dpUrl': url}).then((_) {
+      _userDocument.update({'dpUrl': url}).then((_) {
         CustomSnack.showSnack(context, message: 'Profile picture updated');
         setState(() => _isdpLoading = false);
       });
@@ -151,13 +153,6 @@ class _EditPageState extends State<EditPage> {
     // });
 
     return Scaffold(
-      persistentFooterButtons: !kIsWeb
-          ? [
-              SizedBox(
-                height: AdsHelper.bannerAdsSize().height.toDouble() - 12.0,
-              )
-            ]
-          : null,
       appBar: AppBar(
         foregroundColor: Colors.transparent,
         backgroundColor: Colors.transparent,
@@ -231,7 +226,7 @@ class _EditPageState extends State<EditPage> {
                                     print('Err: $e');
                                   }
                                   try {
-                                    await userDocument.delete();
+                                    await _userDocument.delete();
                                     Navigator.pop(context); //pop the dialog
                                     Navigator.pushReplacement(
                                         context,
@@ -261,9 +256,89 @@ class _EditPageState extends State<EditPage> {
                     },
                   );
                   break;
-                case 'report':
-                  print('Report');
-                  //TODO: Report feature
+                case 'ProbReport':
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      bool _isReportLoading = false;
+                      bool _includeEmail = false;
+                      return StatefulBuilder(
+                        builder: (context, setDialogState) {
+                          return AlertDialog(
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                24.0, 20.0, 24.0, 1.0),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ReportTextField(
+                                  reportController: _reportController,
+                                  showAnonymousMessage: !_includeEmail,
+                                ),
+                                CheckboxListTile(
+                                  value: _includeEmail,
+                                  onChanged: (value) => setDialogState(
+                                      () => _includeEmail = value),
+                                  title: Text('  Include my email'),
+                                  contentPadding: EdgeInsets.zero,
+                                )
+                              ],
+                            ),
+                            actions: [
+                              _isReportLoading
+                                  ? LoadingIndicator()
+                                  : SizedBox.shrink(),
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('Cancel')),
+                              TextButton(
+                                onPressed: () async {
+                                  setDialogState(() => _isReportLoading = true);
+                                  try {
+                                    await _reportCollection.doc().set({
+                                      'date reported':
+                                          FieldValue.serverTimestamp(),
+                                      'App Version': packageInfo.version,
+                                      'Build Number': int.parse(
+                                          packageInfo.buildNumber ?? '0'),
+                                      'messsage: ':
+                                          _reportController.text.trim(),
+                                      'email': _includeEmail
+                                          ? _authInstance.currentUser.email
+                                          : null
+                                    });
+                                    setDialogState(
+                                        () => _reportController.clear());
+                                    Fluttertoast.showToast(msg: 'Report sent.');
+                                    Navigator.pop(context); //pop the dialog
+
+                                  } on FirebaseException catch (e) {
+                                    print('Firebase err: $e');
+                                    CustomSnack.showErrorSnack(context,
+                                        message: 'Error: ${e.message}');
+                                    setDialogState(
+                                        () => _isReportLoading = false);
+                                  } catch (e) {
+                                    print('Unknown err: $e');
+                                    CustomSnack.showErrorSnack(context,
+                                        message: 'Error. Please try again');
+                                    setDialogState(
+                                        () => _isReportLoading = false);
+                                  }
+                                },
+                                child: Text(
+                                  'Send',
+                                  // style: TextStyle(color: Colors.red),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
+
                   break;
               }
             },
@@ -280,13 +355,16 @@ class _EditPageState extends State<EditPage> {
                   value: 'Logout',
                 ),
                 PopupMenuItem(
+                  value: 'ProbReport',
+                  child: Text('Report a problem...'),
+                ),
+                PopupMenuItem(
                   value: 'DeleteAcc',
                   child: Text(
                     'Delete account data...',
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
-                //TODO: Add report item
               ];
             },
           ),
@@ -294,7 +372,7 @@ class _EditPageState extends State<EditPage> {
       ),
       body: SafeArea(
         child: StreamBuilder(
-          stream: userDocument.snapshots(),
+          stream: _userDocument.snapshots(),
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.exists) {
               print('Document exist: ${snapshot.data.data()}');
@@ -401,7 +479,7 @@ class _EditPageState extends State<EditPage> {
                                               onPressed: () async {
                                                 setDialogState(() =>
                                                     _isNicknameLoading = true);
-                                                await userDocument.update({
+                                                await _userDocument.update({
                                                   'nickname': _nameController
                                                       .text
                                                       .trim()
@@ -462,7 +540,7 @@ class _EditPageState extends State<EditPage> {
                                               setDialogState(() {
                                                 _isSubtitleLoading = true;
                                               });
-                                              await userDocument.update({
+                                              await _userDocument.update({
                                                 'showSubtitle': _isShowSubtitle
                                               });
                                               setDialogState(() {
@@ -494,7 +572,7 @@ class _EditPageState extends State<EditPage> {
                                                     setDialogState(() {
                                                       _isSubtitleLoading = true;
                                                     });
-                                                    userDocument.update({
+                                                    _userDocument.update({
                                                       'subtitle':
                                                           _subtitleController
                                                               .text
@@ -543,7 +621,7 @@ class _EditPageState extends State<EditPage> {
                               );
 
                               if (response ?? false) {
-                                userDocument.update({
+                                _userDocument.update({
                                   'socials':
                                       FieldValue.arrayRemove([linkcard.toMap()])
                                 });
@@ -564,11 +642,11 @@ class _EditPageState extends State<EditPage> {
                               if (result != null) {
                                 print('Editing ${result.toMap()}');
 
-                                await userDocument.update({
+                                await _userDocument.update({
                                   'socials':
                                       FieldValue.arrayRemove([linkcard.toMap()])
                                 });
-                                userDocument.update({
+                                _userDocument.update({
                                   'socials':
                                       FieldValue.arrayUnion([result.toMap()])
                                 }).then((value) {
@@ -612,7 +690,7 @@ class _EditPageState extends State<EditPage> {
 
                                   if (result != null) {
                                     print('Adding ${result.toMap()}');
-                                    userDocument.update({
+                                    _userDocument.update({
                                       'socials': FieldValue.arrayUnion(
                                           [result.toMap()])
                                     }).then((value) {
@@ -650,11 +728,7 @@ class _EditPageState extends State<EditPage> {
                               )
                             : SizedBox.shrink(),
                       ),
-                      SizedBox(
-                        height: !kIsWeb
-                            ? AdsHelper.bannerAdsSize().height.toDouble()
-                            : 2,
-                      )
+                      SizedBox(height: 10)
                     ],
                   ),
                 ),
@@ -700,7 +774,6 @@ class _EditPageState extends State<EditPage> {
   void dispose() {
     _nameController.dispose();
     _subtitleController.dispose();
-    AdsHelper.hideBannerAd();
     super.dispose();
   }
 }
@@ -752,7 +825,7 @@ class DeleteCardWidget extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: !kIsWeb ? AdsHelper.bannerAdsSize().height.toDouble() : 5,
+            height: 5,
           )
         ],
       ),

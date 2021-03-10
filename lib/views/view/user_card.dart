@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
 
@@ -58,6 +61,14 @@ class _UserCardState extends State<UserCard> {
     return WillPopScope(
       onWillPop: popHandler,
       child: Scaffold(
+        persistentFooterButtons: [
+          TextButton.icon(
+              onPressed: () {
+                launchURL(context, kPlayStoreUrl);
+              },
+              icon: FaIcon(FontAwesomeIcons.googlePlay),
+              label: Text('Download Flutree app now'))
+        ],
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
