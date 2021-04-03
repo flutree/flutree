@@ -263,7 +263,7 @@ class _EditPageState extends State<EditPage> {
                     context: context,
                     builder: (context) {
                       bool _isReportLoading = false;
-                      bool _includeEmail = false;
+                      bool _includeEmail = true;
                       return StatefulBuilder(
                         builder: (context, setDialogState) {
                           return AlertDialog(
@@ -294,37 +294,41 @@ class _EditPageState extends State<EditPage> {
                                   child: Text('Cancel')),
                               TextButton(
                                 onPressed: () async {
-                                  setDialogState(() => _isReportLoading = true);
-                                  try {
-                                    await _reportCollection.doc().set({
-                                      'date reported':
-                                          FieldValue.serverTimestamp(),
-                                      'App Version': packageInfo.version,
-                                      'Build Number': int.parse(
-                                          packageInfo.buildNumber ?? '0'),
-                                      'messsage: ':
-                                          _reportController.text.trim(),
-                                      'email': _includeEmail
-                                          ? _authInstance.currentUser.email
-                                          : null
-                                    });
+                                  if (_reportController.text.isNotEmpty) {
                                     setDialogState(
-                                        () => _reportController.clear());
-                                    Fluttertoast.showToast(msg: 'Report sent.');
-                                    Navigator.pop(context); //pop the dialog
+                                        () => _isReportLoading = true);
+                                    try {
+                                      await _reportCollection.doc().set({
+                                        'date reported':
+                                            FieldValue.serverTimestamp(),
+                                        'App Version': packageInfo.version,
+                                        'Build Number': int.parse(
+                                            packageInfo.buildNumber ?? '0'),
+                                        'messsage: ':
+                                            _reportController.text.trim(),
+                                        'email': _includeEmail
+                                            ? _authInstance.currentUser.email
+                                            : null
+                                      });
+                                      setDialogState(
+                                          () => _reportController.clear());
+                                      Fluttertoast.showToast(
+                                          msg: 'Report sent.');
+                                      Navigator.pop(context); //pop the dialog
 
-                                  } on FirebaseException catch (e) {
-                                    print('Firebase err: $e');
-                                    CustomSnack.showErrorSnack(context,
-                                        message: 'Error: ${e.message}');
-                                    setDialogState(
-                                        () => _isReportLoading = false);
-                                  } catch (e) {
-                                    print('Unknown err: $e');
-                                    CustomSnack.showErrorSnack(context,
-                                        message: 'Error. Please try again');
-                                    setDialogState(
-                                        () => _isReportLoading = false);
+                                    } on FirebaseException catch (e) {
+                                      print('Firebase err: $e');
+                                      CustomSnack.showErrorSnack(context,
+                                          message: 'Error: ${e.message}');
+                                      setDialogState(
+                                          () => _isReportLoading = false);
+                                    } catch (e) {
+                                      print('Unknown err: $e');
+                                      CustomSnack.showErrorSnack(context,
+                                          message: 'Error. Please try again');
+                                      setDialogState(
+                                          () => _isReportLoading = false);
+                                    }
                                   }
                                 },
                                 child: Text(
