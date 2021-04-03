@@ -13,6 +13,8 @@ import 'user_card.dart';
 enum PlatformTarget { Browser, PlayStore }
 
 class EnterCode extends StatefulWidget {
+  EnterCode({this.userCode});
+  final String userCode;
   @override
   _EnterCodeState createState() => _EnterCodeState();
 }
@@ -28,8 +30,57 @@ class _EnterCodeState extends State<EnterCode> {
 
   bool isLoading = false;
 
+  bool hasTryAccessProfile = false;
+
+  void accessProfile(String code) async {
+    setState(() {
+      isLoading = true;
+      hasTryAccessProfile = true;
+    });
+    try {
+      if (_authInstance.currentUser == null) {
+        await _authInstance.signInAnonymously();
+      } else {
+        print('Using previous credential');
+      }
+      _usersCollection.doc(code).get().then((value) {
+        print('snapshot is ${value.data()}');
+        setState(() => isLoading = false);
+        if (value.exists) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => UserCard(value)));
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: NotFoundDialog(),
+              );
+            },
+          );
+        }
+      });
+    } on FirebaseAuthException catch (error) {
+      print('Error: $error');
+      CustomSnack.showErrorSnack(context, message: 'Error: ${error.message}');
+      setState(() => isLoading = false);
+    } catch (e) {
+      print('Unknown error: $e');
+      setState(() => isLoading = false);
+      CustomSnack.showErrorSnack(context, message: 'Unknown err.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _codeController.text = widget.userCode;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!hasTryAccessProfile && widget.userCode.isNotEmpty) {
+        print(widget.userCode);
+        accessProfile(widget.userCode.trim());
+      }
+    });
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -66,43 +117,7 @@ class _EnterCodeState extends State<EnterCode> {
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState.validate()) {
-                        setState(() => isLoading = true);
-                        try {
-                          if (_authInstance.currentUser == null) {
-                            await _authInstance.signInAnonymously();
-                          } else {
-                            print('Using previous credential');
-                          }
-                          String code = _codeController.text.trim();
-                          print('pressed');
-                          _usersCollection.doc(code).get().then((value) {
-                            print('snapshot is ${value.data()}');
-                            setState(() => isLoading = false);
-                            if (value.exists) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => UserCard(value)));
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    child: NotFoundDialog(),
-                                  );
-                                },
-                              );
-                            }
-                          });
-                        } on FirebaseAuthException catch (error) {
-                          print('Error: $error');
-                          CustomSnack.showErrorSnack(context,
-                              message: 'Error: ${error.message}');
-                          setState(() => isLoading = false);
-                        } catch (e) {
-                          print('Unknown error: $e');
-                          setState(() => isLoading = false);
-                          CustomSnack.showErrorSnack(context,
-                              message: 'Unknown err.');
-                        }
+                        accessProfile(_codeController.text.trim());
                       }
                     },
                     child: !isLoading ? Text('Go') : LoadingIndicator(),

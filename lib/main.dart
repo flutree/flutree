@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:linktree_iqfareez_flutter/views/view/temp.dart';
 import 'utils/ads_helper.dart';
 import 'views/auth/signin.dart';
 import 'views/customizable/editing_page.dart';
@@ -30,8 +31,24 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
+      onGenerateRoute: (settings) {
+        List<String> pathComponents = settings.name.split('/');
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(userCode: ''),
+            );
+            break;
+          default:
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(
+                userCode: pathComponents.last,
+              ),
+            );
+        }
+      },
       home: kIsWeb
-          ? EnterCode()
+          ? EnterCode(userCode: '')
           : _authUser == null
               ? SignIn()
               : _authUser.isAnonymous
