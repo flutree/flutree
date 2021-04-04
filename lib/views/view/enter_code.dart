@@ -2,13 +2,10 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../CONSTANTS.dart';
 import '../../utils/snackbar.dart';
-import '../../utils/urlLauncher.dart';
-import '../auth/signin.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
+import 'bottom_persistant_platform_chooser.dart';
 
 enum PlatformTarget { Browser, PlayStore }
 
@@ -136,16 +133,7 @@ class _EnterCodeState extends State<EnterCode> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
                     onPressed: () async {
-                      PlatformTarget target = await platformChooser(context);
-
-                      if (target == PlatformTarget.Browser) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
-                      } else if (target == PlatformTarget.PlayStore) {
-                        launchURL(context, kPlayStoreUrl);
-                      } else {
-                        return;
-                      }
+                      PersistentPlatformChooser.showPlatformChooser(context);
                     },
                     child: Text('Make your own Flutree profile!',
                         style: TextStyle(
@@ -158,45 +146,6 @@ class _EnterCodeState extends State<EnterCode> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<PlatformTarget> platformChooser(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 170,
-          child: Column(
-            children: [
-              Expanded(
-                child: SizedBox.expand(
-                  child: TextButton.icon(
-                      icon: FaIcon(FontAwesomeIcons.googlePlay),
-                      onPressed: () =>
-                          Navigator.of(context).pop(PlatformTarget.PlayStore),
-                      label: Text(
-                        'Get app from Google Play Store\n(Recommended)',
-                        maxLines: 3,
-                      )),
-                ),
-              ),
-              Expanded(
-                child: SizedBox.expand(
-                  child: TextButton.icon(
-                      icon: FaIcon(FontAwesomeIcons.chrome),
-                      onPressed: () =>
-                          Navigator.of(context).pop(PlatformTarget.Browser),
-                      label: Text(
-                        'Continue on browser\n(Beta)',
-                        maxLines: 3,
-                      )),
-                ),
-              )
-            ],
-          ),
-        );
-      },
     );
   }
 }

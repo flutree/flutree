@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
+import 'bottom_persistant_platform_chooser.dart';
 
 class UserCard extends StatefulWidget {
   UserCard(this.snapshot);
@@ -62,12 +60,11 @@ class _UserCardState extends State<UserCard> {
       onWillPop: popHandler,
       child: Scaffold(
         persistentFooterButtons: [
-          TextButton.icon(
-              onPressed: () {
-                launchURL(context, kPlayStoreUrl);
+          TextButton(
+              onPressed: () async {
+                PersistentPlatformChooser.showPlatformChooser(context);
               },
-              icon: FaIcon(FontAwesomeIcons.googlePlay),
-              label: Text('Download Flutree app now'))
+              child: Text('Made with Flutree ♡'))
         ],
         body: SafeArea(
           child: SingleChildScrollView(

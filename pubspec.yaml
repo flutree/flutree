@@ -28,6 +28,7 @@ dependencies:
   dotted_border: ^1.0.7
   share_plus: ^1.2.0
   package_info_plus: ^0.6.4
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:
