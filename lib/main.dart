@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'utils/ads_helper.dart';
 import 'views/auth/signin.dart';
 import 'views/customizable/editing_page.dart';
-import 'views/preview/ads_wrapper.dart';
 import 'views/view/enter_code.dart';
 
 void main() async {
@@ -30,13 +29,31 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
+      onGenerateRoute: (settings) {
+        List<String> pathComponents = settings.name.split('/');
+        print(settings.name);
+        switch (settings.name) {
+          case '/':
+            print('/');
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(userCode: ''),
+            );
+            break;
+          default:
+            print('default');
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(
+                userCode: pathComponents.last,
+              ),
+            );
+        }
+      },
       home: kIsWeb
-          ? EnterCode()
+          ? EnterCode(userCode: '')
           : _authUser == null
               ? SignIn()
-              : _authUser.isAnonymous
-                  ? PreviewPage()
-                  : EditPage(),
+              : EditPage(),
+      //
     );
   }
 }

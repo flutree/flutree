@@ -2,17 +2,16 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../CONSTANTS.dart';
 import '../../utils/snackbar.dart';
-import '../../utils/urlLauncher.dart';
-import '../auth/signin.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
+import 'bottom_persistant_platform_chooser.dart';
 
 enum PlatformTarget { Browser, PlayStore }
 
 class EnterCode extends StatefulWidget {
+  EnterCode({this.userCode});
+  final String userCode;
   @override
   _EnterCodeState createState() => _EnterCodeState();
 }
@@ -28,8 +27,57 @@ class _EnterCodeState extends State<EnterCode> {
 
   bool isLoading = false;
 
+  bool hasTryAccessProfile = false;
+
+  void accessProfile(String code) async {
+    setState(() {
+      isLoading = true;
+      hasTryAccessProfile = true;
+    });
+    try {
+      if (_authInstance.currentUser == null) {
+        await _authInstance.signInAnonymously();
+      } else {
+        print('Using previous credential');
+      }
+      _usersCollection.doc(code).get().then((value) {
+        print('snapshot is ${value.data()}');
+        setState(() => isLoading = false);
+        if (value.exists) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => UserCard(value)));
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: NotFoundDialog(),
+              );
+            },
+          );
+        }
+      });
+    } on FirebaseAuthException catch (error) {
+      print('Error: $error');
+      CustomSnack.showErrorSnack(context, message: 'Error: ${error.message}');
+      setState(() => isLoading = false);
+    } catch (e) {
+      print('Unknown error: $e');
+      setState(() => isLoading = false);
+      CustomSnack.showErrorSnack(context, message: 'Unknown err.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _codeController.text = widget.userCode;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!hasTryAccessProfile && widget.userCode.isNotEmpty) {
+        print(widget.userCode);
+        accessProfile(widget.userCode.trim());
+      }
+    });
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -66,43 +114,7 @@ class _EnterCodeState extends State<EnterCode> {
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState.validate()) {
-                        setState(() => isLoading = true);
-                        try {
-                          if (_authInstance.currentUser == null) {
-                            await _authInstance.signInAnonymously();
-                          } else {
-                            print('Using previous credential');
-                          }
-                          String code = _codeController.text.trim();
-                          print('pressed');
-                          _usersCollection.doc(code).get().then((value) {
-                            print('snapshot is ${value.data()}');
-                            setState(() => isLoading = false);
-                            if (value.exists) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => UserCard(value)));
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    child: NotFoundDialog(),
-                                  );
-                                },
-                              );
-                            }
-                          });
-                        } on FirebaseAuthException catch (error) {
-                          print('Error: $error');
-                          CustomSnack.showErrorSnack(context,
-                              message: 'Error: ${error.message}');
-                          setState(() => isLoading = false);
-                        } catch (e) {
-                          print('Unknown error: $e');
-                          setState(() => isLoading = false);
-                          CustomSnack.showErrorSnack(context,
-                              message: 'Unknown err.');
-                        }
+                        accessProfile(_codeController.text.trim());
                       }
                     },
                     child: !isLoading ? Text('Go') : LoadingIndicator(),
@@ -121,16 +133,7 @@ class _EnterCodeState extends State<EnterCode> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
                     onPressed: () async {
-                      PlatformTarget target = await platformChooser(context);
-
-                      if (target == PlatformTarget.Browser) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
-                      } else if (target == PlatformTarget.PlayStore) {
-                        launchURL(context, kPlayStoreUrl);
-                      } else {
-                        return;
-                      }
+                      PersistentPlatformChooser.showPlatformChooser(context);
                     },
                     child: Text('Make your own Flutree profile!',
                         style: TextStyle(
@@ -143,45 +146,6 @@ class _EnterCodeState extends State<EnterCode> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<PlatformTarget> platformChooser(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 170,
-          child: Column(
-            children: [
-              Expanded(
-                child: SizedBox.expand(
-                  child: TextButton.icon(
-                      icon: FaIcon(FontAwesomeIcons.googlePlay),
-                      onPressed: () =>
-                          Navigator.of(context).pop(PlatformTarget.PlayStore),
-                      label: Text(
-                        'Get app from Google Play Store\n(Recommended)',
-                        maxLines: 3,
-                      )),
-                ),
-              ),
-              Expanded(
-                child: SizedBox.expand(
-                  child: TextButton.icon(
-                      icon: FaIcon(FontAwesomeIcons.chrome),
-                      onPressed: () =>
-                          Navigator.of(context).pop(PlatformTarget.Browser),
-                      label: Text(
-                        'Continue on browser\n(Beta)',
-                        maxLines: 3,
-                      )),
-                ),
-              )
-            ],
-          ),
-        );
-      },
     );
   }
 }
