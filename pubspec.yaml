@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.4.11+17
+version: 3.4.11-web+17
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -18,17 +18,17 @@ dependencies:
   dough: ^0.3.7
   fluttertoast: ^7.1.1
   giffy_dialog: ^1.8.0
-  firebase_core: ^0.7.0
-  firebase_admob: ^0.11.0+1
-  firebase_auth: ^0.20.1
-  google_sign_in: ^4.5.9
+  # firebase_core: ^0.7.0
+  # firebase_admob: ^0.11.0+1
+  # firebase_auth: ^0.20.1
+  # google_sign_in: ^4.5.9
   cloud_firestore: ^0.16.0+1
-  firebase_storage: ^7.0.0
-  image_picker: ^0.6.7+22
+  # firebase_storage: ^7.0.0
+  # image_picker: ^0.6.7+22
   dotted_border: ^1.0.7
-  share_plus: ^1.2.0
+  # share_plus: ^1.2.0
   package_info_plus: ^0.6.4
-  qr_flutter: ^4.0.0
+  # qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../utils/snackbar.dart';
@@ -48,10 +48,6 @@ class _EnterCodeState extends State<EnterCode> {
           );
         }
       });
-    } on FirebaseAuthException catch (error) {
-      print('Error: $error');
-      CustomSnack.showErrorSnack(context, message: 'Error: ${error.message}');
-      setState(() => isLoading = false);
     } catch (e) {
       print('Unknown error: $e');
       setState(() => isLoading = false);

@@ -1,199 +1,199 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HorizontalOrLine extends StatelessWidget {
-  /// In auth page
-  /// https://stackoverflow.com/a/61304861/13617136
-  const HorizontalOrLine({
-    this.label,
-    this.height,
-  });
+// class HorizontalOrLine extends StatelessWidget {
+//   /// In auth page
+//   /// https://stackoverflow.com/a/61304861/13617136
+//   const HorizontalOrLine({
+//     this.label,
+//     this.height,
+//   });
 
-  final String label;
-  final double height;
+//   final String label;
+//   final double height;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(children: [
-        Expanded(
-          child: Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 15.0),
-              child: Divider(
-                color: Colors.black,
-                height: height,
-              )),
-        ),
-        Text(label),
-        Expanded(
-          child: Container(
-              margin: const EdgeInsets.only(left: 15.0, right: 10.0),
-              child: Divider(
-                color: Colors.black,
-                height: height,
-              )),
-        ),
-      ]),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 4.0),
+//       child: Row(children: [
+//         Expanded(
+//           child: Container(
+//               margin: const EdgeInsets.only(left: 10.0, right: 15.0),
+//               child: Divider(
+//                 color: Colors.black,
+//                 height: height,
+//               )),
+//         ),
+//         Text(label),
+//         Expanded(
+//           child: Container(
+//               margin: const EdgeInsets.only(left: 15.0, right: 10.0),
+//               child: Divider(
+//                 color: Colors.black,
+//                 height: height,
+//               )),
+//         ),
+//       ]),
+//     );
+//   }
+// }
 
-Container buildChangeDpIcon() {
-  return Container(
-    padding: const EdgeInsets.all(5.0),
-    decoration: BoxDecoration(color: Colors.blueGrey, shape: BoxShape.circle),
-    child: FaIcon(
-      FontAwesomeIcons.camera,
-      color: Colors.white,
-      size: 12,
-    ),
-  );
-}
+// Container buildChangeDpIcon() {
+//   return Container(
+//     padding: const EdgeInsets.all(5.0),
+//     decoration: BoxDecoration(color: Colors.blueGrey, shape: BoxShape.circle),
+//     child: FaIcon(
+//       FontAwesomeIcons.camera,
+//       color: Colors.white,
+//       size: 12,
+//     ),
+//   );
+// }
 
-TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
-    color: color,
-    decorationStyle: TextDecorationStyle.dotted,
-    decoration: TextDecoration.underline);
+// TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
+//     color: color,
+//     decorationStyle: TextDecorationStyle.dotted,
+//     decoration: TextDecoration.underline);
 
-class EmailTextField extends StatelessWidget {
-  const EmailTextField({
-    Key key,
-    @required TextEditingController emailController,
-  })  : _emailController = emailController,
-        super(key: key);
+// class EmailTextField extends StatelessWidget {
+//   const EmailTextField({
+//     Key key,
+//     @required TextEditingController emailController,
+//   })  : _emailController = emailController,
+//         super(key: key);
 
-  final TextEditingController _emailController;
+//   final TextEditingController _emailController;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _emailController,
-      decoration: InputDecoration(
-        isDense: true,
-        labelText: 'Email',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.emailAddress,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       controller: _emailController,
+//       decoration: InputDecoration(
+//         isDense: true,
+//         labelText: 'Email',
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(24),
+//         ),
+//       ),
+//       textInputAction: TextInputAction.next,
+//       keyboardType: TextInputType.emailAddress,
+//     );
+//   }
+// }
 
-class ReportTextField extends StatelessWidget {
-  const ReportTextField(
-      {Key key,
-      @required TextEditingController reportController,
-      this.showAnonymousMessage})
-      : _reportController = reportController,
-        super(key: key);
+// class ReportTextField extends StatelessWidget {
+//   const ReportTextField(
+//       {Key key,
+//       @required TextEditingController reportController,
+//       this.showAnonymousMessage})
+//       : _reportController = reportController,
+//         super(key: key);
 
-  final TextEditingController _reportController;
-  final bool showAnonymousMessage;
+//   final TextEditingController _reportController;
+//   final bool showAnonymousMessage;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 4,
-      controller: _reportController,
-      decoration: InputDecoration(
-        labelText: 'Report a bug or problem',
-        helperText: showAnonymousMessage ? 'Your message is anonymous' : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-      ),
-      keyboardType: TextInputType.multiline,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       maxLines: 4,
+//       controller: _reportController,
+//       decoration: InputDecoration(
+//         labelText: 'Report a bug or problem',
+//         helperText: showAnonymousMessage ? 'Your message is anonymous' : null,
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(18),
+//         ),
+//       ),
+//       keyboardType: TextInputType.multiline,
+//     );
+//   }
+// }
 
-class NameTextField extends StatelessWidget {
-  const NameTextField(
-      {Key key,
-      @required TextEditingController nameController,
-      TextInputAction keyboardAction = TextInputAction.next})
-      : _nameController = nameController,
-        _keyboardAction = keyboardAction,
-        super(key: key);
+// class NameTextField extends StatelessWidget {
+//   const NameTextField(
+//       {Key key,
+//       @required TextEditingController nameController,
+//       TextInputAction keyboardAction = TextInputAction.next})
+//       : _nameController = nameController,
+//         _keyboardAction = keyboardAction,
+//         super(key: key);
 
-  final TextEditingController _nameController;
-  final TextInputAction _keyboardAction;
+//   final TextEditingController _nameController;
+//   final TextInputAction _keyboardAction;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (value) => value.isEmpty ? 'Please enter your name' : null,
-      controller: _nameController,
-      decoration: InputDecoration(
-        isDense: true,
-        labelText: 'Nickname',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-      textInputAction: _keyboardAction,
-      keyboardType: TextInputType.name,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       validator: (value) => value.isEmpty ? 'Please enter your name' : null,
+//       controller: _nameController,
+//       decoration: InputDecoration(
+//         isDense: true,
+//         labelText: 'Nickname',
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(24),
+//         ),
+//       ),
+//       textInputAction: _keyboardAction,
+//       keyboardType: TextInputType.name,
+//     );
+//   }
+// }
 
-class SubtitleTextField extends StatelessWidget {
-  const SubtitleTextField({
-    Key key,
-    @required TextEditingController subsController,
-  })  : _subsController = subsController,
-        super(key: key);
+// class SubtitleTextField extends StatelessWidget {
+//   const SubtitleTextField({
+//     Key key,
+//     @required TextEditingController subsController,
+//   })  : _subsController = subsController,
+//         super(key: key);
 
-  final TextEditingController _subsController;
+//   final TextEditingController _subsController;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _subsController,
-      decoration: InputDecoration(
-        isDense: true,
-        hintText: 'Enter your address, bio, etc.',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.text,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       controller: _subsController,
+//       decoration: InputDecoration(
+//         isDense: true,
+//         hintText: 'Enter your address, bio, etc.',
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(24),
+//         ),
+//       ),
+//       textInputAction: TextInputAction.done,
+//       keyboardType: TextInputType.text,
+//     );
+//   }
+// }
 
-class PasswordTextField extends StatelessWidget {
-  const PasswordTextField({
-    Key key,
-    @required TextEditingController passwordController,
-  })  : _passwordController = passwordController,
-        super(key: key);
+// class PasswordTextField extends StatelessWidget {
+//   const PasswordTextField({
+//     Key key,
+//     @required TextEditingController passwordController,
+//   })  : _passwordController = passwordController,
+//         super(key: key);
 
-  final TextEditingController _passwordController;
+//   final TextEditingController _passwordController;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _passwordController,
-      validator: (value) =>
-          value.length < 7 ? 'Please enter more than 7 character' : null,
-      decoration: InputDecoration(
-        isDense: true,
-        labelText: 'Password',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-      obscureText: true,
-      keyboardType: TextInputType.visiblePassword,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       controller: _passwordController,
+//       validator: (value) =>
+//           value.length < 7 ? 'Please enter more than 7 character' : null,
+//       decoration: InputDecoration(
+//         isDense: true,
+//         labelText: 'Password',
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(24),
+//         ),
+//       ),
+//       obscureText: true,
+//       keyboardType: TextInputType.visiblePassword,
+//     );
+//   }
+// }
 
 class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({
