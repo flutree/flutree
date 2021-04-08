@@ -2,12 +2,11 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../utils/snackbar.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
 import 'bottom_persistant_platform_chooser.dart';
-
-enum PlatformTarget { Browser, PlayStore }
 
 class EnterCode extends StatefulWidget {
   EnterCode({this.userCode});
@@ -23,8 +22,6 @@ class _EnterCodeState extends State<EnterCode> {
 
   final _codeController = TextEditingController();
 
-  final _authInstance = FirebaseAuth.instance;
-
   bool isLoading = false;
 
   bool hasTryAccessProfile = false;
@@ -35,13 +32,7 @@ class _EnterCodeState extends State<EnterCode> {
       hasTryAccessProfile = true;
     });
     try {
-      if (_authInstance.currentUser == null) {
-        await _authInstance.signInAnonymously();
-      } else {
-        print('Using previous credential');
-      }
       _usersCollection.doc(code).get().then((value) {
-        print('snapshot is ${value.data()}');
         setState(() => isLoading = false);
         if (value.exists) {
           Navigator.of(context).pushReplacement(
@@ -83,6 +74,22 @@ class _EnterCodeState extends State<EnterCode> {
       child: Scaffold(
         body: Stack(
           children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
+                    if (snapshot.hasData) {
+                      return Text('V${snapshot.data.version}');
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Column(

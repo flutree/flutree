@@ -7,7 +7,7 @@ class AdsHelper {
   static BannerAd _bannerAd;
 
   static void initialize() {
-    FirebaseAdMob.instance.initialize(appId: kAdmobUnitId);
+    FirebaseAdMob.instance.initialize(appId: kAdmobAppId);
   }
 
   static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(

@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       onGenerateRoute: (settings) {
+        // I don't even know how this works, thanks to stack Overflow lol
+        // https://stackoverflow.com/a/59755970/13617136
         List<String> pathComponents = settings.name.split('/');
         print(settings.name);
         switch (settings.name) {
