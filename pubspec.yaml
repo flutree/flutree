@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.4.11-web+17
+version: 3.4.12-web+18
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -17,7 +17,7 @@ dependencies:
   url_launcher: ^5.5.0
   dough: ^0.3.7
   fluttertoast: ^7.1.1
-  giffy_dialog: ^1.8.0
+  # giffy_dialog: ^1.8.0
   # firebase_core: ^0.7.0
   # firebase_admob: ^0.11.0+1
   # firebase_auth: ^0.20.1
@@ -38,8 +38,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/sample.jpg
-    - images/intro.gif
+    # - images/sample.jpg
     - images/logo/
-    - images/devices.png
     - images/undraw_page_not_found_su7k.png

@@ -1,4 +1,4 @@
-# Flutree
+# Flutree WEB VERSION
 
 Your personalized social cards. Put your social medias link in one place. Easy peasy!
 

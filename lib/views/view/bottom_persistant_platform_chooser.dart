@@ -21,7 +21,7 @@ class PersistentPlatformChooser {
                       icon: FaIcon(FontAwesomeIcons.googlePlay),
                       onPressed: () => launchURL(context, kPlayStoreUrl),
                       label: Text(
-                        'Get app from Google Play Store\n(Recommended)',
+                        'Get app from Google Play Store',
                         maxLines: 3,
                       )),
                 ),
