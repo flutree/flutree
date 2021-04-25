@@ -21,7 +21,7 @@ import '../auth/signin.dart';
 import '../widgets/linkCard.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
-import 'live_guide.dart';
+import 'share_profile.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
