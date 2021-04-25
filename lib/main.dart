@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'views/view/enter_code.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  setPathUrlStrategy();
+
   runApp(MyApp());
 }
 
@@ -19,26 +22,25 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.karlaTextTheme(),
         ),
         onGenerateRoute: (settings) {
+          print('settings.name is ${settings.name}');
           // I don't even know how this works, thanks to stack Overflow lol
           // https://stackoverflow.com/a/59755970/13617136
           List<String> pathComponents = settings.name.split('/');
-          print(settings.name);
           switch (settings.name) {
             case '/':
-              print('/');
               return MaterialPageRoute(
-                builder: (context) => EnterCode(userCode: ''),
+                builder: (context) => EnterCode(),
               );
               break;
             default:
               print('default');
               return MaterialPageRoute(
                 builder: (context) => EnterCode(
-                  userCode: pathComponents.last,
+                  pathComponents.last,
                 ),
               );
           }
         },
-        home: EnterCode(userCode: ''));
+        home: EnterCode());
   }
 }

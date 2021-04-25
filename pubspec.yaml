@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.5.14-web+19
+version: 3.6.14-web-pre+20
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -29,6 +29,7 @@ dependencies:
   # share_plus: ^1.2.0
   package_info_plus: ^1.0.0
   # qr_flutter: ^4.0.0
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:

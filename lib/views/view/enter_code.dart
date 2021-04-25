@@ -9,7 +9,7 @@ import 'user_card.dart';
 import 'bottom_persistant_platform_chooser.dart';
 
 class EnterCode extends StatefulWidget {
-  EnterCode({this.userCode});
+  EnterCode([this.userCode = '']);
   final String userCode;
   @override
   _EnterCodeState createState() => _EnterCodeState();
