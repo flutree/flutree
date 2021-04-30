@@ -1,10 +1,10 @@
 import 'package:dough/dough.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../CONSTANTS.dart' as Constants;
 import '../../PRIVATE.dart';
 import '../../utils/ads_helper.dart';
@@ -17,94 +17,68 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-  InterstitialAd gumroadAd;
-  InterstitialAd exitAd;
-  bool alreadyShowAd = false;
-  bool alreadyShowDialog = false;
-  InterstitialAd createAdReference(
-      void Function(MobileAdEvent) registerListener) {
-    return InterstitialAd(
-      listener: registerListener,
-      adUnitId: kInterstitialGithubUnitId,
-      targetingInfo: AdsHelper.targetingInfo,
-    );
-  }
+  InterstitialAd _gumroadAd;
+  InterstitialAd _exitAd;
+  bool _alreadyShowDialog = false;
 
   bool isInterstitialAdReady;
 
-  void gumroadAdListener(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
-        isInterstitialAdReady = true;
-        print('ads loaded');
-        break;
-      case MobileAdEvent.failedToLoad:
-        isInterstitialAdReady = false;
-        gumroadAd..load();
-        print('ads failed to load');
-        break;
-      case MobileAdEvent.closed:
-        print('ads closed');
-        setState(() => alreadyShowAd = true);
-        Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
-        launchURL(context, Constants.kGumroadDiscountLink);
-        break;
-      case MobileAdEvent.opened:
-        print('opened ads');
-        break;
-      case MobileAdEvent.leftApplication:
-        print('ads left application');
-        break;
-      default:
-        print('ads default case');
-    }
+  void createGumroadAd() {
+    _gumroadAd ??= InterstitialAd(
+        adUnitId: kInterstitialGumroadUnitId,
+        listener: AdListener(
+          onAdLoaded: (ad) {
+            isInterstitialAdReady = true;
+            print('ads loaded');
+          },
+          onAdFailedToLoad: (ad, error) {
+            isInterstitialAdReady = false;
+            print('Error failed to load :${error.message}');
+          },
+          onAdClosed: (ad) {
+            Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
+            launchURL(context, Constants.kGumroadDiscountLink);
+          },
+        ),
+        request: AdsHelper.adRequest)
+      ..load();
   }
 
-  void exitAdListener(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
-        isInterstitialAdReady = true;
-        print('ads loaded');
-        break;
-      case MobileAdEvent.failedToLoad:
-        isInterstitialAdReady = false;
-        gumroadAd..load();
-        print('ads failed to load');
-        break;
-      case MobileAdEvent.closed:
-        print('ads closed');
-        setState(() => alreadyShowAd = true);
-        Fluttertoast.showToast(msg: 'Exitting...');
-        Navigator.pop(context);
-        break;
-      case MobileAdEvent.opened:
-        print('opened ads');
-        break;
-      case MobileAdEvent.leftApplication:
-        print('ads left application');
-        break;
-      default:
-        print('ads default case');
-    }
+  void createExitAd() {
+    _exitAd ??= InterstitialAd(
+        adUnitId: kInterstitialGumroadUnitId,
+        listener: AdListener(
+          onAdLoaded: (ad) {
+            isInterstitialAdReady = true;
+            print('ads loaded');
+          },
+          onAdFailedToLoad: (ad, error) {
+            isInterstitialAdReady = false;
+            ad.load();
+          },
+          onAdClosed: (ad) {
+            print('ads closed');
+            Navigator.pop(context);
+          },
+          onAdOpened: (ad) => print('opened ads'),
+        ),
+        request: AdsHelper.adRequest)
+      ..load();
   }
 
   @override
   void initState() {
     super.initState();
     isInterstitialAdReady = false;
+    createGumroadAd();
+    createExitAd();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('alreadyShowAd is $alreadyShowAd');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!alreadyShowDialog) {
+      if (!_alreadyShowDialog) {
         showWelcomeDialog(context);
-      }
-
-      if (!kIsWeb) {
-        gumroadAd = createAdReference(gumroadAdListener)..load();
-        exitAd = createAdReference(exitAdListener)..load();
       }
     });
 
@@ -162,9 +136,10 @@ class _PreviewPageState extends State<PreviewPage> {
     );
     if (wantToExit ?? false) {
       if (!kIsWeb) {
-        if (isInterstitialAdReady && !alreadyShowAd) {
+        //TODO: Frequency capping @ admob console
+        if (isInterstitialAdReady) {
           print('Ads showing');
-          exitAd.show();
+          _exitAd.show().then((value) => {print('Succcessfully show')});
         } else {
           Navigator.pop(context);
         }
@@ -178,7 +153,7 @@ class _PreviewPageState extends State<PreviewPage> {
     if (!kIsWeb) {
       if (isInterstitialAdReady) {
         print('Ads showing');
-        gumroadAd.show();
+        _gumroadAd.show();
       } else {
         Fluttertoast.showToast(msg: 'Coupon code applied');
         launchURL(context, Constants.kGumroadDiscountLink);
@@ -194,7 +169,7 @@ class _PreviewPageState extends State<PreviewPage> {
       builder: (_) => AssetGiffyDialog(
         onlyOkButton: true,
         onOkButtonPressed: () {
-          setState(() => alreadyShowDialog = true);
+          setState(() => _alreadyShowDialog = true);
           Navigator.pop(context);
         },
         image: Image.asset('images/intro.gif'),
@@ -207,7 +182,7 @@ class _PreviewPageState extends State<PreviewPage> {
   @override
   void dispose() {
     if (!kIsWeb) {
-      gumroadAd?.dispose();
+      _gumroadAd?.dispose();
     }
 
     super.dispose();

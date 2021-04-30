@@ -1,11 +1,15 @@
-import 'package:firebase_admob/firebase_admob.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/advanced_link.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/qrcode_only.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../CONSTANTS.dart';
@@ -14,8 +18,9 @@ import '../../utils/urlLauncher.dart';
 import '../widgets/reuseable.dart';
 
 class LiveGuide extends StatefulWidget {
-  LiveGuide(this.userCode);
+  LiveGuide({this.userCode, this.docs});
   final String userCode;
+  final DocumentSnapshot docs;
 
   @override
   _LiveGuideState createState() => _LiveGuideState();
@@ -29,11 +34,25 @@ class _LiveGuideState extends State<LiveGuide> {
   @override
   void initState() {
     super.initState();
-    _profileLink = '$kWebappUrl/#/${widget.userCode}';
+    _profileLink = '$kWebappUrl/${widget.userCode}';
     _interstitialAd = InterstitialAd(
-        adUnitId: kInterstitialShareUnitId,
-        listener: exitAdListener,
-        targetingInfo: AdsHelper.targetingInfo);
+      adUnitId: kInterstitialShareUnitId,
+      request: AdsHelper.adRequest,
+      listener: AdListener(
+        onAdLoaded: (ad) {
+          print('ads loaded');
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.load();
+          print('ads failed to load. Error ${error.message}');
+        },
+        onAdClosed: (ad) {
+          print('ads closed');
+          Navigator.pop(context);
+        },
+        onAdOpened: (ad) => print('ads opened'),
+      ),
+    )..load();
 
     _interstitialAd.load();
   }
@@ -76,44 +95,67 @@ class _LiveGuideState extends State<LiveGuide> {
             ],
           ),
           body: SafeArea(
-            child: Container(
-              width: double.infinity,
-              child: OrientationBuilder(
-                builder: (context, orientation) {
-                  if (orientation == Orientation.portrait) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        infoWidget(),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 30),
-                          child: buildDevicesImage(_profileLink),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
+              child: Container(
+                width: double.infinity,
+                child: OrientationBuilder(
+                  builder: (context, orientation) {
+                    if (orientation == Orientation.portrait) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(child: infoWidget()),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                    child: buildDevicesImage(_profileLink)),
-                              ),
+                            SizedBox(height: 25),
+                            infoWidget(),
+                            SizedBox(height: 20),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdvancedLink(
+                                      userInfo: widget.docs,
+                                      uniqueLink: 'https://$_profileLink',
+                                      uniqueCode: widget.userCode,
+                                    ),
+                                  ),
+                                );
+                              },
+                              label: Text('Advanced link...'),
+                              icon: FaIcon(FontAwesomeIcons.angleDoubleRight,
+                                  size: 11),
+                            ),
+                            AskSquishCard(context: context),
+                            Padding(
+                              padding: const EdgeInsets.all(30),
+                              child: generateQrCode(_profileLink),
                             ),
                           ],
                         ),
-                      ],
-                    );
-                  }
-                },
+                      );
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(child: infoWidget()),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: generateQrCode(_profileLink)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
               ),
             ),
           ),
@@ -122,10 +164,23 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
-  Widget buildDevicesImage(String url) {
-    return QrImage(
+  Widget generateQrCode(String url) {
+    QrImage _image = QrImage(
       data: 'https://$url',
-      size: 200,
+      size: 210,
+      embeddedImage: AssetImage(
+        'images/logo/qrlogo.png',
+      ),
+    );
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => QrCodeFullScreen(_image)));
+      },
+      child: Hero(
+        tag: 'qrcode',
+        child: _image,
+      ),
     );
   }
 
@@ -134,170 +189,132 @@ class _LiveGuideState extends State<LiveGuide> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Go to page:',
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(height: 5),
-        Container(
-          padding: EdgeInsets.fromLTRB(12, 2, 0, 2),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.blueGrey.shade100.withAlpha(105)),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SelectableText(
-                kWebappUrl,
-                onTap: () =>
-                    Clipboard.setData(ClipboardData(text: 'http://$kWebappUrl'))
-                        .then((value) =>
-                            Fluttertoast.showToast(msg: 'Link copied')),
-                style: TextStyle(fontSize: 24),
-              ),
-              IconButton(
-                onPressed: () => launchURL(context, 'http://$kWebappUrl'),
-                icon: FaIcon(FontAwesomeIcons.externalLinkAlt, size: 18),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 10),
-        Text(
-          'Enter code below',
+          'Your unique link:',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16),
         ),
         SizedBox(height: 5),
         Container(
-          padding: EdgeInsets.fromLTRB(12, 2, 0, 2),
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14.0),
               color: containerTextColour),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SelectableText(
-                widget.userCode ?? 'Error',
-                textAlign: TextAlign.center,
+          child: Text.rich(
+            TextSpan(
                 style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 10,
+                  fontSize: 21,
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: widget.userCode))
-                      .then((value) {
-                    Fluttertoast.showToast(msg: 'Copied');
-                  });
-                },
-                icon: FaIcon(
-                  FontAwesomeIcons.copy,
-                  size: 18,
-                ),
-              ),
-            ],
+                children: [
+                  TextSpan(text: '$kWebappUrl/'),
+                  TextSpan(
+                      text: widget.userCode,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ]),
+            textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          'or use the direct url (beta)',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(height: 5),
-        Container(
-          padding: EdgeInsets.fromLTRB(12, 2, 0, 2),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14.0),
-              color: containerTextColour),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SelectableText(
-                _profileLink,
-                onTap: () {
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton.icon(
+                label: Text('Copy'),
+                onPressed: () {
                   Clipboard.setData(
                           ClipboardData(text: 'https://$_profileLink'))
                       .then((value) {
                     Fluttertoast.showToast(msg: 'Copied profile link');
                   });
                 },
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              IconButton(
-                onPressed: () => launchURL(context, 'https://$_profileLink'),
                 icon: FaIcon(
-                  FontAwesomeIcons.externalLinkAlt,
+                  FontAwesomeIcons.copy,
                   size: 18,
-                ),
+                )),
+            TextButton.icon(
+              label: Text('Open'),
+              onPressed: () => launchURL(context, 'https://$_profileLink'),
+              icon: FaIcon(
+                FontAwesomeIcons.externalLinkAlt,
+                size: 18,
               ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        SelectableText.rich(
+          TextSpan(
+            style: TextStyle(fontSize: 17),
+            children: [
+              TextSpan(text: 'Alternatively, go to '),
+              TextSpan(
+                  text: kWebappUrl,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      launchURL(context, 'http://$kWebappUrl');
+                    }),
+              TextSpan(text: ' and enter code '),
+              TextSpan(
+                  text: widget.userCode,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Clipboard.setData(ClipboardData(text: widget.userCode))
+                          .then((value) {
+                        Fluttertoast.showToast(msg: 'Copied code');
+                      });
+                    })
             ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: TextButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AssetGiffyDialog(
-                    onlyOkButton: true,
-                    onOkButtonPressed: () {
-                      Navigator.pop(context);
-                    },
-                    image: Image.asset(
-                      'images/intro.gif',
-                    ),
-                    title: Text(
-                        'Try this out!\nSquishable (or dough effect) UI elements'),
-                  );
-                },
-              );
-            },
-            child: Text(
-              'Ask others to squish the cards 👀',
-              style: dottedUnderlinedStyle(),
-            ),
-          ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
-  }
-
-  exitAdListener(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
-        print('ads loaded');
-        break;
-      case MobileAdEvent.failedToLoad:
-        _interstitialAd.load();
-        print('ads failed to load');
-        break;
-      case MobileAdEvent.closed:
-        print('ads closed');
-        Navigator.pop(context);
-        break;
-      case MobileAdEvent.opened:
-        print('ads opened');
-        break;
-      case MobileAdEvent.leftApplication:
-        print('ads left application');
-        break;
-      default:
-        print('ads default case');
-    }
   }
 
   @override
   void dispose() {
     _interstitialAd?.dispose();
     super.dispose();
+  }
+}
+
+class AskSquishCard extends StatelessWidget {
+  const AskSquishCard({
+    Key key,
+    @required this.context,
+  }) : super(key: key);
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AssetGiffyDialog(
+                onlyOkButton: true,
+                onOkButtonPressed: () {
+                  Navigator.pop(context);
+                },
+                image: Image.asset(
+                  'images/intro.gif',
+                ),
+                title: Text(
+                    'Try this out!\nSquishable (or dough effect) UI elements'),
+              );
+            },
+          );
+        },
+        child: Text(
+          'Ask others to squish the cards 👀',
+          style: dottedUnderlinedStyle(),
+        ),
+      ),
+    );
   }
 }

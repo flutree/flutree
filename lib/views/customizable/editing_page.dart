@@ -48,9 +48,10 @@ class _EditPageState extends State<EditPage> {
   String _subtitleText;
   DocumentReference _userDocument;
   CollectionReference _reportCollection;
+  DocumentSnapshot _documentSnapshot;
+
   File _image;
   String _userImageUrl;
-
   @override
   void initState() {
     super.initState();
@@ -125,7 +126,7 @@ class _EditPageState extends State<EditPage> {
             source: ImageSource.camera,
             imageQuality: 70,
             maxWidth: 300,
-            maxHeight: 300);
+            maxHeight: 200);
         break;
       default:
         pickedFile = await picker.getImage(
@@ -179,7 +180,10 @@ class _EditPageState extends State<EditPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LiveGuide(_userCode)));
+                      builder: (context) => LiveGuide(
+                            userCode: _userCode,
+                            docs: _documentSnapshot,
+                          )));
             },
             label: Text('Share profile'),
             icon: FaIcon(
@@ -379,6 +383,7 @@ class _EditPageState extends State<EditPage> {
           stream: _userDocument.snapshots(),
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.exists) {
+              _documentSnapshot = snapshot.data;
               print('Document exist: ${snapshot.data.data()}');
 
               _subtitleText = snapshot.data.data()['subtitle'] ??
@@ -505,7 +510,7 @@ class _EditPageState extends State<EditPage> {
                               }
                             : null,
                         child: Text(
-                          '@${snapshot.data.data()['nickname']}',
+                          '${snapshot.data.data()['nickname']}',
                           style: mode == Mode.preview
                               ? TextStyle(fontSize: 22)
                               : TextStyle(
