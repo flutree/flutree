@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
+import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
 import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 
 import '../../CONSTANTS.dart';

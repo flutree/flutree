@@ -1,15 +1,15 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
+import 'package:linktree_iqfareez_flutter/utils/api_bitly.dart';
+import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
+import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AdvancedLink extends StatefulWidget {
   AdvancedLink({this.userInfo, this.uniqueLink, this.uniqueCode});
@@ -23,9 +23,10 @@ class AdvancedLink extends StatefulWidget {
 class _AdvancedLinkState extends State<AdvancedLink> {
   DocumentReference _userData;
   bool _hasGeneratedFdlLink = false;
-  bool _hasGeneratedBitlyLink = false;
-  String _fdlLink;
+  bool _hasGeneratedBitlyLink;
+  String _fdlLink = '';
   String _bitlyLink;
+  bool _waitForBitly = false;
 
   @override
   void initState() {
@@ -34,6 +35,8 @@ class _AdvancedLinkState extends State<AdvancedLink> {
         FirebaseFirestore.instance.collection('links').doc(widget.uniqueCode);
     _hasGeneratedFdlLink = GetStorage().read(kHasFdlLink) != null;
     _fdlLink = GetStorage().read(kFdlLink) ?? "";
+    _hasGeneratedBitlyLink = GetStorage().read(kHasBitlyLink) ?? false;
+    _bitlyLink = GetStorage().read(kBitlyLink) ?? '';
   }
 
   @override
@@ -69,32 +72,24 @@ class _AdvancedLinkState extends State<AdvancedLink> {
                           TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 5),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          flex: 2,
-                          child: Text(
-                            '$kPageUrl/ ',
-                            style: TextStyle(
-                                fontSize: 20,
-                                textBaseline: TextBaseline.alphabetic),
+                    LinkContainer(
+                        child: Text.rich(
+                      TextSpan(
+                          style: TextStyle(
+                            fontSize: 21,
                           ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: TextField(
-                            maxLength: 16,
-                            decoration: InputDecoration(
-                              // border: OutlineInputBorder(),
-                              isDense: true,
+                          children: [
+                            TextSpan(
+                                text: _fdlLink.substring(
+                                    0, _fdlLink.indexOf('/') + 1)),
+                            TextSpan(
+                              text:
+                                  _fdlLink.substring(_fdlLink.indexOf('/') + 1),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                          ]),
+                      textAlign: TextAlign.center,
+                    )),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -133,95 +128,193 @@ class _AdvancedLinkState extends State<AdvancedLink> {
               Expanded(
                   child: Column(
                 children: [
-                  Text('Bitly'),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14.0),
-                        color: Colors.blueGrey.shade100.withAlpha(105)),
-                    child: Text.rich(
-                      TextSpan(
-                          style: TextStyle(
-                            fontSize: 21,
-                          ),
-                          children: [
-                            TextSpan(text: ''),
-                            TextSpan(
-                                text: _bitlyLink,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ]),
-                      textAlign: TextAlign.center,
+                  Text(
+                    'Shorten link with Bitly',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: GestureDetector(
+                      onTap: () => launchURL(context, 'https://$_bitlyLink'),
+                      child: LinkContainer(
+                        child: Text.rich(
+                          TextSpan(
+                              style: TextStyle(
+                                fontSize: 21,
+                              ),
+                              children: [
+                                TextSpan(
+                                    text: _bitlyLink.substring(
+                                        0, _bitlyLink.indexOf('/') + 1)),
+                                TextSpan(
+                                  text: _bitlyLink
+                                      .substring(_bitlyLink.indexOf('/') + 1),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ]),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ),
+                  _hasGeneratedBitlyLink
+                      ? Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Total clicks in this week: '),
+                              FutureBuilder(
+                                future: BitlyApi.clickSummary(url: _bitlyLink),
+                                builder: (context, snapshot) {
+                                  print(snapshot.toString());
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                      'Failed to fetch metric data :(',
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    );
+                                  } else {
+                                    return LoadingIndicator();
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    // mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      OutlinedButton.icon(
-                        onPressed: () {},
-                        label: Text('Copy'),
-                        icon: FaIcon(FontAwesomeIcons.copy, size: 14),
-                      ),
                       SizedBox(width: 5),
-                      SizedBox(width: 5),
-                      ElevatedButton.icon(
-                        onPressed: _hasGeneratedBitlyLink
-                            ? () {
-                                // DynamicLinkParameters _parameters =
-                                //     DynamicLinkParameters(
-                                //         uriPrefix: 'https://flutree.web.app',
-                                //         link: Uri.parse(widget.uniqueLink));
-                                Fluttertoast.showToast(msg: 'Copy');
-                              }
-                            : () async {
-                                var _jsonBody = {
-                                  "long_url": widget.uniqueLink,
-                                  "domain": "bit.ly",
-                                  "group_guid": "Bl4628jEmC1"
-                                };
-                                var response = await Dio().post(
-                                    'https://api-ssl.bitly.com/v4/shorten',
-                                    options: Options(
-                                      headers: {
-                                        'Authorization':
-                                            'Bearer $kBitlyApiToken',
-                                        Headers.contentTypeHeader:
-                                            'application/json'
-                                      },
-                                    ),
-                                    data: _jsonBody);
-
-                                print(response);
-
-                                switch (response.statusCode) {
-                                  case HttpStatus.ok:
-                                  //TODO: Response message
-                                  case HttpStatus.created:
-                                    //TODO: Respomnse message
-                                    var decoded =
-                                        json.decode(response.toString());
-                                    print(decoded);
-                                    Fluttertoast.showToast(msg: decoded["id"]);
-                                    Fluttertoast.showToast(
-                                        msg: decoded["created_at"]);
-                                    setState(() {
-                                      _hasGeneratedBitlyLink = true;
-                                      _bitlyLink = decoded["id"];
-                                    });
-                                    break;
-                                  default:
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            'Error: ${response.statusCode}: ${response.statusMessage}');
-                                }
+                      Visibility(
+                        visible: _hasGeneratedBitlyLink,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: OutlinedButton.icon(
+                              onPressed: () {
+                                //qrcode
                               },
-                        label:
-                            Text(_hasGeneratedBitlyLink ? 'Copy' : 'Shorten'),
-                        icon: FaIcon(
-                            _hasGeneratedBitlyLink
-                                ? FontAwesomeIcons.copy
-                                : FontAwesomeIcons.link,
-                            size: 14),
+                              icon: FaIcon(
+                                FontAwesomeIcons.qrcode,
+                                size: 14,
+                              ),
+                              label: Text('QR Code')),
+                        ),
                       ),
+                      Visibility(
+                        visible: _hasGeneratedBitlyLink,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(
+                                      text: 'https://$_bitlyLink'))
+                                  .then((value) => Fluttertoast.showToast(
+                                      msg: 'Copied link to clipboard.'));
+                            },
+                            label: Text('Copy'),
+                            icon: FaIcon(FontAwesomeIcons.copy, size: 14),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ElevatedButton.icon(
+                          onPressed: _hasGeneratedBitlyLink
+                              ? () {
+                                  Share.share(
+                                      'Visit my Flutree profile on https://$_bitlyLink');
+                                }
+                              : () async {
+                                  bool response = await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                24.0, 20.0, 24.0, 8.0),
+                                        content: Text.rich(
+                                          TextSpan(
+                                            text:
+                                                'By using Bitly services, you agree to Bitly\'s ',
+                                            children: [
+                                              TextSpan(
+                                                  text: 'Terms of Service',
+                                                  style: linkTextStyle,
+                                                  recognizer: TapGestureRecognizer()
+                                                    ..onTap = () => launchURL(
+                                                        context,
+                                                        kBitlyTermsOfService)),
+                                              TextSpan(text: ' and '),
+                                              TextSpan(
+                                                  text: 'Privacy Policy',
+                                                  style: linkTextStyle,
+                                                  recognizer: TapGestureRecognizer()
+                                                    ..onTap = () => launchURL(
+                                                        context,
+                                                        kBitlyPrivacyPolicyLink)),
+                                              TextSpan(text: '.')
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                              child: Text('Cancel')),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, true);
+                                              },
+                                              child: Text('Agree all'))
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  if (response ?? false) {
+                                    setState(() {
+                                      _waitForBitly = true;
+                                    });
+                                    try {
+                                      var link = await BitlyApi.shorten(
+                                          url: widget.uniqueLink);
+                                      setState(() {
+                                        _bitlyLink = link;
+                                        _hasGeneratedBitlyLink = true;
+                                      });
+                                      GetStorage().write(kHasBitlyLink, true);
+                                      GetStorage()
+                                          .write(kBitlyLink, _bitlyLink);
+                                    } catch (e) {
+                                      print(e);
+                                    }
+
+                                    setState(() {
+                                      _waitForBitly = false;
+                                    });
+                                  } else
+                                    return;
+                                },
+                          label: _waitForBitly
+                              ? LoadingIndicator()
+                              : Text(
+                                  _hasGeneratedBitlyLink ? 'Share' : 'Shorten'),
+                          icon: FaIcon(
+                              _hasGeneratedBitlyLink
+                                  ? FontAwesomeIcons.share
+                                  : FontAwesomeIcons.link,
+                              size: 14),
+                        ),
+                      ),
+                      SizedBox(width: 5),
                     ],
                   )
                 ],

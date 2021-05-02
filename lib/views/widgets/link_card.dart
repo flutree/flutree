@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/social_list.dart';
 import '../../utils/social_model.dart';
-import '../../utils/urlLauncher.dart';
+import '../../utils/url_launcher.dart';
 
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage

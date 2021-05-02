@@ -8,7 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../CONSTANTS.dart' as Constants;
 import '../../PRIVATE.dart';
 import '../../utils/ads_helper.dart';
-import '../../utils/urlLauncher.dart';
+import '../../utils/url_launcher.dart';
 import 'preview_app_page.dart';
 
 class PreviewPage extends StatefulWidget {

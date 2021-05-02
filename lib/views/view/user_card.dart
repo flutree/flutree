@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import '../../utils/linkcard_model.dart';
-import '../widgets/linkCard.dart';
+import '../widgets/link_card.dart';
 import 'bottom_persistant_platform_chooser.dart';
 
 class UserCard extends StatefulWidget {

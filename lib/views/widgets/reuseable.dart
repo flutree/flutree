@@ -52,6 +52,9 @@ Container buildChangeDpIcon() {
   );
 }
 
+TextStyle linkTextStyle =
+    TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold);
+
 TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
     color: color,
     decorationStyle: TextDecorationStyle.dotted,
@@ -209,5 +212,19 @@ class LoadingIndicator extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
     );
+  }
+}
+
+class LinkContainer extends StatelessWidget {
+  const LinkContainer({this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14.0),
+            color: Colors.blueGrey.shade100.withAlpha(105)),
+        child: child);
   }
 }

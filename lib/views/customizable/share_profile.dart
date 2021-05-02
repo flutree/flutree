@@ -14,7 +14,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../PRIVATE.dart';
-import '../../utils/urlLauncher.dart';
+import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 
 class LiveGuide extends StatefulWidget {
@@ -27,7 +27,6 @@ class LiveGuide extends StatefulWidget {
 }
 
 class _LiveGuideState extends State<LiveGuide> {
-  final containerTextColour = Colors.blueGrey.shade100.withAlpha(105);
   InterstitialAd _interstitialAd;
   String _profileLink;
 
@@ -194,11 +193,7 @@ class _LiveGuideState extends State<LiveGuide> {
           style: TextStyle(fontSize: 16),
         ),
         SizedBox(height: 5),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14.0),
-              color: containerTextColour),
+        LinkContainer(
           child: Text.rich(
             TextSpan(
                 style: TextStyle(
@@ -239,16 +234,15 @@ class _LiveGuideState extends State<LiveGuide> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 12),
         SelectableText.rich(
           TextSpan(
-            style: TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: 16),
             children: [
               TextSpan(text: 'Alternatively, go to '),
               TextSpan(
                   text: kWebappUrl,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                  style: linkTextStyle,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launchURL(context, 'http://$kWebappUrl');

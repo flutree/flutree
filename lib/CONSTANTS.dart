@@ -1,5 +1,8 @@
 library constants;
 
+// links
+const kBitlyPrivacyPolicyLink = 'https://bitly.com/pages/privacy';
+const kBitlyTermsOfService = 'https://bitly.com/pages/terms-of-service';
 const kWebappUrl = 'flutree.web.app';
 const kPageUrl = 'flutree.page.link';
 const kPlayStoreUrl =
@@ -12,3 +15,5 @@ const kGumroadDiscountLink = 'https://gumroad.com/l/YHweV/8t2062d';
 // Get Storage
 const kHasFdlLink = 'hasFdlLink';
 const kFdlLink = 'fdlLink';
+const kHasBitlyLink = 'hasBitlyLink';
+const kBitlyLink = 'bitlyLink';
