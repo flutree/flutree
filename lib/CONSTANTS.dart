@@ -4,7 +4,7 @@ library constants;
 const kBitlyPrivacyPolicyLink = 'https://bitly.com/pages/privacy';
 const kBitlyTermsOfService = 'https://bitly.com/pages/terms-of-service';
 const kWebappUrl = 'flutree.web.app';
-const kPageUrl = 'flutree.page.link';
+const kPageUrl = 'flut.page.link';
 const kPlayStoreUrl =
     'https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter';
 

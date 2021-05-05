@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../CONSTANTS.dart';
@@ -133,7 +134,7 @@ class _EditPageState extends State<EditPage> {
             source: ImageSource.gallery,
             imageQuality: 70,
             maxWidth: 300,
-            maxHeight: 300);
+            maxHeight: 200);
         break;
     }
 
@@ -149,15 +150,13 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   startBannerAd();
-    // });
-
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        shadowColor: Colors.blueGrey.withAlpha(70),
+        iconTheme: IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        elevation: 0.0,
         toolbarHeight: 40,
         automaticallyImplyLeading: false,
         title: Material(
@@ -194,6 +193,7 @@ class _EditPageState extends State<EditPage> {
             onSelected: (value) async {
               switch (value) {
                 case 'Logout':
+                  await GetStorage().erase();
                   await FirebaseAuth.instance.signOut();
                   await GoogleSignIn().signOut();
                   Navigator.pushReplacement(context,

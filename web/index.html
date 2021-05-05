@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Your beautiful social cards">
-  <meta property="og:site_name" content="Flutree" />
-  <meta property="og:image" content="https://flutree.web.app/static/logo-flutree.png" />
+  <meta name="description" content="Create your beautiful beautiful social cards online.">
+  <meta property="og:site_name" content="Flutree Create on Web" />
+  <meta property="og:image" content="https://flutreecreate.web.app/static/logo-flutree.png" />
 
   <!-- https://github.com/flutter/plugins/blob/master/packages/google_sign_in/google_sign_in_web/README.md#web-integration-->
   <meta name="google-signin-client_id"
@@ -21,7 +21,7 @@
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="favicon.png" />
 
-  <title>Flutree - Social Cards</title>
+  <title>Flutree Create</title>
   <link rel="manifest" href="manifest.json">
 </head>
 
@@ -37,31 +37,19 @@
     }
   </script>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="/__/firebase/8.4.3/firebase-app.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
-  <!-- https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-analytics.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="/__/firebase/8.4.3/firebase-analytics.js"></script>
+  <script src="/__/firebase/8.4.3/firebase-auth.js"></script>
+  <script src="/__/firebase/8.4.3/firebase-firestore.js"></script>
 
-  <script>
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    var firebaseConfig = {
-      apiKey: "AIzaSyAJygwdQgzuR2xEf53BZOCQ_NMZWNNrU0I",
-      authDomain: "linktree-clone-flutter.firebaseapp.com",
-      databaseURL: "https://linktree-clone-flutter.firebaseio.com",
-      projectId: "linktree-clone-flutter",
-      storageBucket: "linktree-clone-flutter.appspot.com",
-      messagingSenderId: "385807044061",
-      appId: "1:385807044061:web:2b097f5fc775a5496eba34",
-      measurementId: "G-52F563EKRW"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-  </script>
+
+  <!-- Initialize Firebase -->
+  <script src="/__/firebase/init.js"></script>
+
+
   <script src="main.dart.js" type="application/javascript"></script>
 
 </body>
