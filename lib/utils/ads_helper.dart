@@ -1,5 +1,4 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../PRIVATE.dart';
 
 const String testDevice = '544FB3234D373268D3A6DB803850CDFB';
 

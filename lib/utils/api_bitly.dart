@@ -24,9 +24,7 @@ class BitlyApi {
 
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:
-      //TODO: Response message
       case HttpStatus.created:
-        //TODO: Respomnse message
         var decoded = json.decode(apiResponse.toString());
 
         return decoded["id"];

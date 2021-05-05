@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'views/auth/signin.dart';
 import 'views/customizable/editing_page.dart';
-import 'views/view/enter_code.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,33 +35,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
-      onGenerateRoute: (settings) {
-        // I don't even know how this works, thanks to stack Overflow lol
-        // https://stackoverflow.com/a/59755970/13617136
-        List<String> pathComponents = settings.name.split('/');
-        print(settings.name);
-        switch (settings.name) {
-          case '/':
-            print('/');
-            return MaterialPageRoute(
-              builder: (context) => EnterCode(userCode: ''),
-            );
-            break;
-          default:
-            print('default');
-            return MaterialPageRoute(
-              builder: (context) => EnterCode(
-                userCode: pathComponents.last,
-              ),
-            );
-        }
-      },
-      home: kIsWeb
-          ? EnterCode(userCode: '')
-          : _authUser == null
-              ? SignIn()
-              : EditPage(),
-      //
+      home: _authUser == null ? SignIn() : EditPage(),
     );
   }
 }
