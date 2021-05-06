@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/api_bitly.dart';
-import 'package:linktree_iqfareez_flutter/utils/api_dynamic_link.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/qr_code_page.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/api_bitly.dart';
+import '../../utils/api_dynamic_link.dart';
+import '../../utils/copy_link.dart';
+import '../../utils/snackbar.dart';
+import '../../utils/url_launcher.dart';
+import '../widgets/reuseable.dart';
+import 'qr_code_page.dart';
 
 class AdvancedLink extends StatelessWidget {
   AdvancedLink({this.userInfo, this.uniqueLink, this.uniqueCode});
@@ -41,21 +41,44 @@ class AdvancedLink extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: FdlWidget(
-                  uniqueLink: uniqueLink,
-                  userInfo: userInfo,
-                ),
-              ),
-              Divider(indent: 10, endIndent: 10),
-              Expanded(
-                child: BitlyWidget(
-                  uniqueLink: uniqueLink,
-                ),
-              )
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 500) {
+                return Column(
+                  children: [
+                    Expanded(
+                      child: FdlWidget(
+                        uniqueLink: uniqueLink,
+                        userInfo: userInfo,
+                      ),
+                    ),
+                    Divider(indent: 10, endIndent: 10),
+                    Expanded(
+                      child: BitlyWidget(
+                        uniqueLink: uniqueLink,
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: FdlWidget(
+                        uniqueLink: uniqueLink,
+                        userInfo: userInfo,
+                      ),
+                    ),
+                    VerticalDivider(),
+                    Expanded(
+                      child: BitlyWidget(
+                        uniqueLink: uniqueLink,
+                      ),
+                    )
+                  ],
+                );
+              }
+            },
           ),
         ),
       ),
@@ -90,10 +113,17 @@ class _FdlWidgetState extends State<FdlWidget> {
     return Column(
       children: [
         Text(
-          'Link with social meta tags',
+          'Link with social preview',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 5),
+        kIsWeb
+            ? Container(
+                color: Colors.redAccent,
+                padding: const EdgeInsets.all(12),
+                child: Text('Firebase Dynamic Link not available on web.'),
+              )
+            : SizedBox.shrink(),
         Padding(
           padding: const EdgeInsets.all(14.0),
           child: GestureDetector(
@@ -141,17 +171,7 @@ class _FdlWidgetState extends State<FdlWidget> {
             ),
             Visibility(
               visible: _hasGeneratedFdlLink,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: 'https://$_fdlLink'))
-                        .then((value) => Fluttertoast.showToast(msg: 'Copied'));
-                  },
-                  label: Text('Copy'),
-                  icon: FaIcon(FontAwesomeIcons.copy, size: 14),
-                ),
-              ),
+              child: buildCopyButton('https://$_fdlLink'),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -159,10 +179,9 @@ class _FdlWidgetState extends State<FdlWidget> {
                 onPressed: _waitForFdl
                     ? null
                     : _hasGeneratedFdlLink
-                        ? () {
-                            Share.share('Visit my profile on https://$_fdlLink',
-                                subject: 'My Flutree profile link');
-                          }
+                        ? () => Share.share(
+                            'Visit my profile on https://$_fdlLink',
+                            subject: 'My Flutree profile link')
                         : () async {
                             setState(() => _waitForFdl = true);
                             try {
@@ -181,6 +200,7 @@ class _FdlWidgetState extends State<FdlWidget> {
                                   .write(kHasFdlLink, _hasGeneratedFdlLink);
                             } catch (e) {
                               print(e);
+                              setState(() => _waitForFdl = false);
                               CustomSnack.showErrorSnack(context,
                                   message:
                                       'Failed to build dynamic link. Error: $e');
@@ -292,14 +312,12 @@ class _BitlyWidgetState extends State<BitlyWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: OutlinedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => QrPage(url: _bitlyLink),
-                            fullscreenDialog: true),
-                      );
-                    },
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => QrPage(url: _bitlyLink),
+                              fullscreenDialog: true),
+                        ),
                     icon: FaIcon(
                       FontAwesomeIcons.qrcode,
                       size: 14,
@@ -309,19 +327,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
             ),
             Visibility(
               visible: _hasGeneratedBitlyLink,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Clipboard.setData(
-                            ClipboardData(text: 'https://$_bitlyLink'))
-                        .then((value) => Fluttertoast.showToast(
-                            msg: 'Copied link to clipboard.'));
-                  },
-                  label: Text('Copy'),
-                  icon: FaIcon(FontAwesomeIcons.copy, size: 14),
-                ),
-              ),
+              child: buildCopyButton('https://$_bitlyLink'),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -329,10 +335,8 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                 onPressed: _waitForBitly
                     ? null
                     : _hasGeneratedBitlyLink
-                        ? () {
-                            Share.share(
-                                'Visit my Flutree profile on https://$_bitlyLink');
-                          }
+                        ? () => Share.share(
+                            'Visit my Flutree profile on https://$_bitlyLink')
                         : () async {
                             bool response = await showDialog(
                               context: context,
@@ -340,47 +344,22 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                                 return AlertDialog(
                                   contentPadding: const EdgeInsets.fromLTRB(
                                       24.0, 20.0, 24.0, 8.0),
-                                  content: Text.rich(
-                                    TextSpan(
-                                      text:
-                                          'By using Bitly services, you agree to Bitly\'s ',
-                                      children: [
-                                        TextSpan(
-                                            text: 'Terms of Service',
-                                            style: linkTextStyle,
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () => launchURL(context,
-                                                  kBitlyTermsOfService)),
-                                        TextSpan(text: ' and '),
-                                        TextSpan(
-                                            text: 'Privacy Policy',
-                                            style: linkTextStyle,
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () => launchURL(context,
-                                                  kBitlyPrivacyPolicyLink)),
-                                        TextSpan(text: '.')
-                                      ],
-                                    ),
-                                  ),
+                                  content: BitlyConsents(),
                                   actions: [
                                     TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
                                         child: Text('Cancel')),
                                     TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                        },
-                                        child: Text('Agree all'))
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: Text('Agree to all'))
                                   ],
                                 );
                               },
                             );
                             if (response ?? false) {
-                              setState(() {
-                                _waitForBitly = true;
-                              });
+                              setState(() => _waitForBitly = true);
                               try {
                                 var link = await BitlyApi.shorten(
                                     url: widget.uniqueLink);
@@ -392,11 +371,11 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                                 GetStorage().write(kBitlyLink, _bitlyLink);
                               } catch (e) {
                                 print(e);
+                                CustomSnack.showErrorSnack(context,
+                                    message: 'Bitly error: $e');
                               }
 
-                              setState(() {
-                                _waitForBitly = false;
-                              });
+                              setState(() => _waitForBitly = false);
                             } else
                               return;
                           },
@@ -416,4 +395,44 @@ class _BitlyWidgetState extends State<BitlyWidget> {
       ],
     );
   }
+}
+
+class BitlyConsents extends StatelessWidget {
+  const BitlyConsents({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(
+        text: 'By using Bitly services, you agree to Bitly\'s ',
+        children: [
+          TextSpan(
+              text: 'Terms of Service',
+              style: linkTextStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => launchURL(context, kBitlyTermsOfService)),
+          TextSpan(text: ' and '),
+          TextSpan(
+              text: 'Privacy Policy',
+              style: linkTextStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => launchURL(context, kBitlyPrivacyPolicyLink)),
+          TextSpan(text: '.')
+        ],
+      ),
+    );
+  }
+}
+
+Padding buildCopyButton(String url) {
+  return Padding(
+    padding: const EdgeInsets.all(4.0),
+    child: OutlinedButton.icon(
+      onPressed: () => CopyLink.copy(url: url),
+      label: Text('Copy'),
+      icon: FaIcon(FontAwesomeIcons.copy, size: 14),
+    ),
+  );
 }

@@ -7,15 +7,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:linktree_iqfareez_flutter/utils/ads_helper.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/advanced_link.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/qrcode_only.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../PRIVATE.dart';
+import '../../utils/ads_helper.dart';
+import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
+import 'advanced_link.dart';
+import 'qr_code_page.dart';
 
 class LiveGuide extends StatefulWidget {
   LiveGuide({this.userCode, this.docs});
@@ -109,23 +110,7 @@ class _LiveGuideState extends State<LiveGuide> {
                             SizedBox(height: 25),
                             infoWidget(),
                             SizedBox(height: 20),
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AdvancedLink(
-                                      userInfo: widget.docs,
-                                      uniqueLink: 'https://$_profileLink',
-                                      uniqueCode: widget.userCode,
-                                    ),
-                                  ),
-                                );
-                              },
-                              label: Text('Advanced link...'),
-                              icon: FaIcon(FontAwesomeIcons.angleDoubleRight,
-                                  size: 11),
-                            ),
+                            advancedLinkButton(context),
                             AskSquishCard(context: context),
                             Padding(
                               padding: const EdgeInsets.all(30),
@@ -140,7 +125,14 @@ class _LiveGuideState extends State<LiveGuide> {
                         children: [
                           Row(
                             children: [
-                              Expanded(child: infoWidget()),
+                              Expanded(
+                                  child: Column(
+                                children: [
+                                  infoWidget(),
+                                  SizedBox(height: 15),
+                                  advancedLinkButton(context),
+                                ],
+                              )),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -163,22 +155,39 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
-  Widget generateQrCode(String url) {
-    QrImage _image = QrImage(
-      data: 'https://$url',
-      size: 210,
-      embeddedImage: AssetImage(
-        'images/logo/qrlogo.png',
-      ),
-    );
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => QrCodeFullScreen(_image)));
+  OutlinedButton advancedLinkButton(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdvancedLink(
+              userInfo: widget.docs,
+              uniqueLink: 'https://$_profileLink',
+              uniqueCode: widget.userCode,
+            ),
+          ),
+        );
       },
+      label: Text('Advanced link...'),
+      icon: FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
+    );
+  }
+
+  Widget generateQrCode(String url) {
+    String completeUrl = 'https://$url';
+    return GestureDetector(
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => QrPage(url: completeUrl))),
       child: Hero(
         tag: 'qrcode',
-        child: _image,
+        child: QrImage(
+          data: completeUrl,
+          size: 210,
+          embeddedImage: AssetImage(
+            'images/logo/qrlogo.png',
+          ),
+        ),
       ),
     );
   }
@@ -213,13 +222,7 @@ class _LiveGuideState extends State<LiveGuide> {
           children: [
             TextButton.icon(
                 label: Text('Copy'),
-                onPressed: () {
-                  Clipboard.setData(
-                          ClipboardData(text: 'https://$_profileLink'))
-                      .then((value) {
-                    Fluttertoast.showToast(msg: 'Copied profile link');
-                  });
-                },
+                onPressed: () => CopyLink.copy(url: 'https://$_profileLink'),
                 icon: FaIcon(
                   FontAwesomeIcons.copy,
                   size: 18,
@@ -241,23 +244,26 @@ class _LiveGuideState extends State<LiveGuide> {
             children: [
               TextSpan(text: 'Alternatively, go to '),
               TextSpan(
-                  text: kWebappUrl,
-                  style: linkTextStyle,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      launchURL(context, 'http://$kWebappUrl');
-                    }),
+                text: kWebappUrl,
+                style: linkTextStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    launchURL(context, 'http://$kWebappUrl');
+                  },
+              ),
               TextSpan(text: ' and enter code '),
               TextSpan(
-                  text: widget.userCode,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
+                text: widget.userCode,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () =>
                       Clipboard.setData(ClipboardData(text: widget.userCode))
-                          .then((value) {
-                        Fluttertoast.showToast(msg: 'Copied code');
-                      });
-                    })
+                          .then(
+                        (value) {
+                          Fluttertoast.showToast(msg: 'Copied code');
+                        },
+                      ),
+              )
             ],
           ),
           textAlign: TextAlign.center,
@@ -292,9 +298,7 @@ class AskSquishCard extends StatelessWidget {
             builder: (context) {
               return AssetGiffyDialog(
                 onlyOkButton: true,
-                onOkButtonPressed: () {
-                  Navigator.pop(context);
-                },
+                onOkButtonPressed: () => Navigator.pop(context),
                 image: Image.asset(
                   'images/intro.gif',
                 ),

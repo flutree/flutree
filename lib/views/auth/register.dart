@@ -15,7 +15,7 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  bool _isLoading = false;
+  bool _isRegisterLoading = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -43,43 +43,52 @@ class _RegisterState extends State<Register> {
                 PasswordTextField(passwordController: _passwordController),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      FocusScope.of(context).unfocus();
-                      setState(() => _isLoading = true);
-                      try {
-                        UserCredential user =
-                            await _authInstance.createUserWithEmailAndPassword(
-                                email: _emailController.text.trim(),
-                                password: _passwordController.text.trim());
+                  onPressed: _isRegisterLoading
+                      ? null
+                      : () async {
+                          if (_formKey.currentState.validate()) {
+                            FocusScope.of(context).unfocus();
+                            setState(() => _isRegisterLoading = true);
+                            try {
+                              UserCredential user = await _authInstance
+                                  .createUserWithEmailAndPassword(
+                                      email: _emailController.text.trim(),
+                                      password:
+                                          _passwordController.text.trim());
 
-                        await user.user.updateProfile(
-                            displayName: _nameController.text.trim());
+                              await user.user.updateProfile(
+                                  displayName: _nameController.text.trim());
 
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPage(),
-                            ));
-                      } on FirebaseAuthException catch (e) {
-                        setState(() => _isLoading = false);
-                        print('ERROROR: ${e.message}');
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Error: ${e.message}'),
-                          behavior: SnackBarBehavior.floating,
-                        ));
-                      } catch (e) {
-                        setState(() => _isLoading = false);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Unknown error occured'),
-                          behavior: SnackBarBehavior.floating,
-                        ));
-                      }
-                    }
-                  },
-                  child: _isLoading ? LoadingIndicator() : Text('Register'),
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditPage(),
+                                  ));
+                            } on FirebaseAuthException catch (e) {
+                              setState(() => _isRegisterLoading = false);
+                              print('ERROROR: ${e.message}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Error: ${e.message}'),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            } catch (e) {
+                              setState(() => _isRegisterLoading = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Unknown error occured'),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  child: _isRegisterLoading
+                      ? LoadingIndicator()
+                      : Text('Register'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),

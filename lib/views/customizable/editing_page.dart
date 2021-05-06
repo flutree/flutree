@@ -14,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/snackbar.dart';
@@ -23,7 +24,6 @@ import '../widgets/link_card.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
 import 'share_profile.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
@@ -227,7 +227,7 @@ class _EditPageState extends State<EditPage> {
                                         .refFromURL(_userImageUrl)
                                         .delete();
                                   } catch (e) {
-                                    print('Err: $e');
+                                    print('Unable to delete image: $e');
                                   }
                                   try {
                                     await _userDocument.delete();
@@ -286,7 +286,7 @@ class _EditPageState extends State<EditPage> {
                                       () => _includeEmail = value),
                                   title: Text('  Include my email'),
                                   contentPadding: EdgeInsets.zero,
-                                )
+                                ),
                               ],
                             ),
                             actions: [
@@ -384,7 +384,7 @@ class _EditPageState extends State<EditPage> {
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.exists) {
               _documentSnapshot = snapshot.data;
-              print('Document exist: ${snapshot.data.data()}');
+              // print('Document exist: ${snapshot.data.data()}');
 
               _subtitleText = snapshot.data.data()['subtitle'] ??
                   'Something about yourself';
@@ -410,7 +410,7 @@ class _EditPageState extends State<EditPage> {
                         onTap: kIsWeb
                             ? () => CustomSnack.showSnack(context,
                                 message:
-                                    'Change image available only in Android App',
+                                    'Change image only available in Android App',
                                 barAction: SnackBarAction(
                                     textColor: Colors.blueGrey.shade200,
                                     label: 'Get the app',
@@ -644,7 +644,13 @@ class _EditPageState extends State<EditPage> {
                                 shape: _bottomSheetStyle,
                                 context: context,
                                 builder: (context) {
-                                  return AddCard(linkcardModel: temp);
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom),
+                                    child: AddCard(linkcardModel: temp),
+                                  );
                                 },
                               );
 
@@ -693,7 +699,13 @@ class _EditPageState extends State<EditPage> {
                                     shape: _bottomSheetStyle,
                                     context: context,
                                     builder: (context) {
-                                      return AddCard();
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        child: AddCard(),
+                                      );
                                     },
                                   );
 
@@ -737,7 +749,7 @@ class _EditPageState extends State<EditPage> {
                               )
                             : SizedBox.shrink(),
                       ),
-                      SizedBox(height: 10)
+                      SizedBox(height: 15)
                     ],
                   ),
                 ),

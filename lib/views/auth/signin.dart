@@ -18,7 +18,7 @@ class _SignInState extends State<SignIn> {
   FirebaseAuth _authInstance = FirebaseAuth.instance;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
+  bool _isSignInLoading = false;
   bool _isGoogleLoading = false;
 
   @override
@@ -46,32 +46,35 @@ class _SignInState extends State<SignIn> {
                 PasswordTextField(passwordController: _passwordController),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      FocusScope.of(context).unfocus();
-                      setState(() => _isLoading = true);
-                      _authInstance
-                          .signInWithEmailAndPassword(
-                              email: _emailController.text.trim(),
-                              password: _passwordController.text.trim())
-                          .then((value) {
-                        print('Sign in email password done');
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPage(),
-                            ));
-                      }).catchError((error) {
-                        print('ERROR: $error');
-                        setState(() {
-                          _isLoading = false;
-                          CustomSnack.showErrorSnack(context,
-                              message: 'Error: ${error.message}');
-                        });
-                      });
-                    }
-                  },
-                  child: _isLoading ? LoadingIndicator() : Text('Sign in'),
+                  onPressed: _isSignInLoading
+                      ? null
+                      : () {
+                          if (_formKey.currentState.validate()) {
+                            FocusScope.of(context).unfocus();
+                            setState(() => _isSignInLoading = true);
+                            _authInstance
+                                .signInWithEmailAndPassword(
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim())
+                                .then((value) {
+                              print('Sign in email password done');
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditPage(),
+                                  ));
+                            }).catchError((error) {
+                              print('ERROR: $error');
+                              setState(() {
+                                _isSignInLoading = false;
+                                CustomSnack.showErrorSnack(context,
+                                    message: 'Error: ${error.message}');
+                              });
+                            });
+                          }
+                        },
+                  child:
+                      _isSignInLoading ? LoadingIndicator() : Text('Sign in'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -210,44 +213,49 @@ class _SignInState extends State<SignIn> {
                             borderRadius: BorderRadius.circular(18.0),
                           ),
                         ),
-                        onPressed: () async {
-                          setState(() => _isGoogleLoading = true);
-                          try {
-                            // Trigger the authentication flow
-                            final GoogleSignInAccount googleUser =
-                                await GoogleSignIn().signIn();
+                        onPressed: _isGoogleLoading
+                            ? null
+                            : () async {
+                                setState(() => _isGoogleLoading = true);
+                                try {
+                                  // Trigger the authentication flow
+                                  final GoogleSignInAccount googleUser =
+                                      await GoogleSignIn().signIn();
 
-                            // Obtain the auth details from the request
-                            final GoogleSignInAuthentication googleAuth =
-                                await googleUser.authentication;
+                                  // Obtain the auth details from the request
+                                  final GoogleSignInAuthentication googleAuth =
+                                      await googleUser.authentication;
 
-                            // Create a new credential
-                            final GoogleAuthCredential credential =
-                                GoogleAuthProvider.credential(
-                              accessToken: googleAuth.accessToken,
-                              idToken: googleAuth.idToken,
-                            );
+                                  // Create a new credential
+                                  final GoogleAuthCredential credential =
+                                      GoogleAuthProvider.credential(
+                                    accessToken: googleAuth.accessToken,
+                                    idToken: googleAuth.idToken,
+                                  );
 
-                            // Once signed in, return the UserCredential
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential)
-                                .then((value) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditPage(),
-                                  ));
-                            });
-                          } on FirebaseAuthException catch (e) {
-                            print('Error: $e');
-                            setState(() => _isGoogleLoading = false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('ERROR: ${e.message}')));
-                          } catch (e) {
-                            print('UNKNOWN ERROR CAUGHT GOOGLE SIGN IN: $e');
-                            setState(() => _isGoogleLoading = false);
-                          }
-                        },
+                                  // Once signed in, return the UserCredential
+                                  await FirebaseAuth.instance
+                                      .signInWithCredential(credential)
+                                      .then((value) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditPage(),
+                                        ));
+                                  });
+                                } on FirebaseAuthException catch (e) {
+                                  print('Error: $e');
+                                  setState(() => _isGoogleLoading = false);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('ERROR: ${e.message}')));
+                                } catch (e) {
+                                  print(
+                                      'UNKNOWN ERROR CAUGHT GOOGLE SIGN IN: $e');
+                                  setState(() => _isGoogleLoading = false);
+                                }
+                              },
                         icon: FaIcon(FontAwesomeIcons.google, size: 15),
                         label: _isGoogleLoading
                             ? LoadingIndicator()

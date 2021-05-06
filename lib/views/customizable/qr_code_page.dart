@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../utils/url_launcher.dart';
+import '../widgets/reuseable.dart';
 
 class QrPage extends StatelessWidget {
   QrPage({this.url});
@@ -23,12 +23,19 @@ class QrPage extends StatelessWidget {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: QrImage(
-              data: 'https://$url',
+          Spacer(),
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Center(
+                child: QrImage(
+                  data: 'https://$url',
+                ),
+              ),
             ),
           ),
           SizedBox(height: 10),
@@ -37,12 +44,14 @@ class QrPage extends StatelessWidget {
                 onTap: () => launchURL(context, 'https://$url'),
                 child: Text(
                   'https://$url',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     decorationStyle: TextDecorationStyle.dotted,
                     decoration: TextDecoration.underline,
                   ),
                 )),
-          )
+          ),
+          Spacer()
         ],
       ),
     );

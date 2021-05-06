@@ -20,7 +20,7 @@ class BitlyApi {
         ),
         data: _jsonBody);
 
-    print('ApiResponse is $apiResponse');
+    // print('ApiResponse is $apiResponse');
 
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:
@@ -43,7 +43,7 @@ class BitlyApi {
         'https://api-ssl.bitly.com/v4/bitlinks/$url/clicks/summary',
         queryParameters: {'unit': 'week'},
         options: Options(headers: {'Authorization': 'Bearer $kBitlyApiToken'}));
-    print('clickSummary api response:$apiResponse');
+    // print('clickSummary api response:$apiResponse');
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:
         var decoded = json.decode(apiResponse.toString());
