@@ -11,12 +11,14 @@ class CustomSnack {
   }
 
   static void showSnack(BuildContext context,
-      {@required String message, SnackBarAction barAction}) {
+      {@required String message,
+      SnackBarAction barAction,
+      Duration duration = const Duration(milliseconds: 2100)}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       action: barAction,
       behavior: SnackBarBehavior.floating,
       content: Text(message),
-      duration: Duration(milliseconds: 2100),
+      duration: duration,
     ));
   }
 }

@@ -63,6 +63,7 @@ class _AbuseReportState extends State<AbuseReport> {
                 ),
               ),
               ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _abuseMap.length,
                 itemBuilder: (context, index) {
@@ -109,11 +110,17 @@ class _AbuseReportState extends State<AbuseReport> {
                                   _abuseMap.keys.elementAt(_abuseType.index),
                               'Profile Link': widget.profileLink
                             }).then((value) {
-                              CustomSnack.showSnack(
-                                context,
-                                message:
-                                    'Thank your report. We will review your report as soon as possible.\nYour case ID is ${value.id}:',
-                              );
+                              CustomSnack.showSnack(context,
+                                  message:
+                                      'Thank your report. We will review your report as soon as possible.\nYour case ID is ${value.id}:',
+                                  duration: Duration(seconds: 3),
+                                  barAction: SnackBarAction(
+                                      label: 'OK',
+                                      onPressed: () {
+                                        //TODO: TEst this
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      }));
                               setState(() => _isProcess = false);
                               Navigator.of(context).pop();
                             }).catchError((e) {
