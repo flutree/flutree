@@ -1,55 +1,65 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/views/report_abuse.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
 import 'bottom_persistant_platform_chooser.dart';
 
 class UserCard extends StatefulWidget {
-  UserCard(this.snapshot);
+  UserCard(this.snapshot, this.code);
   final DocumentSnapshot snapshot;
+  final String code;
   @override
   _UserCardState createState() => _UserCardState();
 }
 
 class _UserCardState extends State<UserCard> {
   List<LinkCard> datas = [];
+  String _profileLink;
   @override
   void initState() {
     super.initState();
-    print('Document exist: ${widget.snapshot.data()}');
+    // print('Document exist: ${widget.snapshot.data()}');
+    print('Document exist');
+    _profileLink = 'https://$kWebappUrl/${widget.code}';
 
     List<dynamic> socialsList = widget.snapshot.data()['socials'];
 
     for (var item in socialsList ?? []) {
-      datas.add(LinkCard(
-          linkcardModel: LinkcardModel(item['exactName'],
-              displayName: item['displayName'], link: item['link'])));
+      datas.add(
+        LinkCard(
+          linkcardModel: LinkcardModel(
+            item['exactName'],
+            displayName: item['displayName'],
+            link: item['link'],
+          ),
+        ),
+      );
     }
   }
 
   Future<bool> popHandler() async {
     bool response = await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Exit'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: Text('Yes'),
-              ),
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Exit'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
 
     return response ?? false;
   }
@@ -59,13 +69,6 @@ class _UserCardState extends State<UserCard> {
     return WillPopScope(
       onWillPop: popHandler,
       child: Scaffold(
-        persistentFooterButtons: [
-          TextButton(
-              onPressed: () async {
-                PersistentPlatformChooser.showPlatformChooser(context);
-              },
-              child: Text('Made with Flutree ♡'))
-        ],
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -80,19 +83,25 @@ class _UserCardState extends State<UserCard> {
                         buildBasicInfo(),
                         SizedBox(height: 25.0),
                         buildSocialCardsList(),
-                        SizedBox(height: 10),
+                        footerButtons()
                       ],
                     );
                   } else {
-                    return Row(
+                    return Column(
                       children: [
-                        Expanded(flex: 2, child: buildBasicInfo()),
-                        Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 70.0),
-                              child: buildSocialCardsList(),
-                            ))
+                        Row(
+                          children: [
+                            Expanded(flex: 2, child: buildBasicInfo()),
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 70.0),
+                                child: buildSocialCardsList(),
+                              ),
+                            )
+                          ],
+                        ),
+                        footerButtons()
                       ],
                     );
                   }
@@ -110,9 +119,11 @@ class _UserCardState extends State<UserCard> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: datas.isNotEmpty
-          ? datas.map((linkcard) {
-              return linkcard;
-            }).toList()
+          ? datas.map(
+              (linkcard) {
+                return linkcard;
+              },
+            ).toList()
           : [
               SelectableText(
                 'Krik krik... Empty here.. 👀',
@@ -144,6 +155,41 @@ class _UserCardState extends State<UserCard> {
                   'Something about yourself')),
         ),
       ],
+    );
+  }
+
+  Widget footerButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 55),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton.icon(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AbuseReport(_profileLink))),
+            icon: FaIcon(
+              FontAwesomeIcons.exclamationTriangle,
+              size: 14,
+              semanticLabel: 'Report abuse',
+            ),
+            label: Text('Report Abuse'),
+          ),
+          SizedBox(width: 20),
+          TextButton.icon(
+            onPressed: () async {
+              PersistentPlatformChooser.showPlatformChooser(context);
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.heart,
+              size: 14,
+              semanticLabel: 'Create your own',
+            ),
+            label: Text(
+              'Made with Flutree',
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

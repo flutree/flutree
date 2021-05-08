@@ -3,8 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'social_model.dart';
 
 class SocialLists {
-  //TODO: Add Google Play, App store
-  // Make sure update both Android and Web
   static List<SocialModel> socialList = [
     SocialModel('WhatsApp',
         icon: FontAwesomeIcons.whatsapp, colour: Colors.teal.shade800),
@@ -39,6 +37,10 @@ class SocialLists {
     SocialModel('LinkedIn',
         icon: FontAwesomeIcons.linkedin, colour: Colors.blue.shade900),
     SocialModel('Devto', icon: FontAwesomeIcons.dev, colour: Color(0xFF000000)),
+    SocialModel('GooglePlay',
+        icon: FontAwesomeIcons.googlePlay, colour: Color(0xFF40916c)),
+    SocialModel('AppStore ',
+        icon: FontAwesomeIcons.appStore, colour: Color(0xFF1F7EF4)),
     SocialModel('Snapchat',
         icon: FontAwesomeIcons.snapchatGhost, colour: Colors.black),
     SocialModel('Medium',

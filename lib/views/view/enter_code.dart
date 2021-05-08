@@ -22,21 +22,21 @@ class _EnterCodeState extends State<EnterCode> {
 
   final _codeController = TextEditingController();
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   bool hasTryAccessProfile = false;
 
   void accessProfile(String code) async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
       hasTryAccessProfile = true;
     });
     try {
       _usersCollection.doc(code).get().then((value) {
-        setState(() => isLoading = false);
+        setState(() => _isLoading = false);
         if (value.exists) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => UserCard(value)));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => UserCard(value, widget.userCode)));
         } else {
           showDialog(
             context: context,
@@ -50,7 +50,7 @@ class _EnterCodeState extends State<EnterCode> {
       });
     } catch (e) {
       print('Unknown error: $e');
-      setState(() => isLoading = false);
+      setState(() => _isLoading = false);
       CustomSnack.showErrorSnack(context, message: 'Unknown err.');
     }
   }
@@ -114,13 +114,15 @@ class _EnterCodeState extends State<EnterCode> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState.validate()) {
-                        accessProfile(_codeController.text.trim());
-                      }
-                    },
-                    child: !isLoading ? Text('Go') : LoadingIndicator(),
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            FocusScope.of(context).unfocus();
+                            if (_formKey.currentState.validate()) {
+                              accessProfile(_codeController.text.trim());
+                            }
+                          },
+                    child: !_isLoading ? Text('Go') : LoadingIndicator(),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

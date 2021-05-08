@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/utils/urlLauncher.dart';
+import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
 // import 'package:linktree_iqfareez_flutter/views/auth/signin.dart';
 
 import '../../CONSTANTS.dart';
@@ -26,18 +26,18 @@ class PersistentPlatformChooser {
                       )),
                 ),
               ),
-              // Expanded(
-              //   child: SizedBox.expand(
-              //     child: TextButton.icon(
-              //         icon: FaIcon(FontAwesomeIcons.chrome),
-              //         onPressed: () => Navigator.push(context,
-              //             MaterialPageRoute(builder: (context) => SignIn())),
-              //         label: Text(
-              //           'Continue on browser\n(Beta)',
-              //           maxLines: 3,
-              //         )),
-              //   ),
-              // )
+              Expanded(
+                child: SizedBox.expand(
+                  child: TextButton.icon(
+                      icon: FaIcon(FontAwesomeIcons.chrome),
+                      onPressed: () =>
+                          launchURL(context, 'https://$kWebCreateUrl'),
+                      label: Text(
+                        'Continue on browser',
+                        maxLines: 3,
+                      )),
+                ),
+              )
             ],
           ),
         );

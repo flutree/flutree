@@ -16,31 +16,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutree Web',
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-          textTheme: GoogleFonts.karlaTextTheme(),
-        ),
-        onGenerateRoute: (settings) {
-          print('settings.name is ${settings.name}');
-          // I don't even know how this works, thanks to stack Overflow lol
-          // https://stackoverflow.com/a/59755970/13617136
-          List<String> pathComponents = settings.name.split('/');
-          switch (settings.name) {
-            case '/':
-              return MaterialPageRoute(
-                builder: (context) => EnterCode(),
-              );
-              break;
-            default:
-              print('default');
-              return MaterialPageRoute(
-                builder: (context) => EnterCode(
-                  pathComponents.last,
-                ),
-              );
-          }
-        },
-        home: EnterCode());
+      title: 'Flutree Web',
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+        textTheme: GoogleFonts.karlaTextTheme(),
+      ),
+      onGenerateRoute: (settings) {
+        print('settings.name is ${settings.name}');
+        // I don't even know how this works, thanks to stack Overflow lol
+        // https://stackoverflow.com/a/59755970/13617136
+        List<String> pathComponents = settings.name.split('/');
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(),
+            );
+            break;
+          default:
+            print('default');
+            return MaterialPageRoute(
+              builder: (context) => EnterCode(
+                pathComponents.last,
+              ),
+            );
+        }
+      },
+      home: EnterCode(),
+      // home: AbuseReport('https://example.com/4545'),
+    );
   }
 }
