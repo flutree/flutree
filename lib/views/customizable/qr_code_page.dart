@@ -39,17 +39,20 @@ class QrPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          LinkContainer(
-            child: GestureDetector(
-                onTap: () => launchURL(context, 'https://$url'),
-                child: Text(
-                  'https://$url',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    decorationStyle: TextDecorationStyle.dotted,
-                    decoration: TextDecoration.underline,
-                  ),
-                )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: LinkContainer(
+              child: GestureDetector(
+                  onTap: () => launchURL(context, 'https://$url'),
+                  child: Text(
+                    'https://$url',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      decorationStyle: TextDecorationStyle.dotted,
+                      decoration: TextDecoration.underline,
+                    ),
+                  )),
+            ),
           ),
           Spacer()
         ],

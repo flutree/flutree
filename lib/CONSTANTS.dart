@@ -3,8 +3,7 @@ library constants;
 // links
 const kBitlyPrivacyPolicyLink = 'https://bitly.com/pages/privacy';
 const kBitlyTermsOfService = 'https://bitly.com/pages/terms-of-service';
-// const kWebappUrl = 'flutree.web.app';
-const kWebappUrl = 'flutree--3-6-18-web-pre-plg5x0yp.web.app';
+const kWebappUrl = 'flutree.web.app';
 const kPageUrl = 'flut.page.link';
 const kPlayStoreUrl =
     'https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter';

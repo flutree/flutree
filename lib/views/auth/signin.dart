@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../utils/snackbar.dart';
 import '../customizable/editing_page.dart';
@@ -20,6 +21,12 @@ class _SignInState extends State<SignIn> {
   final _passwordController = TextEditingController();
   bool _isSignInLoading = false;
   bool _isGoogleLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    GetStorage().erase(); //to make sure it sign in as a new user.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +75,7 @@ class _SignInState extends State<SignIn> {
                               setState(() {
                                 _isSignInLoading = false;
                                 CustomSnack.showErrorSnack(context,
-                                    message: 'Error: ${error.message}');
+                                    message: 'Error: $error');
                               });
                             });
                           }
@@ -208,58 +215,62 @@ class _SignInState extends State<SignIn> {
                         label: Text('Preview only')),
                     SizedBox(width: 10),
                     ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
-                        onPressed: _isGoogleLoading
-                            ? null
-                            : () async {
-                                setState(() => _isGoogleLoading = true);
-                                try {
-                                  // Trigger the authentication flow
-                                  final GoogleSignInAccount googleUser =
-                                      await GoogleSignIn().signIn();
+                      ),
+                      onPressed: _isGoogleLoading
+                          ? null
+                          : () async {
+                              setState(() => _isGoogleLoading = true);
+                              try {
+                                // Trigger the authentication flow
+                                final GoogleSignInAccount googleUser =
+                                    await GoogleSignIn().signIn();
 
-                                  // Obtain the auth details from the request
-                                  final GoogleSignInAuthentication googleAuth =
-                                      await googleUser.authentication;
+                                // Obtain the auth details from the request
+                                final GoogleSignInAuthentication googleAuth =
+                                    await googleUser.authentication;
 
-                                  // Create a new credential
-                                  final GoogleAuthCredential credential =
-                                      GoogleAuthProvider.credential(
-                                    accessToken: googleAuth.accessToken,
-                                    idToken: googleAuth.idToken,
-                                  );
+                                // Create a new credential
+                                final GoogleAuthCredential credential =
+                                    GoogleAuthProvider.credential(
+                                  accessToken: googleAuth.accessToken,
+                                  idToken: googleAuth.idToken,
+                                );
 
-                                  // Once signed in, return the UserCredential
-                                  await FirebaseAuth.instance
-                                      .signInWithCredential(credential)
-                                      .then((value) {
+                                // Once signed in, return the UserCredential
+                                await FirebaseAuth.instance
+                                    .signInWithCredential(credential)
+                                    .then(
+                                  (value) {
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => EditPage(),
                                         ));
-                                  });
-                                } on FirebaseAuthException catch (e) {
-                                  print('Error: $e');
-                                  setState(() => _isGoogleLoading = false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('ERROR: ${e.message}')));
-                                } catch (e) {
-                                  print(
-                                      'UNKNOWN ERROR CAUGHT GOOGLE SIGN IN: $e');
-                                  setState(() => _isGoogleLoading = false);
-                                }
-                              },
-                        icon: FaIcon(FontAwesomeIcons.google, size: 15),
-                        label: _isGoogleLoading
-                            ? LoadingIndicator()
-                            : Text('Sign in with Google'))
+                                  },
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                print('Error: $e');
+                                setState(() => _isGoogleLoading = false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('ERROR: ${e.message}'),
+                                  ),
+                                );
+                              } catch (e) {
+                                print(
+                                    'UNKNOWN ERROR CAUGHT GOOGLE SIGN IN: $e');
+                                setState(() => _isGoogleLoading = false);
+                              }
+                            },
+                      icon: FaIcon(FontAwesomeIcons.google, size: 15),
+                      label: _isGoogleLoading
+                          ? LoadingIndicator()
+                          : Text('Sign in with Google'),
+                    )
                   ],
                 ),
               ],

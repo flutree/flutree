@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -193,7 +192,6 @@ class _EditPageState extends State<EditPage> {
             onSelected: (value) async {
               switch (value) {
                 case 'Logout':
-                  await GetStorage().erase();
                   await FirebaseAuth.instance.signOut();
                   await GoogleSignIn().signOut();
                   Navigator.pushReplacement(context,

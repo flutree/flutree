@@ -65,9 +65,8 @@ class _LiveGuideState extends State<LiveGuide> {
         if (await _interstitialAd.isLoaded()) {
           _interstitialAd.show();
           return false;
-        } else {
+        } else
           return true;
-        }
       },
       child: GestureDetector(
         //to dismiss selectable text
@@ -86,12 +85,13 @@ class _LiveGuideState extends State<LiveGuide> {
             centerTitle: true,
             actions: [
               IconButton(
-                  icon: FaIcon(FontAwesomeIcons.shareAlt),
-                  onPressed: () {
-                    Share.share(
-                        'Visit my profile page on https://$_profileLink, or open http://$kWebappUrl on browser and enter the code: ${widget.userCode}',
-                        subject: 'My Flutree code');
-                  })
+                icon: FaIcon(FontAwesomeIcons.shareAlt),
+                onPressed: () {
+                  Share.share(
+                      'Visit my profile page on https://$_profileLink, or open https://$kWebappUrl on browser and enter the code: ${widget.userCode}',
+                      subject: 'My Flutree code');
+                },
+              )
             ],
           ),
           body: SafeArea(
@@ -157,36 +157,30 @@ class _LiveGuideState extends State<LiveGuide> {
 
   OutlinedButton advancedLinkButton(BuildContext context) {
     return OutlinedButton.icon(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AdvancedLink(
-              userInfo: widget.docs,
-              uniqueLink: 'https://$_profileLink',
-              uniqueCode: widget.userCode,
-            ),
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdvancedLink(
+            userInfo: widget.docs,
+            uniqueLink: 'https://$_profileLink',
+            uniqueCode: widget.userCode,
           ),
-        );
-      },
+        ),
+      ),
       label: Text('Advanced link...'),
       icon: FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
     );
   }
 
   Widget generateQrCode(String url) {
-    String completeUrl = 'https://$url';
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => QrPage(url: completeUrl))),
-      child: Hero(
-        tag: 'qrcode',
-        child: QrImage(
-          data: completeUrl,
-          size: 210,
-          embeddedImage: AssetImage(
-            'images/logo/qrlogo.png',
-          ),
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => QrPage(url: url))),
+      child: QrImage(
+        data: 'https://$url',
+        size: 210,
+        embeddedImage: AssetImage(
+          'images/logo/qrlogo.png',
         ),
       ),
     );
@@ -221,12 +215,13 @@ class _LiveGuideState extends State<LiveGuide> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton.icon(
-                label: Text('Copy'),
-                onPressed: () => CopyLink.copy(url: 'https://$_profileLink'),
-                icon: FaIcon(
-                  FontAwesomeIcons.copy,
-                  size: 18,
-                )),
+              label: Text('Copy'),
+              onPressed: () => CopyLink.copy(url: 'https://$_profileLink'),
+              icon: FaIcon(
+                FontAwesomeIcons.copy,
+                size: 18,
+              ),
+            ),
             TextButton.icon(
               label: Text('Open'),
               onPressed: () => launchURL(context, 'https://$_profileLink'),
@@ -259,9 +254,7 @@ class _LiveGuideState extends State<LiveGuide> {
                   ..onTap = () =>
                       Clipboard.setData(ClipboardData(text: widget.userCode))
                           .then(
-                        (value) {
-                          Fluttertoast.showToast(msg: 'Copied code');
-                        },
+                        (value) => Fluttertoast.showToast(msg: 'Copied code'),
                       ),
               )
             ],
