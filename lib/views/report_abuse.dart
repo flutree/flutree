@@ -93,9 +93,7 @@ class _AbuseReportState extends State<AbuseReport> {
               Row(
                 children: [
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: () => Navigator.of(context).pop(),
                     child: Text('CANCEL'),
                   ),
                   SizedBox(width: 10),
@@ -113,14 +111,12 @@ class _AbuseReportState extends State<AbuseReport> {
                               CustomSnack.showSnack(context,
                                   message:
                                       'Thank your report. We will review your report as soon as possible.\nYour case ID is ${value.id}:',
-                                  duration: Duration(seconds: 3),
+                                  duration: Duration(seconds: 5),
                                   barAction: SnackBarAction(
                                       label: 'OK',
-                                      onPressed: () {
-                                        //TODO: TEst this
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                      }));
+                                      onPressed: () =>
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar()));
                               setState(() => _isProcess = false);
                               Navigator.of(context).pop();
                             }).catchError((e) {
