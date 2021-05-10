@@ -1,5 +1,7 @@
 # linktree flutter clone
 
+## Looking for Flutree? 👀 They lives in branch v3 and web. I'm not planning to merge them in master branch. 😄
+
 I made linktree clone. But with dough.
 Fully customizeable.
 
