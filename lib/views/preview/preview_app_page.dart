@@ -1,7 +1,8 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
+import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
+import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
 import '../widgets/link_card.dart';
-import 'mock_data.dart';
 
 class PreviewAppPage extends StatefulWidget {
   @override
@@ -46,11 +47,14 @@ class _PreviewAppPageState extends State<PreviewAppPage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: PreviewMockData.mockData.length,
+                itemCount: SocialLists.socialList.length,
                 itemBuilder: (context, index) {
                   return LinkCard(
-                    linkcardModel: PreviewMockData.mockData[index],
-                    isSample: index.isEven,
+                    linkcardModel: LinkcardModel(
+                        SocialLists.socialList[index].name,
+                        displayName: SocialLists.socialList[index].name,
+                        link: 'https://example.com'),
+                    isSample: true,
                   );
                 },
               ),

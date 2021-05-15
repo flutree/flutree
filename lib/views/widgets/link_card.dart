@@ -26,8 +26,8 @@ class LinkCard extends StatelessWidget {
     //   },
     // ),
     content: Text(
-        'To fully customize the app. Get the source code on for free Gumroad.'),
-    behavior: SnackBarBehavior.floating,
+        'To fully customize the card. Register or login with Flutree now.'),
+    // behavior: SnackBarBehavior.floating,
   );
 
   @override

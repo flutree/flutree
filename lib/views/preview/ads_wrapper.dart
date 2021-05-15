@@ -136,7 +136,6 @@ class _PreviewPageState extends State<PreviewPage> {
     );
     if (wantToExit ?? false) {
       if (!kIsWeb) {
-        //TODO: Frequency capping @ admob console
         if (isInterstitialAdReady) {
           print('Ads showing');
           _exitAd.show().then((value) => {print('Succcessfully show')});
