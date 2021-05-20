@@ -205,6 +205,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                         onPressed: () {
+                          FocusScope.of(context).unfocus();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
