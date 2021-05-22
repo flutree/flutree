@@ -10,7 +10,7 @@ import '../widgets/linkCard.dart';
 
 class UserCard extends StatefulWidget {
   UserCard(this.snapshot, this.code);
-  final DocumentSnapshot snapshot;
+  final DocumentSnapshot<Map<String, dynamic>> snapshot;
   final String code;
   @override
   _UserCardState createState() => _UserCardState();
@@ -184,7 +184,7 @@ class _UserCardState extends State<UserCard> {
               size: 14,
               semanticLabel: 'Create your own',
             ),
-            //TODO: Adaat with screen < fold
+            //TODO: Adapt with screen < fold
             label: Text(
               'Made with Flutree',
             ),
