@@ -5,6 +5,7 @@ const kBitlyPrivacyPolicyLink = 'https://bitly.com/pages/privacy';
 const kBitlyTermsOfService = 'https://bitly.com/pages/terms-of-service';
 const kWebappUrl = 'flutree.web.app';
 const kPageUrl = 'flut.page.link';
+const kFlutreeCreate = 'https://flutree.studio';
 const kPlayStoreUrl =
     'https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter';
 

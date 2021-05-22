@@ -6,7 +6,7 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 
 ## Flutree Create
 
-[flutree.web.app](https://flutree.web.app)
+[flutreecreate.web.app](https://flutreecreate.web.app) or [flutree.studio](https://flutree.studio)
 
 ## Devlog
 
