@@ -3,10 +3,10 @@ import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
 import 'package:linktree_iqfareez_flutter/views/report_abuse.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
-import 'bottom_persistant_platform_chooser.dart';
 
 class UserCard extends StatefulWidget {
   UserCard(this.snapshot, this.code);
@@ -151,8 +151,10 @@ class _UserCardState extends State<UserCard> {
         Visibility(
           visible: widget.snapshot.data()['showSubtitle'] ?? false,
           child: GestureDetector(
-              child: SelectableText(widget.snapshot.data()['subtitle'] ??
-                  'Something about yourself')),
+              child: SelectableText(
+            widget.snapshot.data()['subtitle'] ?? 'Flutree user',
+            textAlign: TextAlign.center,
+          )),
         ),
       ],
     );
@@ -176,9 +178,7 @@ class _UserCardState extends State<UserCard> {
           ),
           SizedBox(width: 20),
           TextButton.icon(
-            onPressed: () async {
-              PersistentPlatformChooser.showPlatformChooser(context);
-            },
+            onPressed: () => launchURL(context, kDynamicLink),
             icon: FaIcon(
               FontAwesomeIcons.heart,
               size: 14,

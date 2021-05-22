@@ -17,18 +17,10 @@ dependencies:
   url_launcher: ^6.0.3
   dough: ^1.0.1
   fluttertoast: ^8.0.4
-  # giffy_dialog: ^1.8.0
-  # firebase_core: ^0.7.0
-  # firebase_admob: ^0.11.0+1
-  # firebase_auth: ^0.20.1
-  # google_sign_in: ^4.5.9
   cloud_firestore: ^1.0.5
-  # firebase_storage: ^7.0.0
-  # image_picker: ^0.6.7+22
   dotted_border: ^2.0.0
   share_plus: ^2.0.3
   package_info_plus: ^1.0.0
-  # qr_flutter: ^4.0.0
   url_strategy: ^0.2.0
 
 dev_dependencies:
@@ -39,6 +31,5 @@ flutter:
   uses-material-design: true
 
   assets:
-    # - images/sample.jpg
     - images/logo/
     - images/undraw_page_not_found_su7k.png

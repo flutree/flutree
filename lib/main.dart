@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       onGenerateRoute: (settings) {
-        // print('settings.name is ${settings.name}');
         // https://stackoverflow.com/a/59755970/13617136
         List<String> pathComponents = settings.name.split('/');
         switch (settings.name) {

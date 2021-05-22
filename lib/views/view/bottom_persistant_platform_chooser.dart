@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
-
 import '../../CONSTANTS.dart';
 
 class PersistentPlatformChooser {
@@ -17,7 +16,7 @@ class PersistentPlatformChooser {
                 child: SizedBox.expand(
                   child: TextButton.icon(
                     icon: FaIcon(FontAwesomeIcons.googlePlay),
-                    onPressed: () => launchURL(context, kGetAndroidApp),
+                    onPressed: () => launchURL(context, kDynamicLink),
                     label: Text(
                       'Continue in app (Recommended)',
                       maxLines: 3,

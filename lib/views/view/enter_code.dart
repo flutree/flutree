@@ -1,11 +1,12 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../utils/snackbar.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
-import 'bottom_persistant_platform_chooser.dart';
 
 class EnterCode extends StatefulWidget {
   EnterCode([this.userCode = '']);
@@ -67,6 +68,7 @@ class _EnterCodeState extends State<EnterCode> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Align(
@@ -136,9 +138,7 @@ class _EnterCodeState extends State<EnterCode> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
-                    onPressed: () async {
-                      PersistentPlatformChooser.showPlatformChooser(context);
-                    },
+                    onPressed: () => launchURL(context, kDynamicLink),
                     child: Text('Make your own Flutree profile!',
                         style: TextStyle(
                             fontSize: 15,
