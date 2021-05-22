@@ -17,7 +17,7 @@ dependencies:
   url_launcher: ^6.0.3
   dough: ^1.0.1
   fluttertoast: ^8.0.4
-  cloud_firestore: ^1.0.5
+  cloud_firestore: ^2.2.0
   dotted_border: ^2.0.0
   share_plus: ^2.0.3
   package_info_plus: ^1.0.0
