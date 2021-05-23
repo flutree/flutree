@@ -68,7 +68,6 @@ class _EnterCodeState extends State<EnterCode> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Align(
