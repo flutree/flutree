@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/reuseable.dart';
+import '../utils/snackbar.dart';
+import 'widgets/reuseable.dart';
 
 enum AbuseType { nudity, hateViolence, spam, confidential }
 

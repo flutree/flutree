@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
-import 'package:linktree_iqfareez_flutter/views/report_abuse.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/url_launcher.dart';
+import '../report_abuse.dart';
 import '../../utils/linkcard_model.dart';
 import '../widgets/linkCard.dart';
 

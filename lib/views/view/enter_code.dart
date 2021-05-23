@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
-import 'package:linktree_iqfareez_flutter/utils/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../../CONSTANTS.dart';
 import '../../utils/snackbar.dart';
+import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
 
