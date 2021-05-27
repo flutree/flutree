@@ -279,7 +279,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Total clicks for the past seven days: '),
+                    Text('Total clicks all time: '),
                     FutureBuilder(
                       future: BitlyApi.clickSummary(url: _bitlyLink),
                       builder: (context, snapshot) {
