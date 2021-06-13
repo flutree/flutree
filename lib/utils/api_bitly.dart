@@ -2,17 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:linktree_iqfareez_flutter/model/bitly_click_summary_model.dart';
+import 'package:linktree_iqfareez_flutter/model/bitly_shorten_model.dart';
 import '../PRIVATE.dart';
 
+const authority = 'https://api-ssl.bitly.com/v4';
+
 class BitlyApi {
-  static Future shorten({String url}) async {
+  static Future<BitlyShortenModel> shorten({String url}) async {
     var _jsonBody = {
       "long_url": url,
       "domain": "bit.ly",
       "group_guid": "Bl4628jEmC1"
     };
-    //TODO: jadikan url to vriable (boleh guna URI)
-    var apiResponse = await Dio().post('https://api-ssl.bitly.com/v4/shorten',
+    var apiResponse = await Dio().post('$authority/shorten',
         options: Options(
           headers: {
             'Authorization': 'Bearer $kBitlyApiToken',
@@ -24,10 +27,7 @@ class BitlyApi {
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:
       case HttpStatus.created:
-        var decoded = json.decode(apiResponse.toString());
-
-        return decoded["id"];
-
+        return BitlyShortenModel.fromJson(json.decode(apiResponse.toString()));
         break;
       default:
         String errMessage =
@@ -37,19 +37,19 @@ class BitlyApi {
     }
   }
 
-  static Future clickSummary({String url}) async {
-    var apiResponse = await Dio().get(
-        'https://api-ssl.bitly.com/v4/bitlinks/$url/clicks/summary',
+  static Future<BitlyClickSummaryModel> clickSummary({String url}) async {
+    var apiResponse = await Dio().get('$authority/bitlinks/$url/clicks/summary',
         options: Options(headers: {'Authorization': 'Bearer $kBitlyApiToken'}));
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:
-        var decoded = json.decode(apiResponse.toString());
-        return decoded["total_clicks"];
+        return BitlyClickSummaryModel.fromJson(
+            json.decode(apiResponse.toString()));
         break;
       default:
-        Fluttertoast.showToast(
-            msg:
-                'Error: ${apiResponse.statusCode}: ${apiResponse.statusMessage}');
+        var errMessage =
+            'Error: ${apiResponse.statusCode}: ${apiResponse.statusMessage}';
+        Fluttertoast.showToast(msg: errMessage);
+        throw errMessage;
     }
   }
 }

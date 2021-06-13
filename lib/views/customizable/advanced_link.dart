@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:linktree_iqfareez_flutter/model/bitly_click_summary_model.dart';
+import 'package:linktree_iqfareez_flutter/model/bitly_shorten_model.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../utils/api_bitly.dart';
@@ -279,10 +281,11 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Total clicks all time: '),
+                    Text('Total clicks for past 30 days: '),
                     FutureBuilder(
                       future: BitlyApi.clickSummary(url: _bitlyLink),
-                      builder: (context, snapshot) {
+                      builder: (context,
+                          AsyncSnapshot<BitlyClickSummaryModel> snapshot) {
                         print(snapshot.toString());
                         if (snapshot.hasError) {
                           return Text(
@@ -290,7 +293,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                           );
                         } else if (snapshot.hasData) {
                           return Text(
-                            snapshot.data.toString(),
+                            snapshot.data.totalClicks.toString(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           );
                         } else {
@@ -361,10 +364,10 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                             if (response ?? false) {
                               setState(() => _waitForBitly = true);
                               try {
-                                var link = await BitlyApi.shorten(
+                                BitlyShortenModel link = await BitlyApi.shorten(
                                     url: widget.uniqueLink);
                                 setState(() {
-                                  _bitlyLink = link;
+                                  _bitlyLink = link.id;
                                   _hasGeneratedBitlyLink = true;
                                 });
                                 GetStorage().write(kHasBitlyLink, true);
