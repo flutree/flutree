@@ -197,6 +197,9 @@ class _EditPageState extends State<EditPage> {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => SignIn()));
                   break;
+                case 'dwApp':
+                  launchURL(context, kPlayStoreUrl);
+                  break;
                 case 'DeleteAcc':
                   showDialog(
                     context: context,
@@ -357,13 +360,17 @@ class _EditPageState extends State<EditPage> {
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
-                  child: Text('Logout'),
+                  child: Text('Log out'),
                   value: 'Logout',
                 ),
                 PopupMenuItem(
                   value: 'ProbReport',
                   child: Text('Report a problem...'),
                 ),
+                kIsWeb
+                    ? PopupMenuItem(
+                        value: 'dwApp', child: Text('Download Android app...'))
+                    : null,
                 PopupMenuItem(
                   value: 'DeleteAcc',
                   child: Text(
