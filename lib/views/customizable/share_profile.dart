@@ -118,8 +118,8 @@ class _LiveGuideState extends State<LiveGuide> {
                 icon: FaIcon(FontAwesomeIcons.shareAlt),
                 onPressed: () {
                   Share.share(
-                      'Visit my profile page on https://$_profileLink, or open https://$kWebappUrl on browser and enter the code: ${widget.userCode}',
-                      subject: 'My Flutree code');
+                      'Hey. Visit my profile page on https://$_profileLink',
+                      subject: 'Sharing my Flutree profile');
                 },
               )
             ],
