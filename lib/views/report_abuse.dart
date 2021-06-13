@@ -89,6 +89,19 @@ class _AbuseReportState extends State<AbuseReport> {
                 _abuseMap.values.elementAt(_abuseType.index),
                 style: TextStyle(fontSize: 16),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'Profile link to be reported',
+                  style: emphasisTextStyle,
+                ),
+              ),
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey.shade100),
+                  child: SelectableText(widget.profileLink)),
               SizedBox(height: 23),
               Row(
                 children: [

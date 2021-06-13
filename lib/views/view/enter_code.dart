@@ -35,8 +35,8 @@ class _EnterCodeState extends State<EnterCode> {
       _usersCollection.doc(code).get().then((value) {
         setState(() => _isLoading = false);
         if (value.exists) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => UserCard(value, widget.userCode)));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => UserCard(value, code)));
         } else {
           showDialog(
             context: context,
@@ -57,7 +57,7 @@ class _EnterCodeState extends State<EnterCode> {
 
   @override
   Widget build(BuildContext context) {
-    _codeController.text = widget.userCode;
+    if (widget.userCode.isNotEmpty) _codeController.text = widget.userCode;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!hasTryAccessProfile && widget.userCode.isNotEmpty) {
         print(widget.userCode);
@@ -172,8 +172,11 @@ class NotFoundDialog extends StatelessWidget {
               width: 400,
             ),
           ),
-          Text(
-              'User not found. Please try again or check the code if entered correctly.')
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+                'User not found. Please try again or check the link if entered correctly.'),
+          )
         ],
       ),
     );

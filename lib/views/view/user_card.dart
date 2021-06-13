@@ -25,6 +25,7 @@ class _UserCardState extends State<UserCard> {
     // print('Document exist: ${widget.snapshot.data()}');
     print('Document exist');
     _profileLink = 'https://$kWebappUrl/${widget.code}';
+    print(_profileLink);
 
     List<dynamic> socialsList = widget.snapshot.data()['socials'];
 
