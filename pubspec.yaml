@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.7.22+20
+version: 3.7.30-pre+21
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -46,4 +46,3 @@ flutter:
     - images/intro.gif
     - images/logo/
     - images/devices.png
-    - images/undraw_page_not_found_su7k.png
