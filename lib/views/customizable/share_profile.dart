@@ -11,7 +11,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../PRIVATE.dart';
-import '../../utils/ads_helper.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
@@ -21,7 +20,7 @@ import 'qr_code_page.dart';
 class LiveGuide extends StatefulWidget {
   LiveGuide({this.userCode, this.docs});
   final String userCode;
-  final DocumentSnapshot docs;
+  final DocumentSnapshot<Map<String, dynamic>> docs;
 
   @override
   _LiveGuideState createState() => _LiveGuideState();
@@ -29,44 +28,75 @@ class LiveGuide extends StatefulWidget {
 
 class _LiveGuideState extends State<LiveGuide> {
   InterstitialAd _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
   String _profileLink;
+  bool _adsIsLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _profileLink = '$kWebappUrl/${widget.userCode}';
-    _interstitialAd = InterstitialAd(
-      adUnitId: kInterstitialShareUnitId,
-      request: AdsHelper.adRequest,
-      listener: AdListener(
-        onAdLoaded: (ad) {
-          print('ads loaded');
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.load();
-          print('ads failed to load. Error ${error.message}');
-        },
-        onAdClosed: (ad) {
-          print('ads closed');
-          Navigator.pop(context);
-        },
-        onAdOpened: (ad) => print('ads opened'),
-      ),
-    )..load();
+    _createInterstitialAd();
+  }
 
-    _interstitialAd.load();
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: kInterstitialShareUnitId,
+      request: AdRequest(keywords: ['share', 'profile', 'social', 'online']),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          print('$ad loaded');
+          _interstitialAd = ad;
+          _adsIsLoaded = true;
+          _numInterstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (error) {
+          print('InterstitialAd failed to load: $error.');
+          _numInterstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_numInterstitialLoadAttempts <= kMaxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAd() async {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      Navigator.pop(context);
+    }
+    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdShowedFullScreenContent.');
+      },
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+
+        _createInterstitialAd();
+        Navigator.of(context).pop();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+        Navigator.of(context).pop();
+      },
+    );
+    _interstitialAd.show();
+    _interstitialAd = null;
   }
 
   @override
   Widget build(BuildContext context) {
+    print('_adsIsLoaded is $_adsIsLoaded');
     return WillPopScope(
       onWillPop: () async {
-        if (kIsWeb) return true;
-        if (await _interstitialAd.isLoaded()) {
-          _interstitialAd.show();
-          return false;
-        } else
-          return true;
+        // if (kIsWeb) return true else false;
+        _showInterstitialAd();
+        return kIsWeb;
       },
       child: GestureDetector(
         //to dismiss selectable text

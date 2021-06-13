@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'CONSTANTS.dart';
 import 'views/auth/signin.dart';
 import 'views/customizable/editing_page.dart';
 
@@ -15,6 +16,8 @@ void main() async {
   await Firebase.initializeApp();
   GetStorage.init();
   MobileAds.instance.initialize();
+  MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(testDeviceIds: [kTestDeviceId]));
 
   runApp(MyApp());
 }

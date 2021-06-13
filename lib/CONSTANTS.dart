@@ -13,6 +13,10 @@ const kPlayStoreUrl =
 const kLinkGumroad = 'https://gum.co/YHweV';
 const kGumroadDiscountLink = 'https://gumroad.com/l/YHweV/8t2062d';
 
+// Mobile ads
+const kTestDeviceId = '544FB3234D373268D3A6DB803850CDFB';
+const kMaxFailedLoadAttempts = 3;
+
 // Get Storage
 const kHasFdlLink = 'hasFdlLink';
 const kFdlLink = 'fdlLink';

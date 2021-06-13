@@ -46,9 +46,9 @@ class _EditPageState extends State<EditPage> {
   String _userCode;
   bool _isdpLoading = false;
   String _subtitleText;
-  DocumentReference _userDocument;
-  CollectionReference _reportCollection;
-  DocumentSnapshot _documentSnapshot;
+  DocumentReference<Map<String, dynamic>> _userDocument;
+  CollectionReference<Map<String, dynamic>> _reportCollection;
+  DocumentSnapshot<Map<String, dynamic>> _documentSnapshot;
 
   File _image;
   String _userImageUrl;
@@ -379,7 +379,8 @@ class _EditPageState extends State<EditPage> {
       body: SafeArea(
         child: StreamBuilder(
           stream: _userDocument.snapshots(),
-          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          builder: (context,
+              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData && snapshot.data.exists) {
               _documentSnapshot = snapshot.data;
               // print('Document exist: ${snapshot.data.data()}');

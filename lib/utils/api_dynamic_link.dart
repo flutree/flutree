@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-
 import '../CONSTANTS.dart';
 
 class DynamicLinkApi {
   static Future<String> generateShortUrl(
-      {String profileUrl, DocumentSnapshot userInfo}) async {
+      {String profileUrl,
+      DocumentSnapshot<Map<String, dynamic>> userInfo}) async {
     ShortDynamicLink fdLink = await DynamicLinkParameters(
             uriPrefix: 'https://$kPageUrl',
             link: Uri.parse(profileUrl),

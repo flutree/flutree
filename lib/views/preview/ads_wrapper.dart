@@ -1,14 +1,9 @@
-import 'package:dough/dough.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../../CONSTANTS.dart' as Constants;
+import '../../CONSTANTS.dart';
 import '../../PRIVATE.dart';
-import '../../utils/ads_helper.dart';
-import '../../utils/url_launcher.dart';
 import 'preview_app_page.dart';
 
 class PreviewPage extends StatefulWidget {
@@ -17,60 +12,36 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-  InterstitialAd _gumroadAd;
   InterstitialAd _exitAd;
   bool _alreadyShowDialog = false;
-
+  int _numInterstitialLoadAttempts = 0;
   bool isInterstitialAdReady;
 
-  void createGumroadAd() {
-    _gumroadAd ??= InterstitialAd(
-        adUnitId: kInterstitialGumroadUnitId,
-        listener: AdListener(
-          onAdLoaded: (ad) {
-            isInterstitialAdReady = true;
-            print('ads loaded');
-          },
-          onAdFailedToLoad: (ad, error) {
-            isInterstitialAdReady = false;
-            print('Error failed to load :${error.message}');
-          },
-          onAdClosed: (ad) {
-            Fluttertoast.showToast(msg: 'Coupon code applied. Enjoy!');
-            launchURL(context, Constants.kGumroadDiscountLink);
-          },
-        ),
-        request: AdsHelper.adRequest)
-      ..load();
-  }
-
   void createExitAd() {
-    _exitAd ??= InterstitialAd(
-        adUnitId: kInterstitialGumroadUnitId,
-        listener: AdListener(
+    InterstitialAd.load(
+        adUnitId: kInterstitialPreviewUnitId,
+        adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
+            _exitAd = ad;
             isInterstitialAdReady = true;
-            print('ads loaded');
+            _numInterstitialLoadAttempts = 0;
           },
-          onAdFailedToLoad: (ad, error) {
-            isInterstitialAdReady = false;
-            ad.load();
+          onAdFailedToLoad: (error) {
+            print('InterstitialAd failed to load: $error.');
+            _numInterstitialLoadAttempts += 1;
+            _exitAd = null;
+            if (_numInterstitialLoadAttempts <= kMaxFailedLoadAttempts) {
+              createExitAd();
+            }
           },
-          onAdClosed: (ad) {
-            print('ads closed');
-            Navigator.pop(context);
-          },
-          onAdOpened: (ad) => print('opened ads'),
         ),
-        request: AdsHelper.adRequest)
-      ..load();
+        request: AdRequest(keywords: ['social, asset, profile']));
   }
 
   @override
   void initState() {
     super.initState();
     isInterstitialAdReady = false;
-    createGumroadAd();
     createExitAd();
   }
 
@@ -82,10 +53,12 @@ class _PreviewPageState extends State<PreviewPage> {
       }
     });
 
+    //FIXME: https://pub.dev/packages/google_mobile_ads/changelog
+
     return WillPopScope(
       onWillPop: () async {
         onExitPreview();
-        return false;
+        return kIsWeb;
       },
       child: Scaffold(
         body: PreviewAppPage(),
@@ -95,20 +68,35 @@ class _PreviewPageState extends State<PreviewPage> {
             child: Text('Exit preview'),
           ),
         ),
-        floatingActionButton: PressableDough(
-          child: FloatingActionButton(
-            onPressed: openGumroadLink,
-            backgroundColor: Colors.purple.shade800,
-            tooltip: 'Get source code',
-            mini: true,
-            child: FaIcon(
-              FontAwesomeIcons.code,
-              color: Colors.white,
-            ),
-          ),
-        ),
       ),
     );
+  }
+
+  void showInterstitialAd() async {
+    if (_exitAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      Navigator.pop(context);
+    }
+    _exitAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdShowedFullScreenContent.');
+      },
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+
+        createExitAd();
+        Navigator.of(context).pop();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        createExitAd();
+        Navigator.of(context).pop();
+      },
+    );
+    _exitAd.show();
+    _exitAd = null;
   }
 
   onExitPreview() async {
@@ -137,28 +125,14 @@ class _PreviewPageState extends State<PreviewPage> {
     if (wantToExit ?? false) {
       if (!kIsWeb) {
         if (isInterstitialAdReady) {
+          showInterstitialAd();
           print('Ads showing');
-          _exitAd.show().then((value) => {print('Succcessfully show')});
         } else {
           Navigator.pop(context);
         }
       } else {
         Navigator.pop(context);
       }
-    }
-  }
-
-  openGumroadLink() {
-    if (!kIsWeb) {
-      if (isInterstitialAdReady) {
-        print('Ads showing');
-        _gumroadAd.show();
-      } else {
-        Fluttertoast.showToast(msg: 'Coupon code applied');
-        launchURL(context, Constants.kGumroadDiscountLink);
-      }
-    } else {
-      launchURL(context, Constants.kLinkGumroad);
     }
   }
 
@@ -176,14 +150,5 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
       barrierDismissible: false,
     );
-  }
-
-  @override
-  void dispose() {
-    if (!kIsWeb) {
-      _gumroadAd?.dispose();
-    }
-
-    super.dispose();
   }
 }
