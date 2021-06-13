@@ -19,15 +19,8 @@ class LinkCard extends StatelessWidget {
   final bool isEditing;
 
   final snackbar = SnackBar(
-    // action: SnackBarAction(
-    //   label: 'Info',
-    //   onPressed: () {
-    //     //TODO: put guide link
-    //   },
-    // ),
     content: Text(
         'To fully customize the card. Register or login with Flutree now.'),
-    // behavior: SnackBarBehavior.floating,
   );
 
   @override
