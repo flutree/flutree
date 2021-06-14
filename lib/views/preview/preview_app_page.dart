@@ -1,7 +1,7 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/linkcard_model.dart';
-import 'package:linktree_iqfareez_flutter/utils/social_list.dart';
+import '../../utils/linkcard_model.dart';
+import '../../utils/social_list.dart';
 import '../widgets/link_card.dart';
 
 class PreviewAppPage extends StatefulWidget {
