@@ -122,11 +122,16 @@ class _EditPageState extends State<EditPage> {
     var pickedFile;
     switch (option) {
       case 0:
-        pickedFile = await picker.getImage(
-            source: ImageSource.camera,
-            imageQuality: 70,
-            maxWidth: 300,
-            maxHeight: 200);
+        try {
+          pickedFile = await picker.getImage(
+              source: ImageSource.camera,
+              imageQuality: 70,
+              maxWidth: 300,
+              maxHeight: 200);
+        } on PlatformException catch (e) {
+          CustomSnack.showErrorSnack(context, message: e.message);
+        }
+
         break;
       default:
         pickedFile = await picker.getImage(
