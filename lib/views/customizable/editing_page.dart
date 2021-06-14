@@ -129,6 +129,10 @@ class _EditPageState extends State<EditPage> {
               maxWidth: 300,
               maxHeight: 200);
         } on PlatformException catch (e) {
+          //catch error when no camera available for example hahha
+          // i think this is most useless catching error bcs
+          // all phones has camera amiright? (Emulator sometimes
+          // can't access laptop's camera)
           CustomSnack.showErrorSnack(context, message: e.message);
         }
 
