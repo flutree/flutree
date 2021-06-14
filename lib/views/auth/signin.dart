@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../CONSTANTS.dart';
+import '../../utils/url_launcher.dart';
 import '../../utils/snackbar.dart';
 import '../customizable/editing_page.dart';
 import '../preview/ads_wrapper.dart';
@@ -274,6 +277,23 @@ class _SignInState extends State<SignIn> {
                     )
                   ],
                 ),
+                SizedBox(height: 15),
+                LayoutBuilder(builder: (context, constraints) {
+                  if (constraints.maxWidth > 600 && kIsWeb) {
+                    return GestureDetector(
+                      onTap: () => launchURL(context, kPlayStoreUrl),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Image.network(
+                          'https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png',
+                          width: 280,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                })
               ],
             ),
           ),
