@@ -72,6 +72,8 @@ class EmailTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: (value) =>
+          value.isEmpty ? 'Please enter your valid email address' : null,
       controller: _emailController,
       decoration: InputDecoration(
         isDense: true,
