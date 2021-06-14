@@ -56,8 +56,8 @@ class _RegisterState extends State<Register> {
                                       password:
                                           _passwordController.text.trim());
 
-                              await user.user.updateProfile(
-                                  displayName: _nameController.text.trim());
+                              await user.user.updateDisplayName(
+                                  _nameController.text.trim());
 
                               Navigator.pushReplacement(
                                   context,
