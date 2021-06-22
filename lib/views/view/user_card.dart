@@ -6,7 +6,7 @@ import '../../CONSTANTS.dart';
 import '../../utils/url_launcher.dart';
 import '../report_abuse.dart';
 import '../../utils/linkcard_model.dart';
-import '../widgets/linkCard.dart';
+import '../widgets/link_card.dart';
 
 class UserCard extends StatefulWidget {
   UserCard(this.snapshot, this.code);
@@ -22,8 +22,6 @@ class _UserCardState extends State<UserCard> {
   @override
   void initState() {
     super.initState();
-    // print('Document exist: ${widget.snapshot.data()}');
-    print('Document exist');
     _profileLink = 'https://$kWebappUrl/${widget.code}';
     print(_profileLink);
 

@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
             );
             break;
           default:
-            print('default');
             return MaterialPageRoute(
               builder: (context) => EnterCode(
                 pathComponents.last,

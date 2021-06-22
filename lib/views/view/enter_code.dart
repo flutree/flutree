@@ -9,7 +9,7 @@ import '../widgets/reuseable.dart';
 import 'user_card.dart';
 
 class EnterCode extends StatefulWidget {
-  EnterCode([this.userCode = '']);
+  EnterCode([this.userCode]);
   final String userCode;
   @override
   _EnterCodeState createState() => _EnterCodeState();
@@ -25,6 +25,21 @@ class _EnterCodeState extends State<EnterCode> {
   bool _isLoading = false;
 
   bool hasTryAccessProfile = false;
+
+  String userCode;
+
+  @override
+  void initState() {
+    super.initState();
+    userCode = widget.userCode ?? '';
+
+    // Remove additional parameter in url if exist
+    if (userCode.contains('?')) {
+      int index = userCode.indexOf('?');
+      userCode = userCode.substring(0, index);
+      print('Removed additional parameter');
+    }
+  }
 
   void accessProfile(String code) async {
     setState(() {
@@ -57,11 +72,10 @@ class _EnterCodeState extends State<EnterCode> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.userCode.isNotEmpty) _codeController.text = widget.userCode;
+    if (userCode.isNotEmpty) _codeController.text = userCode;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!hasTryAccessProfile && widget.userCode.isNotEmpty) {
-        print(widget.userCode);
-        accessProfile(widget.userCode.trim());
+      if (!hasTryAccessProfile && userCode.isNotEmpty) {
+        accessProfile(userCode.trim());
       }
     });
 

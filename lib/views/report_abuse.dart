@@ -90,7 +90,7 @@ class _AbuseReportState extends State<AbuseReport> {
                 style: TextStyle(fontSize: 16),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 child: Text(
                   'Profile link to be reported',
                   style: emphasisTextStyle,
