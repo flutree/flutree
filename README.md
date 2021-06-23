@@ -1,6 +1,6 @@
 # linktree flutter clone
 
-## Looking for Flutree? 👀 They lives in branch v3 and web. I'm not planning to merge them in master branch. 😄
+## Looking for Flutree? 👀 Find them in [v3](https://github.com/iqfareez/linktree-clone-flutter/tree/v3) and [web](https://github.com/iqfareez/linktree-clone-flutter/tree/web) branch. I'm not planning to merge them into the master branch. 😄
 
 I made linktree clone. But with dough.
 Fully customizeable.
@@ -9,7 +9,7 @@ Fully customizeable.
 
 Fork or clone this repository to use it on your own.
 
-You can do whatever you want, (optional: you can tag me on Twitter @iqfareez2)
+You can do whatever you want, (optional: you can tag me on Twitter [@iqfareez](https://twitter.com/iqfareez))
 
 ## Watch speedcoding
 
@@ -40,4 +40,4 @@ Check also https://itsallwidgets.com/linktree-clone
 
 ## Deploy
 
-Deployed using free firebase hosting
+Deployed using free Firebase hosting.
