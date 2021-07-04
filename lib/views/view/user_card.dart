@@ -161,7 +161,7 @@ class _UserCardState extends State<UserCard> {
 
   Widget footerButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 55),
+      padding: const EdgeInsets.symmetric(vertical: 60),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -181,7 +181,7 @@ class _UserCardState extends State<UserCard> {
             icon: FaIcon(
               FontAwesomeIcons.heart,
               size: 14,
-              semanticLabel: 'Create your own',
+              semanticLabel: 'Create your own profile',
             ),
             //TODO: Adapt with screen < fold
             label: Text(
