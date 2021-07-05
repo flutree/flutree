@@ -7,13 +7,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linktree_iqfareez_flutter/views/widgets/help_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../CONSTANTS.dart';
 import '../../utils/linkcard_model.dart';
@@ -175,7 +175,7 @@ class _EditPageState extends State<EditPage> {
             groupValue: mode,
             padding: EdgeInsets.zero,
             children: {
-              Mode.edit: Text('EDITING'),
+              Mode.edit: Text('EDIT'),
               Mode.preview: Text('PREVIEW'),
             },
             onValueChanged: (value) {
@@ -635,145 +635,202 @@ class _EditPageState extends State<EditPage> {
                       Builder(
                         builder: (builder) {
                           if (mode == Mode.edit) {
-                            return Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 6, bottom: 0),
-                                child: TextButton.icon(
-                                  icon: FaIcon(
-                                    !_isReorderable
-                                        ? FontAwesomeIcons.toggleOff
-                                        : FontAwesomeIcons.toggleOn,
-                                    size: 16,
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton.icon(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (builder) {
+                                            return HelpDialogs
+                                                .editModehelpDialog(context);
+                                          });
+                                    },
+                                    icon: FaIcon(
+                                        FontAwesomeIcons.questionCircle,
+                                        size: 16),
+                                    label: Text('Help')),
+                                Tooltip(
+                                  message:
+                                      'Toggle whether the cards should be\nreordarable or locked in place.',
+                                  child: TextButton.icon(
+                                    icon: FaIcon(
+                                      !_isReorderable
+                                          ? FontAwesomeIcons.toggleOff
+                                          : FontAwesomeIcons.toggleOn,
+                                      size: 16,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isReorderable = !_isReorderable;
+                                      });
+                                    },
+                                    label: Text('Reorder'),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isReorderable = !_isReorderable;
-                                    });
-                                  },
-                                  label: Text('Drag to reorder'),
                                 ),
-                              ),
+                              ],
                             );
                           } else {
-                            return SizedBox(height: 25.0);
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (builder) {
+                                          return HelpDialogs
+                                              .previewModehelpDialog(context);
+                                        });
+                                  },
+                                  icon: FaIcon(FontAwesomeIcons.questionCircle,
+                                      size: 16),
+                                  label: Text('Help')),
+                            );
+                          }
+                        },
+                      ),
+                      Builder(
+                        builder: (context) {
+                          if (mode == Mode.edit) {
+                            return ReorderableListView.builder(
+                                buildDefaultDragHandles: _isReorderable,
+                                itemCount: datas.length,
+                                onReorder: (oldIndex, newIndex) {
+                                  print('$oldIndex, $newIndex');
+                                  if (oldIndex < newIndex) {
+                                    newIndex -= 1;
+                                  }
+                                  final LinkcardModel item =
+                                      datas.removeAt(oldIndex);
+                                  datas.insert(newIndex, item);
+                                  List<Map<String, String>> tempData = [];
+                                  for (var item in datas) {
+                                    tempData.add(item.toMap());
+                                  }
+                                  _userDocument.update({'socials': tempData});
+                                },
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  //  dynamic response = await showModalBottomSheet(
+                                  //     shape: _bottomSheetStyle,
+                                  //     context: context,
+                                  //     builder: (context) {
+                                  //       return DeleteCardWidget(datas[index]);
+                                  //     },
+                                  //   );
+
+                                  //   if (response ?? false) {
+                                  //     _userDocument.update({
+                                  //       'socials': FieldValue.arrayRemove(
+                                  //           [datas[index].toMap()])
+                                  //     });
+                                  //   }
+
+                                  return Dismissible(
+                                    onDismissed: (direction) {
+                                      print('Delete confirmed');
+                                      _userDocument.update({
+                                        'socials': FieldValue.arrayRemove(
+                                            [datas[index].toMap()])
+                                      });
+                                    },
+                                    direction: DismissDirection.startToEnd,
+                                    confirmDismiss: (direction) async {
+                                      return await showModalBottomSheet(
+                                        shape: _bottomSheetStyle,
+                                        context: context,
+                                        builder: (context) {
+                                          return DeleteCardWidget(datas[index]);
+                                        },
+                                      );
+                                    },
+                                    background: Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(width: 8),
+                                          FaIcon(FontAwesomeIcons.trashAlt,
+                                              size: 20,
+                                              color: Colors.redAccent),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'Swipe to delete >>>',
+                                            style: TextStyle(
+                                                color: Colors.redAccent),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    key: Key(datas[index].hashCode.toString()),
+                                    child: GestureDetector(
+                                      onLongPress: mode == Mode.preview
+                                          ? () {}
+                                          : null, // disable reorderable when in preview mode
+                                      onTap: () async {
+                                        LinkcardModel temp = datas[index];
+
+                                        dynamic result =
+                                            await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: _bottomSheetStyle,
+                                          context: context,
+                                          builder: (context) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom),
+                                              child:
+                                                  AddCard(linkcardModel: temp),
+                                            );
+                                          },
+                                        );
+                                        if (result != null) {
+                                          print('Editing ${result.toMap()}');
+
+                                          await _userDocument.update({
+                                            'socials': FieldValue.arrayRemove(
+                                                [datas[index].toMap()])
+                                          });
+                                          _userDocument.update({
+                                            'socials': FieldValue.arrayUnion(
+                                                [result.toMap()])
+                                          }).then((value) {
+                                            setState(() {});
+                                          }).catchError((Object error) {
+                                            print(error);
+                                            CustomSnack.showErrorSnack(context,
+                                                message: 'Unable to sync');
+                                          });
+                                        }
+                                      },
+                                      child: LinkCard(
+                                        linkcardModel: datas[index],
+                                        isEditing: mode == Mode.edit,
+                                      ),
+                                    ),
+                                  );
+                                });
+                          } else {
+                            return ListView.builder(
+                              itemCount: datas.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return PressableDough(
+                                  child: LinkCard(
+                                    linkcardModel: datas[index],
+                                  ),
+                                );
+                              },
+                            );
                           }
                         },
                       ),
 
-                      ReorderableListView.builder(
-                          buildDefaultDragHandles: _isReorderable,
-                          itemCount: datas.length,
-                          onReorder: (oldIndex, newIndex) {
-                            print('$oldIndex, $newIndex');
-                            if (oldIndex < newIndex) {
-                              newIndex -= 1;
-                            }
-                            final LinkcardModel item = datas.removeAt(oldIndex);
-                            datas.insert(newIndex, item);
-                            List<Map<String, String>> tempData = [];
-                            for (var item in datas) {
-                              tempData.add(item.toMap());
-                            }
-                            _userDocument.update({'socials': tempData});
-                          },
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Dismissible(
-                              onDismissed: (direction) {
-                                setState(() {
-                                  datas.removeAt(index);
-                                });
-                              },
-                              direction: DismissDirection.startToEnd,
-                              confirmDismiss: (direction) async {
-                                return mode == Mode.edit;
-                              },
-                              background: Container(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    SizedBox(width: 5),
-                                    FaIcon(FontAwesomeIcons.trash,
-                                        color: Colors.redAccent),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Swipe to delete >>>',
-                                      style: TextStyle(color: Colors.redAccent),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              key: Key(datas[index].hashCode.toString()),
-                              child: GestureDetector(
-                                // key: Key(index.toString()),
-                                onLongPress: mode == Mode.preview
-                                    ? () {}
-                                    : null, // disable reorderable when in preview mode
-                                // onLongPress: () async {
-                                //   dynamic response = await showModalBottomSheet(
-                                //     shape: _bottomSheetStyle,
-                                //     context: context,
-                                //     builder: (context) {
-                                //       return DeleteCardWidget(datas[index]);
-                                //     },
-                                //   );
-
-                                //   if (response ?? false) {
-                                //     _userDocument.update({
-                                //       'socials': FieldValue.arrayRemove(
-                                //           [datas[index].toMap()])
-                                //     });
-                                //   }
-                                // },
-                                onTap: () async {
-                                  LinkcardModel temp = datas[index];
-
-                                  dynamic result = await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: _bottomSheetStyle,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: AddCard(linkcardModel: temp),
-                                      );
-                                    },
-                                  );
-
-                                  if (result != null) {
-                                    print('Editing ${result.toMap()}');
-
-                                    await _userDocument.update({
-                                      'socials': FieldValue.arrayRemove(
-                                          [datas[index].toMap()])
-                                    });
-                                    _userDocument.update({
-                                      'socials': FieldValue.arrayUnion(
-                                          [result.toMap()])
-                                    }).then((value) {
-                                      setState(() {});
-                                    }).catchError((Object error) {
-                                      print(error);
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Unable to sync');
-                                    });
-                                  }
-                                },
-                                child: LinkCard(
-                                  linkcardModel: datas[index],
-                                  isEditing: mode == Mode.edit,
-                                ),
-                              ),
-                            );
-                          }),
-
-                      SizedBox(height: 10),
+                      SizedBox(height: 6),
                       Visibility(
                         visible: mode == Mode.edit,
                         child: Transform.scale(
@@ -831,17 +888,7 @@ class _EditPageState extends State<EditPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: datas.isNotEmpty
-                            ? Text(
-                                (mode == Mode.edit)
-                                    ? 'Tap to edit, long press to delete'
-                                    : 'Tap card to test link',
-                                style: TextStyle(color: Colors.black87),
-                              )
-                            : SizedBox.shrink(),
-                      ),
+
                       SizedBox(height: 15)
                     ],
                   ),
