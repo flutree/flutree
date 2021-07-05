@@ -49,12 +49,14 @@ class _PreviewAppPageState extends State<PreviewAppPage> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: SocialLists.socialList.length,
                 itemBuilder: (context, index) {
-                  return LinkCard(
-                    linkcardModel: LinkcardModel(
-                        SocialLists.socialList[index].name,
-                        displayName: SocialLists.socialList[index].name,
-                        link: 'https://example.com'),
-                    isSample: true,
+                  return PressableDough(
+                    child: LinkCard(
+                      linkcardModel: LinkcardModel(
+                          exactName: SocialLists.socialList[index].name,
+                          displayName: SocialLists.socialList[index].name,
+                          link: 'https://example.com'),
+                      isSample: true,
+                    ),
                   );
                 },
               ),

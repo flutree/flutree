@@ -230,7 +230,8 @@ class _AddCardState extends State<AddCard> {
                           break;
                       }
 
-                      Navigator.of(context).pop(LinkcardModel(_socialModelName,
+                      Navigator.of(context).pop(LinkcardModel(
+                          exactName: _socialModelName,
                           displayName: _titleController.text.trim(),
                           link: inputUrl));
                     }
