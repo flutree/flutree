@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linktree_iqfareez_flutter/views/customizable/consent_screen.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/help_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../CONSTANTS.dart';
@@ -185,14 +187,20 @@ class _EditPageState extends State<EditPage> {
         ),
         actions: [
           TextButton.icon(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => LiveGuide(
-                            userCode: _userCode,
-                            docs: _documentSnapshot,
-                          )));
+            onPressed: () async {
+              if (GetStorage().read(kHasAgreeConsent) ||
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ConsentScreen()))) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LiveGuide(
+                              userCode: _userCode,
+                              docs: _documentSnapshot,
+                            )));
+              } else {}
             },
             label: Text('Share profile'),
             icon: FaIcon(
@@ -829,7 +837,6 @@ class _EditPageState extends State<EditPage> {
                           }
                         },
                       ),
-
                       SizedBox(height: 6),
                       Visibility(
                         visible: mode == Mode.edit,
