@@ -5,11 +5,10 @@ import 'snackbar.dart';
 ///lauch URL to a new web browser
 launchURL(BuildContext context, String url) async {
   print('Launching url: $url');
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
+  try {
+    launch(url);
+  } catch (e) {
     CustomSnack.showErrorSnack(context,
         message: 'Could not launch $url. Please check url');
-    throw 'Could not launch $url';
   }
 }
