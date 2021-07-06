@@ -19,5 +19,10 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 - [Part 1](https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTUzMDA3Njg0MTgyODA3)
 - [Part 2](https://www.instagram.com/s/aGlnaGxpZ2h0OjE3ODg1MzE2ODMzMjE5MDg5)
 
+## To build for yourself
+
+1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
+2. My usually used command : `flutter clean; flutter build web --web-renderer html --pwa-strategy=none; firebase deploy -m "3.9.41+24"; gh release create 3.9.41+24`
+
 \
 :star::star::star::star::star:
