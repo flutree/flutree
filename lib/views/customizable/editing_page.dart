@@ -188,24 +188,26 @@ class _EditPageState extends State<EditPage> {
         actions: [
           TextButton.icon(
             onPressed: () async {
+              /// Check whether the getstorage was not true or the user hasn't
+              /// agree with the consent yet
               if (GetStorage().read(kHasAgreeConsent) ||
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ConsentScreen()))) {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LiveGuide(
-                              userCode: _userCode,
-                              docs: _documentSnapshot,
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LiveGuide(
+                      userCode: _userCode,
+                      docs: _documentSnapshot,
+                    ),
+                  ),
+                );
               } else {}
             },
             label: Text('Share profile'),
-            icon: FaIcon(
-              FontAwesomeIcons.share,
-            ),
+            icon: FaIcon(FontAwesomeIcons.share, size: 20),
           ),
           PopupMenuButton<String>(
             onSelected: (value) async {

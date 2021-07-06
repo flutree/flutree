@@ -22,7 +22,7 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 ## To build for yourself
 
 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. My usually used command : `flutter clean; flutter build web --web-renderer html --pwa-strategy=none; firebase deploy -m "3.9.41+24"; gh release create 3.9.41+24`
+2. My usually used command : `flutter clean; flutter build web --web-renderer html --pwa-strategy=none; firebase deploy -m "3.9.41+24"; flutter build appbundle; gh release create 3.9.41+24`
 
 \
 :star::star::star::star::star:
