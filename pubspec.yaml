@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.6.31-web+28
+version: 3.6.32-web+29
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -30,7 +30,7 @@ dev_dependencies:
   flutter_native_splash: ^1.2.0
 
 flutter:
-  uses-material-design: true
+  # uses-material-design: true
 
   assets:
     - images/logo/

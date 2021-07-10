@@ -40,72 +40,46 @@ class _UserCardState extends State<UserCard> {
     }
   }
 
-  Future<bool> popHandler() async {
-    bool response = await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Exit'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text('Yes'),
-            ),
-          ],
-        );
-      },
-    );
-
-    return response ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: popHandler,
-      child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(34.0, 0, 34.0, 0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth < 730) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        buildBasicInfo(),
-                        SizedBox(height: 25.0),
-                        buildSocialCardsList(),
-                        footerButtons()
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(flex: 2, child: buildBasicInfo()),
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 70.0),
-                                child: buildSocialCardsList(),
-                              ),
-                            )
-                          ],
-                        ),
-                        footerButtons()
-                      ],
-                    );
-                  }
-                },
-              ),
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(34.0, 0, 34.0, 0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 730) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      buildBasicInfo(),
+                      SizedBox(height: 25.0),
+                      buildSocialCardsList(),
+                      footerButtons()
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(flex: 2, child: buildBasicInfo()),
+                          Expanded(
+                            flex: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 70.0),
+                              child: buildSocialCardsList(),
+                            ),
+                          )
+                        ],
+                      ),
+                      footerButtons()
+                    ],
+                  );
+                }
+              },
             ),
           ),
         ),
@@ -145,7 +119,9 @@ class _UserCardState extends State<UserCard> {
         ),
         SizedBox(height: 28.0),
         SelectableText('@${widget.snapshot.data()['nickname']}',
-            style: TextStyle(fontSize: 22)), //just a plain text
+            style: TextStyle(
+              fontSize: 22,
+            )),
         SizedBox(height: 5),
         Visibility(
           visible: widget.snapshot.data()['showSubtitle'] ?? false,
