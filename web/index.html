@@ -45,9 +45,18 @@
   <title>Flutree - Social Cards</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" type="text/css" href="splash/style.css">
+  <script data-ad-client="ca-pub-1896379146653594" async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body>
+  <picture id="splash">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x"
+      media="(prefers-color-scheme: light) or (prefers-color-scheme: no-preference)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x"
+      media="(prefers-color-scheme: dark)">
+    <img class="center" src="splash/img/light-1x.png" />
+  </picture>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -81,13 +90,43 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
+
+    var scriptLoaded = false;
+    function loadMainDartJs() {
+      if (scriptLoaded) {
+        return;
+      }
+      scriptLoaded = true;
+      var scriptTag = document.createElement('script');
+      scriptTag.src = 'main.dart.js';
+      scriptTag.type = 'application/javascript';
+      document.body.append(scriptTag);
+    }
+    // read url path
+    var docName = window.location.pathname.replace('/', '');
+    // only load main dart js if document is exist
+    if (docName) {
+      var docRef = firebase.firestore().collection("users").doc(docName);
+
+      docRef.get().then((doc) => {
+        if (doc.exists) {
+          console.log("Document exist");
+          loadMainDartJs();
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          window.location.replace("/error/404.html");
+        }
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+    } else {
+      // just load when nothing is passed to the path
+      loadMainDartJs();
+    }
   </script>
-  <picture id="splash">
-    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x" media="(prefers-color-scheme: light) or (prefers-color-scheme: no-preference)">
-    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x" media="(prefers-color-scheme: dark)">
-    <img class="center" src="splash/img/light-1x.png" />
-  </picture>
-  <script src="main.dart.js" type="application/javascript"></script>
+
+  <!-- <script src="main.dart.js" type="application/javascript"></script> -->
 
 </body>
 
