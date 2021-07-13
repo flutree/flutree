@@ -1,10 +1,7 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../CONSTANTS.dart';
 import '../../utils/snackbar.dart';
-import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 import 'user_card.dart';
 
@@ -38,10 +35,6 @@ class EnterCode extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: MakeFlutreeButton(),
-                  ),
                 ],
               );
             } else {
@@ -73,35 +66,11 @@ class EnterCode extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Spacer(),
-                  MakeFlutreeButton(),
                 ],
               );
             }
           },
         ),
-      ),
-    );
-  }
-}
-
-class MakeFlutreeButton extends StatelessWidget {
-  const MakeFlutreeButton({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextButton(
-        onPressed: () => launchURL(context, kDynamicLink),
-        child: Text('Make your own Flutree profile!',
-            style: TextStyle(
-                fontSize: 15,
-                color: Colors.orange.shade700,
-                decorationStyle: TextDecorationStyle.dotted,
-                decoration: TextDecoration.underline)),
       ),
     );
   }
@@ -140,8 +109,6 @@ class InputCodeArea extends StatefulWidget {
 
 class _InputCodeAreaState extends State<InputCodeArea> {
   final _usersCollection = FirebaseFirestore.instance.collection('users');
-  final _formKey = GlobalKey<FormState>();
-  final _codeController = TextEditingController();
   bool _isLoading = false;
   bool hasTryAccessProfile = false;
   String userCode;
@@ -175,7 +142,7 @@ class _InputCodeAreaState extends State<InputCodeArea> {
             context: context,
             builder: (context) {
               return Dialog(
-                child: NotFoundDialog(),
+                child: Text('not found'),
               );
             },
           );
@@ -190,7 +157,7 @@ class _InputCodeAreaState extends State<InputCodeArea> {
 
   @override
   Widget build(BuildContext context) {
-    if (userCode.isNotEmpty) _codeController.text = userCode;
+    // if (userCode.isNotEmpty) _codeController.text = userCode;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!hasTryAccessProfile && userCode.isNotEmpty) {
         accessProfile(userCode.trim());
@@ -199,77 +166,13 @@ class _InputCodeAreaState extends State<InputCodeArea> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Enter Flutree code', style: TextStyle(fontSize: 26)),
+        Text('Loading...', style: TextStyle(fontSize: 26)),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 60.0),
-          child: Form(
-            key: _formKey,
-            child: Container(
-              width: 360,
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                validator: (value) =>
-                    value.length < 5 ? 'Not enough character' : null,
-                controller: _codeController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                ),
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.text,
-              ),
-            ),
-          ),
+          child:
+              !_isLoading ? Text('Acccessing $userCode') : LoadingIndicator(),
         ),
-        ElevatedButton(
-          onPressed: _isLoading
-              ? null
-              : () async {
-                  FocusScope.of(context).unfocus();
-                  if (_formKey.currentState.validate()) {
-                    accessProfile(_codeController.text.trim());
-                  }
-                },
-          child: !_isLoading ? Text('Go') : LoadingIndicator(),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        )
       ],
-    );
-  }
-}
-
-class NotFoundDialog extends StatelessWidget {
-  const NotFoundDialog({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'images/undraw_page_not_found_su7k.png',
-              width: 400,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-                'User not found. Please try again or check the link if entered correctly.'),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linktree_iqfareez_flutter/views/support.dart';
 import '../../CONSTANTS.dart';
 import '../../utils/url_launcher.dart';
 import '../report_abuse.dart';
@@ -138,31 +139,46 @@ class _UserCardState extends State<UserCard> {
   Widget footerButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 60),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          TextButton.icon(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AbuseReport(_profileLink))),
-            icon: FaIcon(
-              FontAwesomeIcons.exclamationTriangle,
-              size: 14,
-              semanticLabel: 'Report abuse',
-            ),
-            label: Text('Report Abuse'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AbuseReport(_profileLink))),
+                icon: FaIcon(
+                  FontAwesomeIcons.exclamationTriangle,
+                  size: 14,
+                  semanticLabel: 'Report abuse',
+                ),
+                label: Text('Report Abuse'),
+              ),
+              SizedBox(width: 20),
+              TextButton.icon(
+                onPressed: () => launchURL(context, kDynamicLink),
+                icon: FaIcon(
+                  FontAwesomeIcons.heart,
+                  size: 14,
+                  semanticLabel: 'Create your own profile',
+                ),
+                //TODO: Adapt with screen < fold
+                label: Text(
+                  'Made with Flutree',
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 20),
           TextButton.icon(
-            onPressed: () => launchURL(context, kDynamicLink),
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => Donate())),
             icon: FaIcon(
-              FontAwesomeIcons.heart,
+              FontAwesomeIcons.mugHot,
               size: 14,
-              semanticLabel: 'Create your own profile',
+              semanticLabel: 'Support',
             ),
-            //TODO: Adapt with screen < fold
-            label: Text(
-              'Made with Flutree',
-            ),
+            label: Text('Buy me a coffee'),
           ),
         ],
       ),
