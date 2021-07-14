@@ -15,7 +15,7 @@ import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 import 'advanced_link.dart';
-import 'qr_code_page.dart';
+import '../screens/qr_code_page.dart';
 
 class LiveGuide extends StatefulWidget {
   LiveGuide({this.userCode, this.docs});

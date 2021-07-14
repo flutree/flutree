@@ -14,7 +14,7 @@ import '../../utils/copy_link.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
-import 'qr_code_page.dart';
+import '../screens/qr_code_page.dart';
 
 class AdvancedLink extends StatelessWidget {
   AdvancedLink({this.userInfo, this.uniqueLink, this.uniqueCode});
