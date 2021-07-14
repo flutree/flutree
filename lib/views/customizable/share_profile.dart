@@ -221,7 +221,7 @@ class _LiveGuideState extends State<LiveGuide> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Your unique link:',
+          'Your profile link:',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16),
         ),
@@ -261,35 +261,6 @@ class _LiveGuideState extends State<LiveGuide> {
               ),
             ),
           ],
-        ),
-        SizedBox(height: 12),
-        SelectableText.rich(
-          TextSpan(
-            style: TextStyle(fontSize: 16),
-            children: [
-              TextSpan(text: 'Alternatively, go to '),
-              TextSpan(
-                text: kWebappUrl,
-                style: linkTextStyle,
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    launchURL(context, 'http://$kWebappUrl');
-                  },
-              ),
-              TextSpan(text: ' and enter code '),
-              TextSpan(
-                text: widget.userCode,
-                style: TextStyle(fontWeight: FontWeight.bold),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () =>
-                      Clipboard.setData(ClipboardData(text: widget.userCode))
-                          .then(
-                        (value) => Fluttertoast.showToast(msg: 'Copied code'),
-                      ),
-              )
-            ],
-          ),
-          textAlign: TextAlign.center,
         ),
       ],
     );
