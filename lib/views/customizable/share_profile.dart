@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -14,8 +11,8 @@ import '../../PRIVATE.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
-import 'advanced_link.dart';
 import '../screens/qr_code_page.dart';
+import 'advanced_link.dart';
 
 class LiveGuide extends StatefulWidget {
   LiveGuide({this.userCode, this.docs});
