@@ -728,7 +728,7 @@ class _EditPageState extends State<EditPage> {
                                         context: context,
                                         builder: (builder) {
                                           return HelpDialogs
-                                              .previewModehelpDialog(context);
+                                              .previewModeHelpDialog(context);
                                         });
                                   },
                                   icon: FaIcon(FontAwesomeIcons.questionCircle,

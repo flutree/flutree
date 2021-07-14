@@ -309,11 +309,13 @@ class _LiveGuideState extends State<LiveGuide> {
   }
 
   Widget bannerAdWidget() {
-    return Container(
-      child: AdWidget(ad: _bannerAd),
-      width: _bannerAd.size.width.toDouble(),
-      height: 100.0,
-      alignment: Alignment.center,
+    return StatefulBuilder(
+      builder: (context, setState) => Container(
+        child: AdWidget(ad: _bannerAd),
+        width: _bannerAd.size.width.toDouble(),
+        height: 100.0,
+        alignment: Alignment.center,
+      ),
     );
   }
 
