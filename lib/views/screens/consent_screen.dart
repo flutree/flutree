@@ -101,14 +101,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 25),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
                             child: Text('Back')),
                         SizedBox(width: 3),
                         ElevatedButton(
