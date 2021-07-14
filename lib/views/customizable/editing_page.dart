@@ -12,8 +12,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
 import 'package:linktree_iqfareez_flutter/views/screens/consent_screen.dart';
 import 'package:linktree_iqfareez_flutter/views/screens/donate.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/help_dialog.dart';
@@ -54,7 +56,8 @@ class _EditPageState extends State<EditPage> {
   DocumentReference<Map<String, dynamic>> _userDocument;
   CollectionReference<Map<String, dynamic>> _reportCollection;
   DocumentSnapshot<Map<String, dynamic>> _documentSnapshot;
-
+  BannerAd _bannerAd;
+  bool _isBannerAdLoaded = false;
   File _image;
   String _userImageUrl;
   @override
@@ -64,8 +67,8 @@ class _EditPageState extends State<EditPage> {
     _userCode = _authInstance.currentUser.uid.substring(0, 5);
     _userDocument = _firestoreInstance.collection('users').doc(_userCode);
     _reportCollection = _firestoreInstance.collection('reports');
-
     initFirestore();
+    _createBannerAd();
   }
 
   void initFirestore() async {
@@ -82,6 +85,29 @@ class _EditPageState extends State<EditPage> {
         'nickname': _authInstance.currentUser.displayName,
       });
     }
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: kEditPageBannerUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Releases an ad resource when it fails to load
+          ad.dispose();
+
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+
+    _bannerAd.load();
   }
 
   Future updateProfilePicture() async {
@@ -910,7 +936,9 @@ class _EditPageState extends State<EditPage> {
                         ),
                       ),
 
-                      SizedBox(height: 15)
+                      _isBannerAdLoaded
+                          ? bannerAdWidget()
+                          : SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -952,10 +980,20 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
+  Widget bannerAdWidget() {
+    return Container(
+      child: AdWidget(ad: _bannerAd),
+      width: _bannerAd.size.width.toDouble(),
+      height: 72.0,
+      alignment: Alignment.center,
+    );
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
     _subtitleController.dispose();
+    _bannerAd.dispose();
     super.dispose();
   }
 }

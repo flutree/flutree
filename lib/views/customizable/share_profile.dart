@@ -25,26 +25,37 @@ class LiveGuide extends StatefulWidget {
 
 class _LiveGuideState extends State<LiveGuide> {
   InterstitialAd _interstitialAd;
+  BannerAd _bannerAd;
   int _numInterstitialLoadAttempts = 0;
   String _profileLink;
-  bool _adsIsLoaded = false;
+  bool _isIntersAdLoaded = false;
+  bool _isBannerAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _profileLink = '$kWebappUrl/${widget.userCode}';
     _createInterstitialAd();
+    _createBannerAd();
   }
 
   void _createInterstitialAd() {
     InterstitialAd.load(
       adUnitId: kInterstitialShareUnitId,
-      request: AdRequest(keywords: ['share', 'profile', 'social', 'online']),
+      request: AdRequest(keywords: [
+        'share',
+        'profile',
+        'social',
+        'online',
+        'social media',
+        'engagement',
+        'business'
+      ]),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           print('$ad loaded');
           _interstitialAd = ad;
-          _adsIsLoaded = true;
+          _isIntersAdLoaded = true;
           _numInterstitialLoadAttempts = 0;
         },
         onAdFailedToLoad: (error) {
@@ -57,6 +68,29 @@ class _LiveGuideState extends State<LiveGuide> {
         },
       ),
     );
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: kShareBannerUnitId,
+      size: AdSize.largeBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Releases an ad resource when it fails to load
+          ad.dispose();
+
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+
+    _bannerAd.load();
   }
 
   void _showInterstitialAd() async {
@@ -88,7 +122,7 @@ class _LiveGuideState extends State<LiveGuide> {
 
   @override
   Widget build(BuildContext context) {
-    print('_adsIsLoaded is $_adsIsLoaded');
+    print('_adsIsLoaded is $_isIntersAdLoaded');
     return WillPopScope(
       onWillPop: () async {
         // if (kIsWeb) return true else false;
@@ -136,13 +170,17 @@ class _LiveGuideState extends State<LiveGuide> {
                           children: [
                             SizedBox(height: 25),
                             infoWidget(),
-                            SizedBox(height: 20),
+                            SizedBox(height: 5),
                             advancedLinkButton(context),
+                            SizedBox(height: 5),
                             AskSquishCard(context: context),
                             Padding(
-                              padding: const EdgeInsets.all(30),
+                              padding: const EdgeInsets.all(20),
                               child: generateQrCode(_profileLink),
                             ),
+                            _isBannerAdLoaded
+                                ? bannerAdWidget()
+                                : SizedBox.shrink(),
                           ],
                         ),
                       );
@@ -156,15 +194,22 @@ class _LiveGuideState extends State<LiveGuide> {
                                   child: Column(
                                 children: [
                                   infoWidget(),
-                                  SizedBox(height: 15),
+                                  SizedBox(height: 5),
                                   advancedLinkButton(context),
+                                  _isBannerAdLoaded
+                                      ? bannerAdWidget()
+                                      : SizedBox.shrink(),
                                 ],
                               )),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: Center(
-                                      child: generateQrCode(_profileLink)),
+                                  child: Column(
+                                    children: [
+                                      AskSquishCard(context: context),
+                                      generateQrCode(_profileLink),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -182,7 +227,7 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
-  OutlinedButton advancedLinkButton(BuildContext context) {
+  Widget advancedLinkButton(BuildContext context) {
     return OutlinedButton.icon(
       onPressed: () => Navigator.push(
         context,
@@ -263,9 +308,20 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
+  Widget bannerAdWidget() {
+    return Container(
+      child: AdWidget(ad: _bannerAd),
+      width: _bannerAd.size.width.toDouble(),
+      height: 100.0,
+      alignment: Alignment.center,
+    );
+  }
+
   @override
   void dispose() {
-    _interstitialAd?.dispose();
+    // TODO: is ? really necessary?
+    _interstitialAd.dispose();
+    _bannerAd.dispose();
     super.dispose();
   }
 }
@@ -280,29 +336,26 @@ class AskSquishCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: TextButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AssetGiffyDialog(
-                onlyOkButton: true,
-                onOkButtonPressed: () => Navigator.pop(context),
-                image: Image.asset(
-                  'images/intro.gif',
-                ),
-                title: Text(
-                    'Try this out!\nSquishable (or dough effect) UI elements'),
-              );
-            },
-          );
-        },
-        child: Text(
-          'Ask others to squish the cards 👀',
-          style: dottedUnderlinedStyle(),
-        ),
+    return TextButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AssetGiffyDialog(
+              onlyOkButton: true,
+              onOkButtonPressed: () => Navigator.pop(context),
+              image: Image.asset(
+                'images/intro.gif',
+              ),
+              title: Text(
+                  'Try this out!\nSquishable (or dough effect) UI elements'),
+            );
+          },
+        );
+      },
+      child: Text(
+        'Ask others to squish the cards 👀',
+        style: dottedUnderlinedStyle(),
       ),
     );
   }
