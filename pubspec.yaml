@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.7.34-web+30
+version: 3.7.35-web+31
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

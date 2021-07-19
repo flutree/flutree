@@ -23,6 +23,7 @@ class LinkCard extends StatelessWidget {
           splashColor: Colors.pink.withAlpha(10),
           onTap: () => launchURL(context, linkcardModel.link),
           child: ListTile(
+            mouseCursor: SystemMouseCursors.click,
             leading: FaIcon(
               socialModel.icon,
               color: Colors.white,
