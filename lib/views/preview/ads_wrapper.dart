@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../../CONSTANTS.dart';
+import '../../constants.dart';
 import '../../PRIVATE.dart';
 import 'preview_app_page.dart';
 
 class PreviewPage extends StatefulWidget {
+  const PreviewPage({Key key}) : super(key: key);
   @override
   _PreviewPageState createState() => _PreviewPageState();
 }
@@ -35,7 +36,8 @@ class _PreviewPageState extends State<PreviewPage> {
             }
           },
         ),
-        request: AdRequest(keywords: ['social, asset, profile']));
+        request: const AdRequest(
+            keywords: ['social', 'asset', 'profile', 'biolink', 'marketing']));
   }
 
   @override
@@ -61,12 +63,10 @@ class _PreviewPageState extends State<PreviewPage> {
         return kIsWeb;
       },
       child: Scaffold(
-        body: PreviewAppPage(),
-        bottomNavigationBar: Container(
-          child: TextButton(
-            onPressed: () => onExitPreview(),
-            child: Text('Exit preview'),
-          ),
+        body: const PreviewAppPage(),
+        bottomNavigationBar: TextButton(
+          onPressed: () => onExitPreview(),
+          child: const Text('Exit preview'),
         ),
       ),
     );
@@ -104,19 +104,19 @@ class _PreviewPageState extends State<PreviewPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Exit preview'),
+          title: const Text('Exit preview'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
-              child: Text('Yes'),
+              child: const Text('Yes'),
             ),
           ],
         );
@@ -146,7 +146,7 @@ class _PreviewPageState extends State<PreviewPage> {
           Navigator.pop(context);
         },
         image: Image.asset('images/intro.gif'),
-        title: Text('Try this!\nSquishable, doughy UI elements'),
+        title: const Text('Try this!\nSquishable, doughy UI elements'),
       ),
       barrierDismissible: false,
     );

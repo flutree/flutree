@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../model/bitly_click_summary_model.dart';
 import '../../model/bitly_shorten_model.dart';
-import '../../CONSTANTS.dart';
+import '../../constants.dart';
 import '../../utils/api_bitly.dart';
 import '../../utils/api_dynamic_link.dart';
 import '../../utils/copy_link.dart';
@@ -17,7 +17,8 @@ import '../widgets/reuseable.dart';
 import '../screens/qr_code_page.dart';
 
 class AdvancedLink extends StatelessWidget {
-  AdvancedLink({this.userInfo, this.uniqueLink, this.uniqueCode});
+  const AdvancedLink({Key key, this.userInfo, this.uniqueLink, this.uniqueCode})
+      : super(key: key);
   final DocumentSnapshot userInfo;
   final String uniqueLink;
   final String uniqueCode;
@@ -32,8 +33,8 @@ class AdvancedLink extends StatelessWidget {
         appBar: AppBar(
           shadowColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          iconTheme: IconThemeData(color: Colors.blueGrey),
-          actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+          iconTheme: const IconThemeData(color: Colors.blueGrey),
+          actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
           elevation: 0.0,
           centerTitle: true,
           title: Text(
@@ -54,7 +55,7 @@ class AdvancedLink extends StatelessWidget {
                         userInfo: userInfo,
                       ),
                     ),
-                    Divider(indent: 10, endIndent: 10),
+                    const Divider(indent: 10, endIndent: 10),
                     Expanded(
                       child: BitlyWidget(
                         uniqueLink: uniqueLink,
@@ -71,7 +72,7 @@ class AdvancedLink extends StatelessWidget {
                         userInfo: userInfo,
                       ),
                     ),
-                    VerticalDivider(),
+                    const VerticalDivider(),
                     Expanded(
                       child: BitlyWidget(
                         uniqueLink: uniqueLink,
@@ -89,7 +90,8 @@ class AdvancedLink extends StatelessWidget {
 }
 
 class FdlWidget extends StatefulWidget {
-  FdlWidget({@required this.uniqueLink, @required this.userInfo});
+  const FdlWidget({Key key, @required this.uniqueLink, @required this.userInfo})
+      : super(key: key);
 
   final String uniqueLink;
   final DocumentSnapshot userInfo;
@@ -114,18 +116,19 @@ class _FdlWidgetState extends State<FdlWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           'Link with social preview',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         kIsWeb
             ? Container(
                 color: Colors.redAccent,
                 padding: const EdgeInsets.all(12),
-                child: Text('Firebase Dynamic Link not available on web.'),
+                child:
+                    const Text('Firebase Dynamic Link not available on web.'),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         Padding(
           padding: const EdgeInsets.all(14.0),
           child: GestureDetector(
@@ -133,7 +136,7 @@ class _FdlWidgetState extends State<FdlWidget> {
             child: LinkContainer(
                 child: Text.rich(
               TextSpan(
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 21,
                   ),
                   children: [
@@ -141,7 +144,7 @@ class _FdlWidgetState extends State<FdlWidget> {
                         text: _fdlLink.substring(0, _fdlLink.indexOf('/') + 1)),
                     TextSpan(
                       text: _fdlLink.substring(_fdlLink.indexOf('/') + 1),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ]),
               textAlign: TextAlign.center,
@@ -164,11 +167,11 @@ class _FdlWidgetState extends State<FdlWidget> {
                             fullscreenDialog: true),
                       );
                     },
-                    icon: FaIcon(
+                    icon: const FaIcon(
                       FontAwesomeIcons.qrcode,
                       size: 14,
                     ),
-                    label: Text('QR Code')),
+                    label: const Text('QR Code')),
               ),
             ),
             Visibility(
@@ -209,7 +212,7 @@ class _FdlWidgetState extends State<FdlWidget> {
                             }
                           },
                 label: _waitForFdl
-                    ? LoadingIndicator()
+                    ? const LoadingIndicator()
                     : Text(_hasGeneratedFdlLink ? 'Share' : 'Generate'),
                 icon: FaIcon(
                     _hasGeneratedFdlLink
@@ -226,7 +229,7 @@ class _FdlWidgetState extends State<FdlWidget> {
 }
 
 class BitlyWidget extends StatefulWidget {
-  BitlyWidget({@required this.uniqueLink});
+  const BitlyWidget({Key key, @required this.uniqueLink}) : super(key: key);
   final String uniqueLink;
   @override
   _BitlyWidgetState createState() => _BitlyWidgetState();
@@ -247,11 +250,11 @@ class _BitlyWidgetState extends State<BitlyWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           'Shorten link with Bitly',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Padding(
           padding: const EdgeInsets.all(14.0),
           child: GestureDetector(
@@ -259,14 +262,14 @@ class _BitlyWidgetState extends State<BitlyWidget> {
             child: LinkContainer(
               child: Text.rich(
                 TextSpan(
-                  style: TextStyle(fontSize: 21),
+                  style: const TextStyle(fontSize: 21),
                   children: [
                     TextSpan(
                         text: _bitlyLink.substring(
                             0, _bitlyLink.indexOf('/') + 1)),
                     TextSpan(
                       text: _bitlyLink.substring(_bitlyLink.indexOf('/') + 1),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -281,35 +284,35 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Total clicks for past 30 days: '),
+                    const Text('Total clicks for past 30 days: '),
                     FutureBuilder(
                       future: BitlyApi.clickSummary(url: _bitlyLink),
                       builder: (context,
                           AsyncSnapshot<BitlyClickSummaryModel> snapshot) {
                         print(snapshot.toString());
                         if (snapshot.hasError) {
-                          return Text(
+                          return const Text(
                             'Failed to fetch metric data :(',
                           );
                         } else if (snapshot.hasData) {
                           return Text(
                             snapshot.data.totalClicks.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           );
                         } else {
-                          return LoadingIndicator();
+                          return const LoadingIndicator();
                         }
                       },
                     )
                   ],
                 ),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         Row(
           // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Visibility(
               visible: _hasGeneratedBitlyLink,
               child: Padding(
@@ -321,11 +324,11 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                               builder: (builder) => QrPage(url: _bitlyLink),
                               fullscreenDialog: true),
                         ),
-                    icon: FaIcon(
+                    icon: const FaIcon(
                       FontAwesomeIcons.qrcode,
                       size: 14,
                     ),
-                    label: Text('QR Code')),
+                    label: const Text('QR Code')),
               ),
             ),
             Visibility(
@@ -347,16 +350,16 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                                 return AlertDialog(
                                   contentPadding: const EdgeInsets.fromLTRB(
                                       24.0, 20.0, 24.0, 8.0),
-                                  content: BitlyConsents(),
+                                  content: const BitlyConsents(),
                                   actions: [
                                     TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, false),
-                                        child: Text('Cancel')),
+                                        child: const Text('Cancel')),
                                     TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, true),
-                                        child: Text('Agree to all'))
+                                        child: const Text('Agree to all'))
                                   ],
                                 );
                               },
@@ -379,11 +382,12 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                               }
 
                               setState(() => _waitForBitly = false);
-                            } else
+                            } else {
                               return;
+                            }
                           },
                 label: _waitForBitly
-                    ? LoadingIndicator()
+                    ? const LoadingIndicator()
                     : Text(_hasGeneratedBitlyLink ? 'Share' : 'Shorten'),
                 icon: FaIcon(
                     _hasGeneratedBitlyLink
@@ -392,7 +396,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                     size: 14),
               ),
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
           ],
         )
       ],
@@ -416,13 +420,13 @@ class BitlyConsents extends StatelessWidget {
               style: linkTextStyle,
               recognizer: TapGestureRecognizer()
                 ..onTap = () => launchURL(context, kBitlyTermsOfService)),
-          TextSpan(text: ' and '),
+          const TextSpan(text: ' and '),
           TextSpan(
               text: 'Privacy Policy',
               style: linkTextStyle,
               recognizer: TapGestureRecognizer()
                 ..onTap = () => launchURL(context, kBitlyPrivacyPolicyLink)),
-          TextSpan(text: '.')
+          const TextSpan(text: '.')
         ],
       ),
     );
@@ -434,8 +438,8 @@ Padding buildCopyButton(String url) {
     padding: const EdgeInsets.all(4.0),
     child: OutlinedButton.icon(
       onPressed: () => CopyLink.copy(url: url),
-      label: Text('Copy'),
-      icon: FaIcon(FontAwesomeIcons.copy, size: 14),
+      label: const Text('Copy'),
+      icon: const FaIcon(FontAwesomeIcons.copy, size: 14),
     ),
   );
 }

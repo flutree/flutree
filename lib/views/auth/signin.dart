@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/views/auth/email_auth.dart';
+import '../../constants.dart';
 import '../../utils/url_launcher.dart';
 import '../../utils/snackbar.dart';
 import '../customizable/editing_page.dart';
@@ -13,13 +14,14 @@ import '../widgets/reuseable.dart';
 import 'register.dart';
 
 class SignIn extends StatefulWidget {
+  const SignIn({Key key}) : super(key: key);
   @override
   _SignInState createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
-  FirebaseAuth _authInstance = FirebaseAuth.instance;
+  final FirebaseAuth _authInstance = FirebaseAuth.instance;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isSignInLoading = false;
@@ -50,47 +52,20 @@ class _SignInState extends State<SignIn> {
                     width: 100,
                   ),
                 ),
-                SizedBox(height: 20),
-                EmailTextField(emailController: _emailController),
-                SizedBox(height: 10),
-                PasswordTextField(passwordController: _passwordController),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _isSignInLoading
-                      ? null
-                      : () {
-                          if (_formKey.currentState.validate()) {
-                            FocusScope.of(context).unfocus();
-                            setState(() => _isSignInLoading = true);
-                            _authInstance
-                                .signInWithEmailAndPassword(
-                                    email: _emailController.text.trim(),
-                                    password: _passwordController.text.trim())
-                                .then((value) {
-                              print('Sign in email password done');
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditPage(),
-                                  ));
-                            }).catchError((error) {
-                              print('ERROR: $error');
-                              setState(() {
-                                _isSignInLoading = false;
-                                CustomSnack.showErrorSnack(context,
-                                    message: 'Error: $error');
-                              });
-                            });
-                          }
-                        },
-                  child:
-                      _isSignInLoading ? LoadingIndicator() : Text('Sign in'),
+                ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                     ),
                   ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => EmailAuth()));
+                  },
+                  icon: const FaIcon(FontAwesomeIcons.mailBulk, size: 15),
+                  label: Text('Sign in with Google'),
                 ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -104,7 +79,7 @@ class _SignInState extends State<SignIn> {
                               return StatefulBuilder(
                                 builder: (context, setDialogState) {
                                   return AlertDialog(
-                                    title: Text(
+                                    title: const Text(
                                         'Enter email you used to register with Flutree'),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -112,21 +87,21 @@ class _SignInState extends State<SignIn> {
                                         EmailTextField(
                                           emailController: _emailController,
                                         ),
-                                        SizedBox(height: 5),
-                                        Text(
+                                        const SizedBox(height: 5),
+                                        const Text(
                                           'A reset password link will be sent to your email.',
                                         )
                                       ],
                                     ),
                                     actions: [
                                       _isResetPasswordLoading
-                                          ? LoadingIndicator()
-                                          : SizedBox.shrink(),
+                                          ? const LoadingIndicator()
+                                          : const SizedBox.shrink(),
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text('Cancel'),
+                                        child: const Text('Cancel'),
                                       ),
                                       TextButton(
                                         onPressed: () async {
@@ -168,7 +143,7 @@ class _SignInState extends State<SignIn> {
                                             }
                                           }
                                         },
-                                        child: Text('Submit'),
+                                        child: const Text('Submit'),
                                       ),
                                     ],
                                   );
@@ -186,7 +161,7 @@ class _SignInState extends State<SignIn> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Register()));
+                                builder: (context) => const Register()));
                       },
                       child: Text(
                         'Register',
@@ -195,7 +170,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ],
                 ),
-                HorizontalOrLine(label: 'OR'),
+                const HorizontalOrLine(label: 'OR'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -212,12 +187,12 @@ class _SignInState extends State<SignIn> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PreviewPage(),
+                                builder: (context) => const PreviewPage(),
                               ));
                         },
-                        icon: FaIcon(FontAwesomeIcons.eye, size: 15),
-                        label: Text('Preview only')),
-                    SizedBox(width: 10),
+                        icon: const FaIcon(FontAwesomeIcons.eye, size: 15),
+                        label: const Text('Preview only')),
+                    const SizedBox(width: 10),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -252,7 +227,8 @@ class _SignInState extends State<SignIn> {
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => EditPage(),
+                                          builder: (context) =>
+                                              const EditPage(),
                                         ));
                                   },
                                 );
@@ -270,14 +246,14 @@ class _SignInState extends State<SignIn> {
                                 setState(() => _isGoogleLoading = false);
                               }
                             },
-                      icon: FaIcon(FontAwesomeIcons.google, size: 15),
+                      icon: const FaIcon(FontAwesomeIcons.google, size: 15),
                       label: _isGoogleLoading
-                          ? LoadingIndicator()
-                          : Text('Sign in with Google'),
+                          ? const LoadingIndicator()
+                          : const Text('Sign in with Google'),
                     )
                   ],
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 LayoutBuilder(builder: (context, constraints) {
                   if (constraints.maxWidth > 600 && kIsWeb) {
                     return GestureDetector(
@@ -291,7 +267,7 @@ class _SignInState extends State<SignIn> {
                       ),
                     );
                   } else {
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                 })
               ],

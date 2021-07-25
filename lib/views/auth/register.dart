@@ -5,13 +5,14 @@ import '../widgets/reuseable.dart';
 import 'signin.dart';
 
 class Register extends StatefulWidget {
+  const Register({Key key}) : super(key: key);
   @override
   _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
-  FirebaseAuth _authInstance = FirebaseAuth.instance;
+  final FirebaseAuth _authInstance = FirebaseAuth.instance;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
@@ -35,13 +36,13 @@ class _RegisterState extends State<Register> {
                     width: 100,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 NameTextField(nameController: _nameController),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 EmailTextField(emailController: _emailController),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 PasswordTextField(passwordController: _passwordController),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _isRegisterLoading
                       ? null
@@ -62,7 +63,7 @@ class _RegisterState extends State<Register> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditPage(),
+                                    builder: (context) => const EditPage(),
                                   ));
                             } on FirebaseAuthException catch (e) {
                               setState(() => _isRegisterLoading = false);
@@ -77,7 +78,7 @@ class _RegisterState extends State<Register> {
                             } catch (e) {
                               setState(() => _isRegisterLoading = false);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text('Unknown error occured'),
                                   behavior: SnackBarBehavior.floating,
@@ -87,8 +88,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                   child: _isRegisterLoading
-                      ? LoadingIndicator()
-                      : Text('Register'),
+                      ? const LoadingIndicator()
+                      : const Text('Register'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -97,8 +98,10 @@ class _RegisterState extends State<Register> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => SignIn()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignIn()));
                   },
                   child: Text(
                     'Already have an account? Login here.',

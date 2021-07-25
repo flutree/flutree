@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SocialModel {
-  String name;
-  IconData icon;
-  Color colour;
+  final String name;
+  final IconData icon;
+  final Color colour;
 
-  SocialModel(this.name, {@required this.icon, @required this.colour});
+  const SocialModel(this.name, {@required this.icon, @required this.colour});
 }

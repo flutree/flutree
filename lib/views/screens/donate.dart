@@ -26,8 +26,8 @@ class Donate extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.blueGrey),
-        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        iconTheme: const IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
         elevation: 0.0,
         centerTitle: true,
         title: Text(
@@ -41,9 +41,9 @@ class Donate extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
             child: Column(
               children: [
-                Text(
+                const Text(
                     'Thank you for interest in supporting Flutree. Your support could help keep Flutree running for free and provide a better experience.'),
-                Text(
+                const Text(
                     '\nYour donation can be utilized in a number of way such as site hosting and maintainance.'),
                 DonateCard(
                   label: 'Paypal',
@@ -66,7 +66,7 @@ class Donate extends StatelessWidget {
                     onTapFun: () => launchURL(context, _links['buymeacoffee']),
                     onLongTapFun: () =>
                         copyToClipboard(_links['buymeacoffee'])),
-                Text(
+                const Text(
                     '\nThe least thing you can do is to share this app among your family and friends.'),
                 DonateCard(
                   label: 'Share the app',

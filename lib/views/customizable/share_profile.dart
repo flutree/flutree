@@ -6,7 +6,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../CONSTANTS.dart';
+import '../../constants.dart';
 import '../../PRIVATE.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
@@ -15,7 +15,7 @@ import '../screens/qr_code_page.dart';
 import 'advanced_link.dart';
 
 class LiveGuide extends StatefulWidget {
-  LiveGuide({this.userCode, this.docs});
+  const LiveGuide({Key key, this.userCode, this.docs}) : super(key: key);
   final String userCode;
   final DocumentSnapshot<Map<String, dynamic>> docs;
 
@@ -42,7 +42,7 @@ class _LiveGuideState extends State<LiveGuide> {
   void _createInterstitialAd() {
     InterstitialAd.load(
       adUnitId: kInterstitialShareUnitId,
-      request: AdRequest(keywords: [
+      request: const AdRequest(keywords: [
         'share',
         'profile',
         'social',
@@ -74,7 +74,7 @@ class _LiveGuideState extends State<LiveGuide> {
     _bannerAd = BannerAd(
       adUnitId: kShareBannerUnitId,
       size: AdSize.largeBanner,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
@@ -136,8 +136,8 @@ class _LiveGuideState extends State<LiveGuide> {
           appBar: AppBar(
             shadowColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            iconTheme: IconThemeData(color: Colors.blueGrey),
-            actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+            iconTheme: const IconThemeData(color: Colors.blueGrey),
+            actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
             elevation: 0.0,
             title: Text(
               'Share your Flutree profile',
@@ -146,7 +146,7 @@ class _LiveGuideState extends State<LiveGuide> {
             centerTitle: true,
             actions: [
               IconButton(
-                icon: FaIcon(FontAwesomeIcons.shareAlt),
+                icon: const FaIcon(FontAwesomeIcons.shareAlt),
                 onPressed: () {
                   Share.share(
                       'Hey. Visit my profile page on https://$_profileLink',
@@ -158,7 +158,7 @@ class _LiveGuideState extends State<LiveGuide> {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28.0),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: OrientationBuilder(
                   builder: (context, orientation) {
@@ -168,11 +168,11 @@ class _LiveGuideState extends State<LiveGuide> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(height: 25),
+                            const SizedBox(height: 25),
                             infoWidget(),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             advancedLinkButton(context),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             AskSquishCard(context: context),
                             Padding(
                               padding: const EdgeInsets.all(20),
@@ -180,7 +180,7 @@ class _LiveGuideState extends State<LiveGuide> {
                             ),
                             _isBannerAdLoaded
                                 ? bannerAdWidget()
-                                : SizedBox.shrink(),
+                                : const SizedBox.shrink(),
                           ],
                         ),
                       );
@@ -194,16 +194,16 @@ class _LiveGuideState extends State<LiveGuide> {
                                   child: Column(
                                 children: [
                                   infoWidget(),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                   advancedLinkButton(context),
                                   _isBannerAdLoaded
                                       ? bannerAdWidget()
-                                      : SizedBox.shrink(),
+                                      : const SizedBox.shrink(),
                                 ],
                               )),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
                                       AskSquishCard(context: context),
@@ -239,8 +239,8 @@ class _LiveGuideState extends State<LiveGuide> {
           ),
         ),
       ),
-      label: Text('Advanced link...'),
-      icon: FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
+      label: const Text('Advanced link...'),
+      icon: const FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
     );
   }
 
@@ -251,7 +251,7 @@ class _LiveGuideState extends State<LiveGuide> {
       child: QrImage(
         data: 'https://$url',
         size: 210,
-        embeddedImage: AssetImage(
+        embeddedImage: const AssetImage(
           'images/logo/qrlogo.png',
         ),
       ),
@@ -262,23 +262,23 @@ class _LiveGuideState extends State<LiveGuide> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        const Text(
           'Your profile link:',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         LinkContainer(
           child: Text.rich(
             TextSpan(
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 21,
                 ),
                 children: [
-                  TextSpan(text: '$kWebappUrl/'),
+                  const TextSpan(text: '$kWebappUrl/'),
                   TextSpan(
                       text: widget.userCode,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ]),
             textAlign: TextAlign.center,
           ),
@@ -287,17 +287,17 @@ class _LiveGuideState extends State<LiveGuide> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton.icon(
-              label: Text('Copy'),
+              label: const Text('Copy'),
               onPressed: () => CopyLink.copy(url: 'https://$_profileLink'),
-              icon: FaIcon(
+              icon: const FaIcon(
                 FontAwesomeIcons.copy,
                 size: 18,
               ),
             ),
             TextButton.icon(
-              label: Text('Open'),
+              label: const Text('Open'),
               onPressed: () => launchURL(context, 'https://$_profileLink'),
-              icon: FaIcon(
+              icon: const FaIcon(
                 FontAwesomeIcons.externalLinkAlt,
                 size: 18,
               ),
@@ -321,7 +321,6 @@ class _LiveGuideState extends State<LiveGuide> {
 
   @override
   void dispose() {
-    // TODO: is ? really necessary?
     _interstitialAd.dispose();
     _bannerAd.dispose();
     super.dispose();
@@ -349,7 +348,7 @@ class AskSquishCard extends StatelessWidget {
               image: Image.asset(
                 'images/intro.gif',
               ),
-              title: Text(
+              title: const Text(
                   'Try this out!\nSquishable (or dough effect) UI elements'),
             );
           },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:linktree_iqfareez_flutter/CONSTANTS.dart';
+import 'package:linktree_iqfareez_flutter/constants.dart';
 
 class ConsentScreen extends StatefulWidget {
   const ConsentScreen({Key key}) : super(key: key);
@@ -10,7 +10,7 @@ class ConsentScreen extends StatefulWidget {
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
-  Map<String, String> _items = {
+  final Map<String, String> _items = {
     "No nudity, pornographic materials":
         "We don't allow the sharing or publishing of content depicting nudity, graphic sex acts, or other sexually explicit material. We also don't allow content that drives traffic to commercial pornography sites or that promotes pedophilia, incest, or bestiality.",
     "No promotes for hate, violence or illegal/offensive activities":
@@ -20,7 +20,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
     "No sharing of private and confidential information":
         "We do not allow the posting of another person's personal and confidential account or identification information.",
   };
-  List<bool> _state = List.generate(4, (index) => false);
+  final List<bool> _state = List.generate(4, (index) => false);
+  //TODO: ^ Takpe ke final _state ni
   bool _countinueButtonActive = false;
 
   bool checkIfAllAreChecked() {
@@ -49,19 +50,19 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: 20),
-                  Icon(
+                  const SizedBox(height: 20),
+                  const Icon(
                     Icons.gpp_maybe_outlined,
                     size: 90,
                     color: Colors.orangeAccent,
                   ),
-                  Text(
+                  const Text(
                     'Attention',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(
+                  const Padding(
+                    padding: EdgeInsets.all(
                       6.0,
                     ),
                     child: Text(
@@ -71,7 +72,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     ),
                   ),
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _items.length,
                     itemBuilder: (context, index) {
@@ -85,7 +86,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                         },
                         title: Text(
                           _items.keys.elementAt(index),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -103,8 +104,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       children: [
                         TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('Back')),
-                        SizedBox(width: 3),
+                            child: const Text('Back')),
+                        const SizedBox(width: 3),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
@@ -116,7 +117,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                                     Navigator.pop(context, true);
                                   }
                                 : null,
-                            child: Text('Continue')),
+                            child: const Text('Continue')),
                       ],
                     ),
                   )

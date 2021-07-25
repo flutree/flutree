@@ -4,7 +4,7 @@ import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 
 class QrPage extends StatelessWidget {
-  QrPage({this.url});
+  const QrPage({Key key, this.url}) : super(key: key);
   final String url;
 
   @override
@@ -13,8 +13,8 @@ class QrPage extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.blueGrey),
-        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        iconTheme: const IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
         elevation: 0.0,
         centerTitle: true,
         title: Text(
@@ -26,7 +26,7 @@ class QrPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(),
+          const Spacer(),
           Expanded(
             flex: 3,
             child: Padding(
@@ -38,7 +38,7 @@ class QrPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: LinkContainer(
@@ -47,14 +47,14 @@ class QrPage extends StatelessWidget {
                   child: Text(
                     'https://$url',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       decorationStyle: TextDecorationStyle.dotted,
                       decoration: TextDecoration.underline,
                     ),
                   )),
             ),
           ),
-          Spacer()
+          const Spacer()
         ],
       ),
     );

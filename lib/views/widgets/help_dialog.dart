@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class HelpDialogs {
   static Widget editModehelpDialog(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'Help',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: const [
           UnorderedListItem(
             TextSpan(
               children: [
@@ -66,7 +66,7 @@ class HelpDialogs {
       contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 2.0),
       actions: [
         TextButton(
-          child: Text('Got it!\n'),
+          child: const Text('Got it!\n'),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -77,13 +77,13 @@ class HelpDialogs {
 
   static Widget previewModeHelpDialog(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'Help',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: const [
           UnorderedListItem(
             TextSpan(
               children: [
@@ -115,7 +115,7 @@ class HelpDialogs {
       contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 2.0),
       actions: [
         TextButton(
-          child: Text('Got it!\n'),
+          child: const Text('Got it!\n'),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -126,7 +126,7 @@ class HelpDialogs {
 }
 
 class UnorderedListItem extends StatelessWidget {
-  UnorderedListItem(this.text);
+  const UnorderedListItem(this.text, {Key key}) : super(key: key);
   final TextSpan text;
 
   @override
@@ -134,7 +134,7 @@ class UnorderedListItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("• "),
+        const Text("• "),
         Expanded(
           child: Text.rich(text),
         ),

@@ -6,7 +6,7 @@ import '../../utils/social_list.dart';
 
 class AddCard extends StatefulWidget {
   /// If linkcardModel is not null, edit mode is triggered
-  AddCard({this.linkcardModel});
+  const AddCard({Key key, this.linkcardModel}) : super(key: key);
 
   final LinkcardModel linkcardModel;
 
@@ -29,22 +29,22 @@ class _AddCardState extends State<AddCard> {
   String _socialModelName;
   // bool _keyboardVisible = false;
 
-  Map<String, String> _urlTextBox = {
+  final Map<String, String> _urlTextBox = {
     'Profile link': 'http://example.com/',
     'Phone number': '601939xxxxx',
     'Email Address': 'name@example.com',
     'SMS': '60182xxxxxxx'
   };
 
-  Map<int, String> _prefixUrlText = {
+  final Map<int, String> _prefixUrlText = {
     0: null,
     1: 'tel:',
     2: 'mailto:',
     3: 'sms:'
   };
 
-  List<String> _dropdownType = ['URL', 'Phone', 'Email', 'SMS'];
-  List<TextInputType> _keyboardType = [
+  final List<String> _dropdownType = ['URL', 'Phone', 'Email', 'SMS'];
+  final List<TextInputType> _keyboardType = [
     TextInputType.url,
     TextInputType.phone,
     TextInputType.emailAddress,
@@ -90,9 +90,9 @@ class _AddCardState extends State<AddCard> {
         children: [
           Text(
             _isNew ? 'Add card' : 'Edit card',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Form(
             key: _formKey,
             child: Column(
@@ -156,7 +156,7 @@ class _AddCardState extends State<AddCard> {
                                 child: Center(
                                     child: Text(
                                   value,
-                                  style: TextStyle(color: Colors.black87),
+                                  style: const TextStyle(color: Colors.black87),
                                 )),
                               );
                             }).toList()),
@@ -190,23 +190,23 @@ class _AddCardState extends State<AddCard> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: FaIcon(FontAwesomeIcons.times, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.times, size: 14),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    label: Text('Discard')),
+                    label: const Text('Discard')),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.check, size: 14),
+                  icon: const FaIcon(FontAwesomeIcons.check, size: 14),
                   style: OutlinedButton.styleFrom(
                       primary: Colors.white, backgroundColor: Colors.blueGrey),
                   onPressed: () async {
@@ -241,7 +241,7 @@ class _AddCardState extends State<AddCard> {
               ),
             ],
           ),
-          SizedBox(height: 5)
+          const SizedBox(height: 5)
         ],
       ),
     );

@@ -16,7 +16,7 @@ class CustomSnack {
       action: barAction,
       behavior: SnackBarBehavior.floating,
       content: Text(message),
-      duration: Duration(milliseconds: 2100),
+      duration: const Duration(milliseconds: 2100),
     ));
   }
 }

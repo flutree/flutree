@@ -20,7 +20,7 @@ import 'package:linktree_iqfareez_flutter/views/screens/consent_screen.dart';
 import 'package:linktree_iqfareez_flutter/views/screens/donate.dart';
 import 'package:linktree_iqfareez_flutter/views/widgets/help_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../CONSTANTS.dart';
+import '../../constants.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
@@ -35,6 +35,7 @@ const _bottomSheetStyle = RoundedRectangleBorder(
 enum Mode { edit, preview }
 
 class EditPage extends StatefulWidget {
+  const EditPage({Key key}) : super(key: key);
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -91,7 +92,7 @@ class _EditPageState extends State<EditPage> {
     _bannerAd = BannerAd(
       adUnitId: kEditPageBannerUnitId,
       size: AdSize.banner,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
@@ -150,7 +151,7 @@ class _EditPageState extends State<EditPage> {
   }
 
   Future getImage(int option) async {
-    var pickedFile;
+    PickedFile pickedFile;
     switch (option) {
       case 0:
         try {
@@ -193,8 +194,8 @@ class _EditPageState extends State<EditPage> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.blueGrey),
-        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        iconTheme: const IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
         elevation: 0.0,
         toolbarHeight: 40,
         automaticallyImplyLeading: false,
@@ -203,7 +204,7 @@ class _EditPageState extends State<EditPage> {
           child: CupertinoSlidingSegmentedControl(
             groupValue: mode,
             padding: EdgeInsets.zero,
-            children: {
+            children: const {
               Mode.edit: Text('EDIT'),
               Mode.preview: Text('PREVIEW'),
             },
@@ -221,7 +222,7 @@ class _EditPageState extends State<EditPage> {
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ConsentScreen()))) {
+                          builder: (context) => const ConsentScreen()))) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -233,8 +234,8 @@ class _EditPageState extends State<EditPage> {
                 );
               } else {}
             },
-            label: Text('Share profile'),
-            icon: FaIcon(FontAwesomeIcons.share, size: 20),
+            label: const Text('Share profile'),
+            icon: const FaIcon(FontAwesomeIcons.share, size: 20),
           ),
           PopupMenuButton<String>(
             onSelected: (value) async {
@@ -243,7 +244,7 @@ class _EditPageState extends State<EditPage> {
                   await FirebaseAuth.instance.signOut();
                   await GoogleSignIn().signOut();
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => SignIn()));
+                      MaterialPageRoute(builder: (context) => const SignIn()));
                   break;
                 case 'dwApp':
                   launchURL(context, kPlayStoreUrl);
@@ -256,18 +257,18 @@ class _EditPageState extends State<EditPage> {
                       return StatefulBuilder(
                         builder: (context, setDialogState) {
                           return AlertDialog(
-                            title: Text('Reset all data in this account'),
-                            content:
-                                Text('You\'ll be signed out automatically'),
+                            title: const Text('Reset all data in this account'),
+                            content: const Text(
+                                'You\'ll be signed out automatically'),
                             actions: [
                               isLoading
-                                  ? LoadingIndicator()
-                                  : SizedBox.shrink(),
+                                  ? const LoadingIndicator()
+                                  : const SizedBox.shrink(),
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Cancel')),
+                                  child: const Text('Cancel')),
                               TextButton(
                                 onPressed: () async {
                                   setDialogState(() => isLoading = true);
@@ -284,7 +285,8 @@ class _EditPageState extends State<EditPage> {
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => SignIn()));
+                                            builder: (context) =>
+                                                const SignIn()));
                                   } on FirebaseException catch (e) {
                                     print('Firebase err: $e');
                                     CustomSnack.showErrorSnack(context,
@@ -297,7 +299,7 @@ class _EditPageState extends State<EditPage> {
                                     setDialogState(() => isLoading = false);
                                   }
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Confirm',
                                   style: TextStyle(color: Colors.red),
                                 ),
@@ -333,18 +335,18 @@ class _EditPageState extends State<EditPage> {
                                   value: _includeEmail,
                                   onChanged: (value) => setDialogState(
                                       () => _includeEmail = value),
-                                  title: Text('  Include my email'),
+                                  title: const Text('  Include my email'),
                                   contentPadding: EdgeInsets.zero,
                                 ),
                               ],
                             ),
                             actions: [
                               _isReportLoading
-                                  ? LoadingIndicator()
-                                  : SizedBox.shrink(),
+                                  ? const LoadingIndicator()
+                                  : const SizedBox.shrink(),
                               TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: Text('Cancel')),
+                                  child: const Text('Cancel')),
                               TextButton(
                                 onPressed: () async {
                                   if (_reportController.text.isNotEmpty) {
@@ -384,10 +386,7 @@ class _EditPageState extends State<EditPage> {
                                     }
                                   }
                                 },
-                                child: Text(
-                                  'Send',
-                                  // style: TextStyle(color: Colors.red),
-                                ),
+                                child: const Text('Send'),
                               )
                             ],
                           );
@@ -402,7 +401,7 @@ class _EditPageState extends State<EditPage> {
                       .push(MaterialPageRoute(builder: (builder) => Donate()));
               }
             },
-            icon: FaIcon(
+            icon: const FaIcon(
               FontAwesomeIcons.ellipsisV,
               size: 14,
               color: Colors.blueGrey,
@@ -410,27 +409,27 @@ class _EditPageState extends State<EditPage> {
             tooltip: 'Your account',
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Log out'),
                   value: 'Logout',
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'ProbReport',
                   child: Text('Report a problem...'),
                 ),
                 kIsWeb
-                    ? PopupMenuItem(
+                    ? const PopupMenuItem(
                         value: 'dwApp',
                         child: Text('Download Android app...'),
                       )
                     : null,
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'Donate',
                   child: Text(
                     'Support Flutree...',
                   ),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'DeleteAcc',
                   child: Text(
                     'Delete account data...',
@@ -467,12 +466,12 @@ class _EditPageState extends State<EditPage> {
 
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(32.0, 0, 32.0, 0),
+                  padding: const EdgeInsets.fromLTRB(32.0, 0, 32.0, 0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 15.0),
+                      const SizedBox(height: 15.0),
                       GestureDetector(
                         onTap: kIsWeb
                             ? () => CustomSnack.showSnack(context,
@@ -489,7 +488,7 @@ class _EditPageState extends State<EditPage> {
                                     int response = await showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return ChooseImageDialog();
+                                        return const ChooseImageDialog();
                                       },
                                     );
                                     if (response != null) {
@@ -505,12 +504,13 @@ class _EditPageState extends State<EditPage> {
                                 radius: 50.0,
                                 child: _isdpLoading
                                     ? Container(
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                         ),
                                         width: double.infinity,
                                         height: double.infinity,
-                                        child: CircularProgressIndicator(),
+                                        child:
+                                            const CircularProgressIndicator(),
                                       )
                                     : null,
                                 backgroundColor: Colors.transparent,
@@ -518,12 +518,12 @@ class _EditPageState extends State<EditPage> {
                               ),
                               mode == Mode.edit
                                   ? buildChangeDpIcon()
-                                  : SizedBox.shrink(),
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(height: 24.0),
+                      const SizedBox(height: 24.0),
                       GestureDetector(
                         onTap: mode == Mode.edit
                             ? () {
@@ -535,7 +535,7 @@ class _EditPageState extends State<EditPage> {
                                     return StatefulBuilder(
                                       builder: (context, setDialogState) {
                                         return AlertDialog(
-                                          title: Text('Change nickname'),
+                                          title: const Text('Change nickname'),
                                           content: NameTextField(
                                             nameController: _nameController,
                                             keyboardAction:
@@ -543,13 +543,13 @@ class _EditPageState extends State<EditPage> {
                                           ),
                                           actions: [
                                             _isNicknameLoading
-                                                ? LoadingIndicator()
-                                                : SizedBox.shrink(),
+                                                ? const LoadingIndicator()
+                                                : const SizedBox.shrink(),
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('Cancel'),
+                                              child: const Text('Cancel'),
                                             ),
                                             TextButton(
                                               onPressed: () async {
@@ -566,7 +566,7 @@ class _EditPageState extends State<EditPage> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              child: Text('Confirm'),
+                                              child: const Text('Confirm'),
                                             ),
                                           ],
                                         );
@@ -579,14 +579,14 @@ class _EditPageState extends State<EditPage> {
                         child: Text(
                           '${snapshot.data.data()['nickname']}',
                           style: mode == Mode.preview
-                              ? TextStyle(fontSize: 22)
-                              : TextStyle(
+                              ? const TextStyle(fontSize: 22)
+                              : const TextStyle(
                                   fontSize: 22,
                                   decoration: TextDecoration.underline,
                                   decorationStyle: TextDecorationStyle.dotted),
                         ),
                       ), //just a plain text
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Visibility(
                         visible: (mode == Mode.edit) || _isShowSubtitle,
                         child: GestureDetector(
@@ -608,7 +608,7 @@ class _EditPageState extends State<EditPage> {
                                           builder: (context, setDialogState) {
                                         return AlertDialog(
                                           title: CheckboxListTile(
-                                            title: Text('Subtitle'),
+                                            title: const Text('Subtitle'),
                                             value: _isShowSubtitle,
                                             onChanged: (value) async {
                                               setState(() =>
@@ -634,13 +634,13 @@ class _EditPageState extends State<EditPage> {
                                           ),
                                           actions: [
                                             _isSubtitleLoading
-                                                ? LoadingIndicator()
-                                                : SizedBox.shrink(),
+                                                ? const LoadingIndicator()
+                                                : const SizedBox.shrink(),
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text('Cancel')),
+                                                child: const Text('Cancel')),
                                             TextButton(
                                                 onPressed: () async {
                                                   if (_subtitleController
@@ -670,7 +670,7 @@ class _EditPageState extends State<EditPage> {
                                                     Navigator.pop(context);
                                                   }
                                                 },
-                                                child: Text('Save')),
+                                                child: const Text('Save')),
                                           ],
                                         );
                                       });
@@ -695,10 +695,10 @@ class _EditPageState extends State<EditPage> {
                                                 .editModehelpDialog(context);
                                           });
                                     },
-                                    icon: FaIcon(
+                                    icon: const FaIcon(
                                         FontAwesomeIcons.questionCircle,
                                         size: 16),
-                                    label: Text('Help')),
+                                    label: const Text('Help')),
                                 Tooltip(
                                   message:
                                       'Toggle whether the cards should be\nreordarable or locked in place.',
@@ -714,7 +714,7 @@ class _EditPageState extends State<EditPage> {
                                         _isReorderable = !_isReorderable;
                                       });
                                     },
-                                    label: Text('Reorder'),
+                                    label: const Text('Reorder'),
                                   ),
                                 ),
                               ],
@@ -731,9 +731,10 @@ class _EditPageState extends State<EditPage> {
                                               .previewModeHelpDialog(context);
                                         });
                                   },
-                                  icon: FaIcon(FontAwesomeIcons.questionCircle,
+                                  icon: const FaIcon(
+                                      FontAwesomeIcons.questionCircle,
                                       size: 16),
-                                  label: Text('Help')),
+                                  label: const Text('Help')),
                             );
                           }
                         },
@@ -759,23 +760,8 @@ class _EditPageState extends State<EditPage> {
                                   _userDocument.update({'socials': tempData});
                                 },
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  //  dynamic response = await showModalBottomSheet(
-                                  //     shape: _bottomSheetStyle,
-                                  //     context: context,
-                                  //     builder: (context) {
-                                  //       return DeleteCardWidget(datas[index]);
-                                  //     },
-                                  //   );
-
-                                  //   if (response ?? false) {
-                                  //     _userDocument.update({
-                                  //       'socials': FieldValue.arrayRemove(
-                                  //           [datas[index].toMap()])
-                                  //     });
-                                  //   }
-
                                   return Dismissible(
                                     onDismissed: (direction) {
                                       print('Delete confirmed');
@@ -797,7 +783,7 @@ class _EditPageState extends State<EditPage> {
                                     background: Container(
                                       alignment: Alignment.centerLeft,
                                       child: Row(
-                                        children: [
+                                        children: const <Widget>[
                                           SizedBox(width: 8),
                                           FaIcon(FontAwesomeIcons.trashAlt,
                                               size: 20,
@@ -865,7 +851,7 @@ class _EditPageState extends State<EditPage> {
                             return ListView.builder(
                               itemCount: datas.length,
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return PressableDough(
                                   child: LinkCard(
@@ -877,13 +863,13 @@ class _EditPageState extends State<EditPage> {
                           }
                         },
                       ),
-                      SizedBox(height: 6),
+                      const SizedBox(height: 6),
                       Visibility(
                         visible: mode == Mode.edit,
                         child: Transform.scale(
                           scale: 0.97,
                           child: DottedBorder(
-                            dashPattern: [6, 5],
+                            dashPattern: const [6, 5],
                             color: Colors.black54,
                             child: Card(
                               color: Theme.of(context).canvasColor,
@@ -901,7 +887,7 @@ class _EditPageState extends State<EditPage> {
                                             bottom: MediaQuery.of(context)
                                                 .viewInsets
                                                 .bottom),
-                                        child: AddCard(),
+                                        child: const AddCard(),
                                       );
                                     },
                                   );
@@ -920,16 +906,16 @@ class _EditPageState extends State<EditPage> {
                                     });
                                   }
                                 },
-                                leading: FaIcon(
+                                leading: const FaIcon(
                                   FontAwesomeIcons.plus,
                                   color: Colors.black54,
                                 ),
-                                title: Text(
+                                title: const Text(
                                   'Add card',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.black54),
                                 ),
-                                trailing: Icon(null),
+                                trailing: const Icon(null),
                               ),
                             ),
                           ),
@@ -938,7 +924,7 @@ class _EditPageState extends State<EditPage> {
 
                       _isBannerAdLoaded
                           ? bannerAdWidget()
-                          : SizedBox(height: 10),
+                          : const SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -948,7 +934,7 @@ class _EditPageState extends State<EditPage> {
               return Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
                       Text('Loading')
@@ -959,7 +945,7 @@ class _EditPageState extends State<EditPage> {
               return Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
                       Text(
@@ -970,7 +956,7 @@ class _EditPageState extends State<EditPage> {
                     ]),
               );
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
@@ -1015,38 +1001,36 @@ class DeleteCardWidget extends StatelessWidget {
         children: [
           Text(
             'Delete ${linkcard.displayName} ?',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: FaIcon(FontAwesomeIcons.times, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.times, size: 14),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    label: Text('Cancel')),
+                    label: const Text('Cancel')),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: FaIcon(FontAwesomeIcons.trashAlt, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.trashAlt, size: 14),
                     style: OutlinedButton.styleFrom(
                         primary: Colors.white,
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
-                    label: Text('Delete')),
+                    label: const Text('Delete')),
               ),
             ],
           ),
-          SizedBox(
-            height: 5,
-          )
+          const SizedBox(height: 5)
         ],
       ),
     );
@@ -1064,8 +1048,8 @@ class ChooseImageDialog extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
               'Choose source',
               textAlign: TextAlign.center,
@@ -1073,15 +1057,15 @@ class ChooseImageDialog extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text(
+            title: const Text(
               'Camera',
             ),
-            trailing: FaIcon(FontAwesomeIcons.camera),
+            trailing: const FaIcon(FontAwesomeIcons.camera),
             onTap: () => Navigator.of(context).pop(0),
           ),
           ListTile(
-            title: Text('Gallery'),
-            trailing: FaIcon(FontAwesomeIcons.images),
+            title: const Text('Gallery'),
+            trailing: const FaIcon(FontAwesomeIcons.images),
             onTap: () => Navigator.of(context).pop(1),
           ),
         ],

@@ -6,9 +6,10 @@ class HorizontalOrLine extends StatelessWidget {
   /// In auth page
   /// https://stackoverflow.com/a/61304861/13617136
   const HorizontalOrLine({
+    Key key,
     this.label,
     this.height,
-  });
+  }) : super(key: key);
 
   final String label;
   final double height;
@@ -43,8 +44,9 @@ class HorizontalOrLine extends StatelessWidget {
 Container buildChangeDpIcon() {
   return Container(
     padding: const EdgeInsets.all(5.0),
-    decoration: BoxDecoration(color: Colors.blueGrey, shape: BoxShape.circle),
-    child: FaIcon(
+    decoration:
+        const BoxDecoration(color: Colors.blueGrey, shape: BoxShape.circle),
+    child: const FaIcon(
       FontAwesomeIcons.camera,
       color: Colors.white,
       size: 12,
@@ -53,7 +55,7 @@ Container buildChangeDpIcon() {
 }
 
 TextStyle linkTextStyle =
-    TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold);
+    const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold);
 
 TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
     color: color,
@@ -207,7 +209,7 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       width: 10,
       height: 10,
       child: CircularProgressIndicator(
@@ -218,12 +220,12 @@ class LoadingIndicator extends StatelessWidget {
 }
 
 class LinkContainer extends StatelessWidget {
-  const LinkContainer({this.child});
+  const LinkContainer({Key key, this.child}) : super(key: key);
   final Widget child;
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.0),
             color: Colors.blueGrey.shade100.withAlpha(105)),

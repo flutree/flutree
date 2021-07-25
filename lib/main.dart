@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'CONSTANTS.dart';
+import 'constants.dart';
 import 'views/auth/signin.dart';
 import 'views/customizable/editing_page.dart';
 
@@ -26,6 +26,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({Key key}) : super(key: key);
   final _authUser = FirebaseAuth.instance.currentUser;
   final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
-      home: _authUser == null ? SignIn() : EditPage(),
+      home: _authUser == null ? const SignIn() : const EditPage(),
     );
   }
 }

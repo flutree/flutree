@@ -7,17 +7,19 @@ import '../../utils/url_launcher.dart';
 
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
-  LinkCard(
-      {@required this.linkcardModel,
+  const LinkCard(
+      {Key key,
+      @required this.linkcardModel,
       this.isSample = false,
-      this.isEditing = false});
+      this.isEditing = false})
+      : super(key: key);
   final LinkcardModel linkcardModel;
   final bool isSample;
 
   /// Block onPressed method. Enable overriding gesture from other widget. Defaulted to false
   final bool isEditing;
 
-  final snackbar = SnackBar(
+  final snackbar = const SnackBar(
     content: Text(
         'To fully customize the card. Register or login with Flutree now.'),
   );
@@ -44,9 +46,9 @@ class LinkCard extends StatelessWidget {
           title: Text(
             linkcardModel.displayName,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
-          trailing: Icon(null), //to keep the text centered
+          trailing: const Icon(null), //to keep the text centered
         ),
       ),
     );
