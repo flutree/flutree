@@ -9,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
-import 'views/auth/signin.dart';
+import 'views/auth/auth_home.dart';
 import 'views/customizable/editing_page.dart';
 
 void main() async {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
-      home: _authUser == null ? const SignIn() : const EditPage(),
+      home: _authUser == null ? const AuthHome() : const EditPage(),
     );
   }
 }

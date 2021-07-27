@@ -3,7 +3,7 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.9.45+26
+version: 3.10.49+27
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -20,10 +20,10 @@ dependencies:
   giffy_dialog: ^1.8.0
   firebase_core: ^1.0.4
   google_mobile_ads: ^0.13.0
-  firebase_auth: ^2.0.0
+  firebase_auth: ^3.0.1
   google_sign_in: ^5.0.2
   cloud_firestore: ^2.2.0
-  firebase_storage: ^9.0.0
+  firebase_storage: ^10.0.1
   firebase_analytics: ^8.0.2
   firebase_dynamic_links: ^2.0.2
   image_picker: ^0.8.0+3
@@ -47,4 +47,3 @@ flutter:
     - images/sample.jpg
     - images/intro.gif
     - images/logo/
-    - images/devices.png

@@ -24,7 +24,7 @@ import '../../constants.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
-import '../auth/signin.dart';
+import '../auth/auth_home.dart';
 import '../widgets/link_card.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
@@ -151,31 +151,20 @@ class _EditPageState extends State<EditPage> {
   }
 
   Future getImage(int option) async {
-    PickedFile pickedFile;
-    switch (option) {
-      case 0:
-        try {
-          pickedFile = await picker.getImage(
-              source: ImageSource.camera,
-              imageQuality: 70,
-              maxWidth: 300,
-              maxHeight: 200);
-        } on PlatformException catch (e) {
-          //catch error when no camera available for example hahha
-          // i think this is most useless catching error bcs
-          // all phones has camera amiright? (Emulator sometimes
-          // can't access laptop's camera)
-          CustomSnack.showErrorSnack(context, message: e.message);
-        }
+    XFile pickedFile;
 
-        break;
-      default:
-        pickedFile = await picker.getImage(
-            source: ImageSource.gallery,
-            imageQuality: 70,
-            maxWidth: 300,
-            maxHeight: 200);
-        break;
+    try {
+      pickedFile = await picker.pickImage(
+          source: option == 0 ? ImageSource.camera : ImageSource.gallery,
+          imageQuality: 70,
+          maxWidth: 300,
+          maxHeight: 200);
+    } on PlatformException catch (e) {
+      //catch error when no camera available for example hahha
+      // i think this is most useless catching error bcs
+      // all phones has camera amiright? (Emulator sometimes
+      // can't access laptop's camera)
+      CustomSnack.showErrorSnack(context, message: e.message);
     }
 
     if (pickedFile != null) {
@@ -184,7 +173,7 @@ class _EditPageState extends State<EditPage> {
       });
       updateProfilePicture();
     } else {
-      print('No image selected.');
+      CustomSnack.showSnack(context, message: 'No image selected');
     }
   }
 
@@ -243,8 +232,10 @@ class _EditPageState extends State<EditPage> {
                 case 'Logout':
                   await FirebaseAuth.instance.signOut();
                   await GoogleSignIn().signOut();
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const SignIn()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AuthHome()));
                   break;
                 case 'dwApp':
                   launchURL(context, kPlayStoreUrl);
@@ -286,7 +277,7 @@ class _EditPageState extends State<EditPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const SignIn()));
+                                                const AuthHome()));
                                   } on FirebaseException catch (e) {
                                     print('Firebase err: $e');
                                     CustomSnack.showErrorSnack(context,
