@@ -9,10 +9,11 @@ void main() async {
   await Firebase.initializeApp();
   setPathUrlStrategy();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
-              builder: (context) => EnterCode(),
+              builder: (context) => const EnterCode(),
             );
             break;
           default:
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             );
         }
       },
-      home: EnterCode(),
+      home: const EnterCode(),
     );
   }
 }

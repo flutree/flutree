@@ -8,9 +8,10 @@ import '../../utils/url_launcher.dart';
 
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
-  LinkCard({
+  const LinkCard({
+    Key key,
     @required this.linkcardModel,
-  });
+  }) : super(key: key);
   final LinkcardModel linkcardModel;
 
   @override
@@ -31,9 +32,9 @@ class LinkCard extends StatelessWidget {
             title: Text(
               linkcardModel.displayName,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
-            trailing: Icon(null), //to keep the text centered
+            trailing: const Icon(null), //to keep the text centered
           ),
         ),
       ),
