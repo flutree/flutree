@@ -289,7 +289,6 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                       future: BitlyApi.clickSummary(url: _bitlyLink),
                       builder: (context,
                           AsyncSnapshot<BitlyClickSummaryModel> snapshot) {
-                        print(snapshot.toString());
                         if (snapshot.hasError) {
                           return const Text(
                             'Failed to fetch metric data :(',
@@ -376,9 +375,9 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                                 GetStorage().write(kHasBitlyLink, true);
                                 GetStorage().write(kBitlyLink, _bitlyLink);
                               } catch (e) {
-                                print(e);
                                 CustomSnack.showErrorSnack(context,
                                     message: 'Bitly error: $e');
+                                rethrow;
                               }
 
                               setState(() => _waitForBitly = false);

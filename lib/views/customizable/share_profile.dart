@@ -321,8 +321,8 @@ class _LiveGuideState extends State<LiveGuide> {
 
   @override
   void dispose() {
-    _interstitialAd.dispose();
-    _bannerAd.dispose();
+    _interstitialAd?.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 }

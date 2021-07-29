@@ -45,12 +45,10 @@ class _EmailSignInState extends State<EmailSignIn> {
                                   email: _emailController.text.trim(),
                                   password: _passwordController.text.trim())
                               .then((value) {
-                            print('Sign in email password done');
-                            Navigator.pushReplacement(
-                                context,
+                            Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) => const EditPage(),
-                                ));
+                                    builder: (builder) => const EditPage()),
+                                (route) => false);
                           }).catchError((error) {
                             print('ERROR: $error');
                             setState(() {
@@ -125,8 +123,6 @@ class _EmailSignInState extends State<EmailSignIn> {
                                             CustomSnack.showSnack(context,
                                                 message: 'Email sent');
                                           } on FirebaseAuthException catch (e) {
-                                            print('Err: $e');
-
                                             setDialogState(() =>
                                                 _isResetPasswordLoading =
                                                     false);
@@ -134,13 +130,13 @@ class _EmailSignInState extends State<EmailSignIn> {
                                             CustomSnack.showErrorSnack(context,
                                                 message: e.message);
                                           } catch (e) {
-                                            print('Unknown err: $e');
                                             setDialogState(() =>
                                                 _isResetPasswordLoading =
                                                     false);
                                             CustomSnack.showErrorSnack(context,
                                                 message: 'Unknown err');
                                             Navigator.pop(context);
+                                            rethrow;
                                           }
                                         }
                                       },

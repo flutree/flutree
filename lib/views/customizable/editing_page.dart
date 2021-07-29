@@ -118,19 +118,16 @@ class _EditPageState extends State<EditPage> {
         _storageInstance.ref('userdps').child(_authInstance.currentUser.uid);
 
     try {
+      // if already exist, it will be overwritten
       await reference.putFile(_image);
-
       url = await reference.getDownloadURL();
-      print('picture url is $url');
     } on FirebaseException catch (e) {
-      print('Error: $e');
       setState(() => _isdpLoading = false);
       CustomSnack.showErrorSnack(context, message: 'Error: ${e.message}');
       return;
     } catch (e) {
       setState(() => _isdpLoading = false);
-      print('Unknown error: $e');
-      return;
+      rethrow;
     }
 
     try {
@@ -139,14 +136,13 @@ class _EditPageState extends State<EditPage> {
         setState(() => _isdpLoading = false);
       });
     } on FirebaseException catch (e) {
-      print('Error: $e');
       CustomSnack.showErrorSnack(context, message: 'Error: ${e.message}');
       setState(() => _isdpLoading = false);
     } catch (e) {
       CustomSnack.showErrorSnack(context,
           message: 'Unexpected error. Please try again.');
-      print('ERROR SETTING PICTURE: $e');
       setState(() => _isdpLoading = false);
+      rethrow;
     }
   }
 
@@ -279,15 +275,14 @@ class _EditPageState extends State<EditPage> {
                                             builder: (context) =>
                                                 const AuthHome()));
                                   } on FirebaseException catch (e) {
-                                    print('Firebase err: $e');
                                     CustomSnack.showErrorSnack(context,
                                         message: 'Error: ${e.message}');
                                     setDialogState(() => isLoading = false);
                                   } catch (e) {
-                                    print('Unknown err: $e');
                                     CustomSnack.showErrorSnack(context,
                                         message: 'Error. Please try again');
                                     setDialogState(() => isLoading = false);
+                                    rethrow;
                                   }
                                 },
                                 child: const Text(
@@ -363,17 +358,16 @@ class _EditPageState extends State<EditPage> {
                                       Navigator.pop(context); //pop the dialog
 
                                     } on FirebaseException catch (e) {
-                                      print('Firebase err: $e');
                                       CustomSnack.showErrorSnack(context,
                                           message: 'Error: ${e.message}');
                                       setDialogState(
                                           () => _isReportLoading = false);
                                     } catch (e) {
-                                      print('Unknown err: $e');
                                       CustomSnack.showErrorSnack(context,
                                           message: 'Error. Please try again');
                                       setDialogState(
                                           () => _isReportLoading = false);
+                                      rethrow;
                                     }
                                   }
                                 },
@@ -737,7 +731,6 @@ class _EditPageState extends State<EditPage> {
                                 buildDefaultDragHandles: _isReorderable,
                                 itemCount: datas.length,
                                 onReorder: (oldIndex, newIndex) {
-                                  print('$oldIndex, $newIndex');
                                   if (oldIndex < newIndex) {
                                     newIndex -= 1;
                                   }
@@ -755,7 +748,6 @@ class _EditPageState extends State<EditPage> {
                                 itemBuilder: (context, index) {
                                   return Dismissible(
                                     onDismissed: (direction) {
-                                      print('Delete confirmed');
                                       _userDocument.update({
                                         'socials': FieldValue.arrayRemove(
                                             [datas[index].toMap()])
@@ -813,8 +805,6 @@ class _EditPageState extends State<EditPage> {
                                           },
                                         );
                                         if (result != null) {
-                                          print('Editing ${result.toMap()}');
-
                                           await _userDocument.update({
                                             'socials': FieldValue.arrayRemove(
                                                 [datas[index].toMap()])

@@ -4,7 +4,6 @@ import 'snackbar.dart';
 
 ///lauch URL to a new web browser
 launchURL(BuildContext context, String url) async {
-  print('Launching url: $url');
   try {
     launch(url);
   } catch (e) {

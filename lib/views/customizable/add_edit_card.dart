@@ -100,27 +100,68 @@ class _AddCardState extends State<AddCard> {
                 Row(
                   children: [
                     Expanded(
+                      flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DropdownButtonFormField<String>(
                           isExpanded: true,
                           value: _socialModelName,
                           onChanged: (value) {
-                            setState(() => _titleController.text =
-                                _socialModelName = value);
+                            //only change title when not editing
+                            setState(() {
+                              if (_isNew) {
+                                _titleController.text = value;
+                              }
+                              _socialModelName = value;
+                            });
+                          },
+                          selectedItemBuilder: (context) {
+                            return List.generate(
+                              SocialLists.socialList.length,
+                              (index) => Center(
+                                child: FaIcon(
+                                  SocialLists.socialList[index].icon,
+                                  color: SocialLists.socialList[index].colour,
+                                ),
+                              ),
+                            );
                           },
                           decoration: dropdownInputDecoration,
                           items: SocialLists.socialList.map((element) {
                             return DropdownMenuItem<String>(
                               value: element.name,
-                              child: Center(child: FaIcon(element.icon)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Expanded(
+                                    child: FaIcon(
+                                      element.icon,
+                                      color: element.colour,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      element.name,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: element.colour,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             );
                           }).toList(),
                         ),
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(

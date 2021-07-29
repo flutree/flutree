@@ -22,7 +22,6 @@ class DynamicLinkApi {
             dynamicLinkParametersOptions: DynamicLinkParametersOptions(
                 shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short))
         .buildShortLink();
-    print('Firebase Dynamic Link Warning: ${fdLink.warnings}');
     return fdLink.shortUrl.toString();
   }
 }

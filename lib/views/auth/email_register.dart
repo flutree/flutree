@@ -50,11 +50,10 @@ class _RegisterState extends State<Register> {
                             await user.user
                                 .updateDisplayName(_nameController.text.trim());
 
-                            Navigator.pushReplacement(
-                                context,
+                            Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) => const EditPage(),
-                                ));
+                                    builder: (builder) => const EditPage()),
+                                (route) => false);
                           } on FirebaseAuthException catch (e) {
                             setState(() => _isRegisterLoading = false);
                             CustomSnack.showErrorSnack(context,
