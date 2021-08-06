@@ -576,8 +576,7 @@ class _EditPageState extends State<EditPage> {
                               }
                             : null,
                         child: Text(
-                          // '${_documentSnapshotData.data()['nickname']}',
-                          'hahahah',
+                          '${_documentSnapshotData.data()['nickname']}',
                           style: mode == Mode.preview
                               ? const TextStyle(fontSize: 22)
                               : const TextStyle(

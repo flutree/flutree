@@ -21,7 +21,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
         "We do not allow the posting of another person's personal and confidential account or identification information.",
   };
   final List<bool> _state = List.generate(4, (index) => false);
-  //TODO: ^ Takpe ke final _state ni
   bool _countinueButtonActive = false;
 
   bool checkIfAllAreChecked() {

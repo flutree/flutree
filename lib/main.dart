@@ -18,7 +18,6 @@ void main() async {
   MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(testDeviceIds: [kTestDeviceId1, kTestDeviceId2]));
-
   runApp(MyApp());
 }
 

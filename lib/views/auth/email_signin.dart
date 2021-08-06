@@ -69,8 +69,9 @@ class _EmailSignInState extends State<EmailSignIn> {
                 ),
               ),
               const Spacer(flex: 4),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
                     onPressed: () {
@@ -158,7 +159,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                       widget.tabController.animateTo(0);
                     },
                     child: const Text(
-                      'Register',
+                      'Need an account? Register',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
