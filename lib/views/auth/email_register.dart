@@ -5,7 +5,8 @@ import '../customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key key}) : super(key: key);
+  const Register({Key key, @required this.tabController}) : super(key: key);
+  final TabController tabController;
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -79,7 +80,7 @@ class _RegisterState extends State<Register> {
               const Spacer(flex: 3),
               TextButton(
                 onPressed: () {
-                  DefaultTabController.of(context).animateTo(1);
+                  widget.tabController.animateTo(1);
                 },
                 child: const Text(
                   'Already have an account? Login here.',

@@ -15,11 +15,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:linktree_iqfareez_flutter/PRIVATE.dart';
-import 'package:linktree_iqfareez_flutter/views/screens/consent_screen.dart';
-import 'package:linktree_iqfareez_flutter/views/screens/donate.dart';
-import 'package:linktree_iqfareez_flutter/views/widgets/help_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../../PRIVATE.dart';
+import '../screens/consent_screen.dart';
+import '../screens/donate.dart';
+import '../widgets/help_dialog.dart';
 import '../../constants.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/snackbar.dart';
@@ -41,7 +41,6 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  bool _isShowSubtitle;
   Mode mode;
   final picker = ImagePicker();
   final FirebaseStorage _storageInstance = FirebaseStorage.instance;
@@ -50,17 +49,19 @@ class _EditPageState extends State<EditPage> {
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
   final _reportController = TextEditingController();
+  DocumentReference<Map<String, dynamic>> _userDocument;
+  CollectionReference<Map<String, dynamic>> _reportCollection;
+  DocumentSnapshot<Map<String, dynamic>> _documentSnapshotData;
   String _userCode;
   bool _isdpLoading = false;
   bool _isReorderable = false;
   String _subtitleText;
-  DocumentReference<Map<String, dynamic>> _userDocument;
-  CollectionReference<Map<String, dynamic>> _reportCollection;
-  DocumentSnapshot<Map<String, dynamic>> _documentSnapshot;
+  bool _isShowSubtitle;
   BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
   File _image;
   String _userImageUrl;
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +86,10 @@ class _EditPageState extends State<EditPage> {
             'https://picsum.photos/seed/$_userCode/200',
         'nickname': _authInstance.currentUser.displayName,
       });
+      _nameController.text = _authInstance.currentUser.displayName;
+    } else {
+      _subtitleController.text = snapshot.data()["subtitle"];
+      _nameController.text = snapshot.data()["nickname"];
     }
   }
 
@@ -213,7 +218,7 @@ class _EditPageState extends State<EditPage> {
                   MaterialPageRoute(
                     builder: (context) => LiveGuide(
                       userCode: _userCode,
-                      docs: _documentSnapshot,
+                      docs: _documentSnapshotData,
                     ),
                   ),
                 );
@@ -427,26 +432,31 @@ class _EditPageState extends State<EditPage> {
         ],
       ),
       body: SafeArea(
+        // Main content
         child: StreamBuilder(
           stream: _userDocument.snapshots(),
           builder: (context,
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData && snapshot.data.exists) {
-              _documentSnapshot = snapshot.data;
-              // print('Document exist: ${snapshot.data.data()}');
+              _documentSnapshotData = snapshot.data;
 
-              _subtitleText = snapshot.data.data()['subtitle'] ??
+              _subtitleText = _documentSnapshotData.data()['subtitle'] ??
                   'Something about yourself';
-              _isShowSubtitle = snapshot.data.data()['showSubtitle'] ?? false;
-              _userImageUrl = snapshot.data.data()['dpUrl'];
+              _isShowSubtitle =
+                  _documentSnapshotData.data()['showSubtitle'] ?? false;
+              _userImageUrl = _documentSnapshotData.data()['dpUrl'];
 
-              List<dynamic> socialsList = snapshot.data.data()['socials'];
+              List<dynamic> socialsList =
+                  _documentSnapshotData.data()['socials'];
               List<LinkcardModel> datas = [];
               for (var item in socialsList ?? []) {
-                datas.add(LinkcardModel(
+                datas.add(
+                  LinkcardModel(
                     exactName: item['exactName'],
                     displayName: item['displayName'],
-                    link: item['link']));
+                    link: item['link'],
+                  ),
+                );
               }
 
               return SingleChildScrollView(
@@ -538,6 +548,10 @@ class _EditPageState extends State<EditPage> {
                                             ),
                                             TextButton(
                                               onPressed: () async {
+                                                // ignore if nickname empty
+                                                if (_nameController
+                                                    .text.isEmpty) return;
+
                                                 setDialogState(() =>
                                                     _isNicknameLoading = true);
                                                 await _userDocument.update({
@@ -562,7 +576,8 @@ class _EditPageState extends State<EditPage> {
                               }
                             : null,
                         child: Text(
-                          '${snapshot.data.data()['nickname']}',
+                          // '${_documentSnapshotData.data()['nickname']}',
+                          'hahahah',
                           style: mode == Mode.preview
                               ? const TextStyle(fontSize: 22)
                               : const TextStyle(
@@ -580,42 +595,21 @@ class _EditPageState extends State<EditPage> {
                                   style: mode == Mode.edit
                                       ? dottedUnderlinedStyle()
                                       : null)
-                              : Text('Add subtitle',
-                                  style: dottedUnderlinedStyle()),
+                              : Text('Add bio', style: dottedUnderlinedStyle()),
                           onTap: mode == Mode.edit
-                              ? () {
-                                  showDialog(
+                              ? () async {
+                                  var res = await showDialog(
                                     context: context,
                                     builder: (context) {
                                       bool _isSubtitleLoading = false;
-
                                       return StatefulBuilder(
-                                          builder: (context, setDialogState) {
+                                          builder: (context, setWidgetState) {
                                         return AlertDialog(
-                                          title: CheckboxListTile(
-                                            title: const Text('Subtitle'),
-                                            value: _isShowSubtitle,
-                                            onChanged: (value) async {
-                                              setState(() =>
-                                                  _isShowSubtitle = value);
-                                              setDialogState(() {
-                                                _isSubtitleLoading = true;
-                                              });
-                                              await _userDocument.update({
-                                                'showSubtitle': _isShowSubtitle
-                                              });
-                                              setDialogState(() {
-                                                print('finish udating');
-                                                _isSubtitleLoading = false;
-                                              });
-                                            },
-                                          ),
-                                          content: Visibility(
-                                            visible: _isShowSubtitle,
-                                            child: SubtitleTextField(
-                                              subsController:
-                                                  _subtitleController,
-                                            ),
+                                          title: const Text('Bio'),
+                                          contentPadding:
+                                              const EdgeInsets.all(8.0),
+                                          content: SubtitleTextField(
+                                            subsController: _subtitleController,
                                           ),
                                           actions: [
                                             _isSubtitleLoading
@@ -628,32 +622,21 @@ class _EditPageState extends State<EditPage> {
                                                 child: const Text('Cancel')),
                                             TextButton(
                                                 onPressed: () async {
-                                                  if (_subtitleController
-                                                      .text.isNotEmpty) {
-                                                    setDialogState(() {
-                                                      _isSubtitleLoading = true;
-                                                    });
-                                                    _userDocument.update({
-                                                      'subtitle':
-                                                          _subtitleController
-                                                              .text
-                                                    }).then((value) {
-                                                      setState(() {
-                                                        _subtitleText =
-                                                            _subtitleController
-                                                                .text;
-                                                        Navigator.pop(context);
-                                                      });
-                                                    }).catchError(
-                                                        (Object error) {
-                                                      print(error);
-                                                      setDialogState(() =>
-                                                          _isSubtitleLoading =
-                                                              false);
-                                                    });
-                                                  } else {
-                                                    Navigator.pop(context);
-                                                  }
+                                                  setWidgetState(() {
+                                                    _isSubtitleLoading = true;
+                                                  });
+                                                  await _userDocument.update({
+                                                    'subtitle':
+                                                        _subtitleController.text
+                                                  });
+                                                  setWidgetState(() {
+                                                    _isSubtitleLoading = true;
+                                                  });
+
+                                                  Navigator.pop(
+                                                      context,
+                                                      _subtitleController
+                                                          .text.isNotEmpty);
                                                 },
                                                 child: const Text('Save')),
                                           ],
@@ -661,6 +644,10 @@ class _EditPageState extends State<EditPage> {
                                       });
                                     },
                                   );
+                                  // Avoid rebuild when no change
+                                  if (res == null) return;
+                                  await _userDocument
+                                      .update({'showSubtitle': res});
                                 }
                               : null,
                         ),
@@ -930,7 +917,7 @@ class _EditPageState extends State<EditPage> {
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
                       Text(
-                        'We have trouble connecting....\nIf the problem still persist, try log out and log in again',
+                        'We have trouble connecting....\nIf the problem still persists, try log out and log in again',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.red),
                       )

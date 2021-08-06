@@ -81,8 +81,6 @@ class _AddCardState extends State<AddCard> {
 
   @override
   Widget build(BuildContext context) {
-    // _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -239,10 +237,8 @@ class _AddCardState extends State<AddCard> {
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
                     icon: const FaIcon(FontAwesomeIcons.times, size: 14),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    label: const Text('Discard')),
+                    onPressed: () => Navigator.pop(context),
+                    label: Text(_isNew ? 'Discard' : 'Cancel')),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

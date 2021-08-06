@@ -6,8 +6,8 @@ import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 
 class EmailSignIn extends StatefulWidget {
-  const EmailSignIn({Key key}) : super(key: key);
-
+  const EmailSignIn({Key key, @required this.tabController}) : super(key: key);
+  final TabController tabController;
   @override
   _EmailSignInState createState() => _EmailSignInState();
 }
@@ -155,7 +155,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                   ),
                   TextButton(
                     onPressed: () {
-                      DefaultTabController.of(context).animateTo(0);
+                      widget.tabController.animateTo(0);
                     },
                     child: const Text(
                       'Register',

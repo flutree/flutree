@@ -136,6 +136,7 @@ class NameTextField extends StatelessWidget {
       validator: (value) => value.isEmpty ? 'Please enter your name' : null,
       controller: _nameController,
       decoration: InputDecoration(
+        helperText: 'Nickname must not be empty',
         isDense: true,
         labelText: 'Nickname',
         border: OutlineInputBorder(
