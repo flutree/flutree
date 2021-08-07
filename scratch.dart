@@ -1,5 +1,7 @@
 void main() {
-  String uid = 'AcpMQyE5NCO9wcAheFQw';
+  String url = Uri.https('firestore.googleapis.com',
+          '/v1/projects/linktree-clone-flutter/databases/(default)')
+      .toString();
 
-  print(uid.substring(0, 5));
+  print(url);
 }

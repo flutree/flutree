@@ -6,7 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../utils/url_launcher.dart';
 
 class Donate extends StatelessWidget {
-  Donate({Key key}) : super(key: key);
+  Donate({Key? key}) : super(key: key);
 
   final _links = {
     'buymeacoffee': 'https://www.buymeacoffee.com/iqfareez',
@@ -15,7 +15,7 @@ class Donate extends StatelessWidget {
     'getapp': 'https://flutree.page.link/getapp'
   };
 
-  void copyToClipboard(String link) {
+  void copyToClipboard(String? link) {
     Clipboard.setData(ClipboardData(text: link))
         .then((value) => Fluttertoast.showToast(msg: 'Copied link'));
   }
@@ -26,8 +26,8 @@ class Donate extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.blueGrey),
-        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        iconTheme: const IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
         elevation: 0.0,
         centerTitle: true,
         title: Text(
@@ -41,21 +41,21 @@ class Donate extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(26, 10, 26, 0),
             child: Column(
               children: [
-                Text(
+                const Text(
                     'Thank you for interest in supporting Flutree. Your support could help keep Flutree running for free and provide a better experience.'),
-                Text(
+                const Text(
                     '\nYour donation can be utilized in a number of way such as site hosting and maintainance.'),
                 DonateCard(
                   label: 'Paypal',
                   link: _links['paypal'],
-                  onTapFun: () => launchURL(context, _links['paypal']),
+                  onTapFun: () => launchURL(context, _links['paypal']!),
                   onLongTapFun: () => copyToClipboard(_links['paypal']),
                   faIcon: FontAwesomeIcons.paypal,
                 ),
                 DonateCard(
                   link: _links['patreon'],
                   faIcon: FontAwesomeIcons.patreon,
-                  onTapFun: () => launchURL(context, _links['patreon']),
+                  onTapFun: () => launchURL(context, _links['patreon']!),
                   onLongTapFun: () => copyToClipboard(_links['patreon']),
                   label: 'Patreon',
                 ),
@@ -63,10 +63,10 @@ class Donate extends StatelessWidget {
                     label: 'Buy me a coffee',
                     link: _links['buymeacoffee'],
                     faIcon: FontAwesomeIcons.mugHot,
-                    onTapFun: () => launchURL(context, _links['buymeacoffee']),
+                    onTapFun: () => launchURL(context, _links['buymeacoffee']!),
                     onLongTapFun: () =>
                         copyToClipboard(_links['buymeacoffee'])),
-                Text(
+                const Text(
                     '\nThe least thing you can do is to share this app among your family and friends.'),
                 DonateCard(
                   label: 'Share the app',
@@ -90,12 +90,12 @@ class Donate extends StatelessWidget {
 
 class DonateCard extends StatelessWidget {
   const DonateCard({
-    Key key,
-    @required String label,
-    @required String link,
-    @required IconData faIcon,
-    @required VoidCallback onTapFun,
-    @required VoidCallback onLongTapFun,
+    Key? key,
+    required String label,
+    required String? link,
+    required IconData faIcon,
+    required VoidCallback onTapFun,
+    required VoidCallback onLongTapFun,
   })  : _link = link,
         _label = label,
         _faIcon = faIcon,
@@ -103,7 +103,7 @@ class DonateCard extends StatelessWidget {
         _onLongTapFun = onLongTapFun,
         super(key: key);
 
-  final String _link;
+  final String? _link;
   final String _label;
   final IconData _faIcon;
   final VoidCallback _onTapFun;
@@ -118,7 +118,7 @@ class DonateCard extends StatelessWidget {
         child: ListTile(
           leading: FaIcon(_faIcon),
           title: Text(_label),
-          subtitle: Text(_link),
+          subtitle: Text(_link!),
         ),
       ),
     );

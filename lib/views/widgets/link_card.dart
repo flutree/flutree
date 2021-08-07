@@ -9,8 +9,8 @@ import '../../utils/url_launcher.dart';
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
   const LinkCard({
-    Key key,
-    @required this.linkcardModel,
+    Key? key,
+    required this.linkcardModel,
   }) : super(key: key);
   final LinkcardModel linkcardModel;
 
@@ -22,7 +22,7 @@ class LinkCard extends StatelessWidget {
         color: socialModel.colour,
         child: InkWell(
           splashColor: Colors.pink.withAlpha(10),
-          onTap: () => launchURL(context, linkcardModel.link),
+          onTap: () => launchURL(context, linkcardModel.link!),
           child: ListTile(
             mouseCursor: SystemMouseCursors.click,
             leading: FaIcon(
@@ -30,7 +30,7 @@ class LinkCard extends StatelessWidget {
               color: Colors.white,
             ),
             title: Text(
-              linkcardModel.displayName,
+              linkcardModel.displayName!,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white),
             ),

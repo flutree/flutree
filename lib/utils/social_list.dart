@@ -93,8 +93,8 @@ class SocialLists {
         icon: FontAwesomeIcons.poll, colour: Colors.blueGrey),
   ];
 
-  static SocialModel getSocial(String exactName) {
+  static SocialModel getSocial(String? exactName) {
     return socialList.firstWhere(
-        (element) => element.name.toLowerCase() == exactName.toLowerCase());
+        (element) => element.name.toLowerCase() == exactName!.toLowerCase());
   }
 }
