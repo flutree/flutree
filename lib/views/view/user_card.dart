@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:linktree_iqfareez_flutter/views/support.dart';
+import '../../models/firestore_users_model.dart';
+import '../support.dart';
 import '../../CONSTANTS.dart';
 import '../../utils/url_launcher.dart';
 import '../report_abuse.dart';
@@ -10,8 +10,8 @@ import '../../utils/linkcard_model.dart';
 import '../widgets/link_card.dart';
 
 class UserCard extends StatefulWidget {
-  UserCard(this.snapshot, this.code);
-  final DocumentSnapshot<Map<String, dynamic>> snapshot;
+  const UserCard(this.snapshot, this.code, {Key? key}) : super(key: key);
+  final FirestoreUsersModel snapshot;
   final String code;
   @override
   _UserCardState createState() => _UserCardState();
@@ -19,26 +19,26 @@ class UserCard extends StatefulWidget {
 
 class _UserCardState extends State<UserCard> {
   List<LinkCard> datas = [];
-  String _profileLink;
+  String? _profileLink;
   @override
   void initState() {
     super.initState();
     _profileLink = 'https://$kWebappUrl/${widget.code}';
-    print(_profileLink);
 
-    List<dynamic> socialsList = widget.snapshot.data()['socials'];
+    List<Values>? socialsList =
+        widget.snapshot.fields?.socials?.arrayValue?.values;
 
-    for (var item in socialsList ?? []) {
-      datas.add(
-        LinkCard(
+    datas.addAll(
+      socialsList!.map(
+        (e) => LinkCard(
           linkcardModel: LinkcardModel(
-            item['exactName'],
-            displayName: item['displayName'],
-            link: item['link'],
+            e.mapValue?.fields?.exactName?.stringValue,
+            displayName: e.mapValue?.fields?.displayName?.stringValue,
+            link: e.mapValue?.fields?.link?.stringValue,
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   @override
@@ -47,7 +47,7 @@ class _UserCardState extends State<UserCard> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(34.0, 0, 34.0, 0),
+            padding: const EdgeInsets.fromLTRB(34.0, 0, 34.0, 0),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth < 730) {
@@ -56,7 +56,7 @@ class _UserCardState extends State<UserCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       buildBasicInfo(),
-                      SizedBox(height: 25.0),
+                      const SizedBox(height: 25.0),
                       buildSocialCardsList(),
                       footerButtons()
                     ],
@@ -91,15 +91,11 @@ class _UserCardState extends State<UserCard> {
   ListView buildSocialCardsList() {
     return ListView(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       children: datas.isNotEmpty
-          ? datas.map(
-              (linkcard) {
-                return linkcard;
-              },
-            ).toList()
+          ? datas
           : [
-              SelectableText(
+              const SelectableText(
                 'Krik krik... Empty here.. 👀',
                 textAlign: TextAlign.center,
               )
@@ -110,25 +106,26 @@ class _UserCardState extends State<UserCard> {
   Column buildBasicInfo() {
     return Column(
       children: [
-        SizedBox(height: 30.0),
+        const SizedBox(height: 30.0),
         PressableDough(
           child: CircleAvatar(
             radius: 50.0,
             backgroundColor: Colors.transparent,
-            backgroundImage: NetworkImage(widget.snapshot.data()['dpUrl']),
+            backgroundImage:
+                NetworkImage(widget.snapshot.fields!.dpUrl!.stringValue!),
           ),
         ),
-        SizedBox(height: 28.0),
-        SelectableText('@${widget.snapshot.data()['nickname']}',
-            style: TextStyle(
+        const SizedBox(height: 28.0),
+        SelectableText('@${widget.snapshot.fields?.nickname?.stringValue}',
+            style: const TextStyle(
               fontSize: 22,
             )),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Visibility(
-          visible: widget.snapshot.data()['showSubtitle'] ?? false,
+          visible: widget.snapshot.fields?.showSubtitle?.booleanValue ?? false,
           child: GestureDetector(
               child: SelectableText(
-            widget.snapshot.data()['subtitle'] ?? 'Flutree user',
+            widget.snapshot.fields?.subtitle?.stringValue ?? 'Flutree user',
             textAlign: TextAlign.center,
           )),
         ),
@@ -147,24 +144,24 @@ class _UserCardState extends State<UserCard> {
             children: [
               TextButton.icon(
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AbuseReport(_profileLink))),
-                icon: FaIcon(
+                    builder: (context) =>
+                        AbuseReport(profileLink: _profileLink))),
+                icon: const FaIcon(
                   FontAwesomeIcons.exclamationTriangle,
                   size: 14,
                   semanticLabel: 'Report abuse',
                 ),
-                label: Text('Report Abuse'),
+                label: const Text('Report Abuse'),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               TextButton.icon(
                 onPressed: () => launchURL(context, kDynamicLink),
-                icon: FaIcon(
+                icon: const FaIcon(
                   FontAwesomeIcons.heart,
                   size: 14,
                   semanticLabel: 'Create your own profile',
                 ),
-                //TODO: Adapt with screen < fold
-                label: Text(
+                label: const Text(
                   'Made with Flutree',
                 ),
               ),
@@ -173,12 +170,12 @@ class _UserCardState extends State<UserCard> {
           TextButton.icon(
             onPressed: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => Donate())),
-            icon: FaIcon(
+            icon: const FaIcon(
               FontAwesomeIcons.mugHot,
               size: 14,
               semanticLabel: 'Support',
             ),
-            label: Text('Buy me a coffee'),
+            label: const Text('Buy me a coffee'),
           ),
         ],
       ),

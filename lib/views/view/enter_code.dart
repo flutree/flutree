@@ -1,12 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../utils/snackbar.dart';
 import '../widgets/reuseable.dart';
+import '../../CONSTANTS.dart';
+import '../../models/firestore_users_model.dart';
+import 'not_found.dart';
 import 'user_card.dart';
 
 class EnterCode extends StatelessWidget {
-  const EnterCode([this.userCode]);
+  const EnterCode({Key? key, required this.userCode}) : super(key: key);
   final String userCode;
 
   @override
@@ -19,7 +22,7 @@ class EnterCode extends StatelessWidget {
             if (constraints.maxWidth < 460) {
               return Stack(
                 children: [
-                  Align(
+                  const Align(
                     alignment: Alignment.topRight,
                     child: VersionInfoText(),
                   ),
@@ -41,7 +44,7 @@ class EnterCode extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Align(
+                  const Align(
                       alignment: Alignment.topRight, child: VersionInfoText()),
                   Expanded(
                     flex: 4,
@@ -78,7 +81,7 @@ class EnterCode extends StatelessWidget {
 
 class VersionInfoText extends StatelessWidget {
   const VersionInfoText({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -89,9 +92,9 @@ class VersionInfoText extends StatelessWidget {
         future: PackageInfo.fromPlatform(),
         builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
           if (snapshot.hasData) {
-            return Text('V${snapshot.data.version}');
+            return Text('V${snapshot.data?.version}');
           } else {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
         },
       ),
@@ -100,23 +103,22 @@ class VersionInfoText extends StatelessWidget {
 }
 
 class InputCodeArea extends StatefulWidget {
-  const InputCodeArea({Key key, this.userCode}) : super(key: key);
-  final userCode;
+  const InputCodeArea({Key? key, required this.userCode}) : super(key: key);
+  final String userCode;
 
   @override
   _InputCodeAreaState createState() => _InputCodeAreaState();
 }
 
 class _InputCodeAreaState extends State<InputCodeArea> {
-  final _usersCollection = FirebaseFirestore.instance.collection('users');
   bool _isLoading = false;
   bool hasTryAccessProfile = false;
-  String userCode;
+  late String userCode;
 
   @override
   void initState() {
     super.initState();
-    userCode = widget.userCode ?? '';
+    userCode = widget.userCode;
 
     // Remove additional parameter in url if exist
     if (userCode.contains('?')) {
@@ -131,34 +133,38 @@ class _InputCodeAreaState extends State<InputCodeArea> {
       _isLoading = true;
       hasTryAccessProfile = true;
     });
-    try {
-      _usersCollection.doc(code).get().then((value) {
+
+    var profileRef = Uri.parse('$kFirestoreDocRef/users/$code');
+    var response = await http.get(profileRef);
+    switch (response.statusCode) {
+      case 200:
         setState(() => _isLoading = false);
-        if (value.exists) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => UserCard(value, code)));
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                child: Text('not found'),
-              );
-            },
-          );
-        }
-      });
-    } catch (e) {
-      print('Unknown error: $e');
-      setState(() => _isLoading = false);
-      CustomSnack.showErrorSnack(context, message: 'Unknown err.');
+        var profileData =
+            FirestoreUsersModel.fromJson(jsonDecode(response.body));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => UserCard(profileData, code)));
+        break;
+      case 404:
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const NotFound()));
+        break;
+      default:
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: Text('Unexpected error; ${response.statusCode}'),
+            );
+          },
+        );
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     // if (userCode.isNotEmpty) _codeController.text = userCode;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       if (!hasTryAccessProfile && userCode.isNotEmpty) {
         accessProfile(userCode.trim());
       }
@@ -166,11 +172,12 @@ class _InputCodeAreaState extends State<InputCodeArea> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Loading...', style: TextStyle(fontSize: 26)),
+        const Text('Loading...', style: TextStyle(fontSize: 26)),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 60.0),
-          child:
-              !_isLoading ? Text('Acccessing $userCode') : LoadingIndicator(),
+          child: !_isLoading
+              ? Text('Acccessing $userCode')
+              : const LoadingIndicator(),
         ),
       ],
     );

@@ -8,16 +8,16 @@ class PersistentPlatformChooser {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: 120,
           child: Column(
             children: [
               Expanded(
                 child: SizedBox.expand(
                   child: TextButton.icon(
-                    icon: FaIcon(FontAwesomeIcons.googlePlay),
+                    icon: const FaIcon(FontAwesomeIcons.googlePlay),
                     onPressed: () => launchURL(context, kDynamicLink),
-                    label: Text(
+                    label: const Text(
                       'Continue in app (Recommended)',
                       maxLines: 3,
                     ),
@@ -27,10 +27,10 @@ class PersistentPlatformChooser {
               Expanded(
                 child: SizedBox.expand(
                   child: TextButton.icon(
-                    icon: FaIcon(FontAwesomeIcons.chrome),
+                    icon: const FaIcon(FontAwesomeIcons.chrome),
                     onPressed: () =>
                         launchURL(context, 'https://$kWebCreateUrl'),
-                    label: Text(
+                    label: const Text(
                       'Continue on browser',
                       maxLines: 3,
                     ),

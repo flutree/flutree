@@ -1,5 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import '../CONSTANTS.dart';
+import '../models/firestore_abuse_model.dart';
 import '../utils/snackbar.dart';
 import 'widgets/reuseable.dart';
 
@@ -8,16 +11,15 @@ enum AbuseType { nudity, hateViolence, spam, confidential }
 const emphasisTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
 class AbuseReport extends StatefulWidget {
-  const AbuseReport(this.profileLink);
-  final String profileLink;
+  const AbuseReport({Key? key, this.profileLink}) : super(key: key);
+  final String? profileLink;
   @override
   _AbuseReportState createState() => _AbuseReportState();
 }
 
 class _AbuseReportState extends State<AbuseReport> {
-  CollectionReference _collectionReference;
-  AbuseType _abuseType;
-  Map<String, String> _abuseMap;
+  AbuseType? _abuseType;
+  late Map<String, String> _abuseMap;
   bool _isProcess = false;
 
   @override
@@ -34,7 +36,27 @@ class _AbuseReportState extends State<AbuseReport> {
       'Private and confidential information':
           "We do not allow the posting of another person's personal and confidential account or identification information. For example, we do not allow the sharing or publishing of another person's credit card number or account passwords."
     };
-    _collectionReference = FirebaseFirestore.instance.collection('abuse');
+  }
+
+  Future<void> _sendReport({
+    required category,
+  }) async {
+    var abuseRef = Uri.parse('$kFirestoreDocRef/abuse');
+    var abuseBody = FirestoreAbuseModel(
+        fields: Fields(
+            profileLink: ProfileLink(stringValue: widget.profileLink),
+            category: Category(stringValue: category),
+            timestamp: Timestamp(
+                timestampValue: DateTime.now().toUtc().toIso8601String())));
+    var jsonAbuseBody = jsonEncode(abuseBody);
+    var response = await http.post(abuseRef, body: jsonAbuseBody);
+
+    switch (response.statusCode) {
+      case 200:
+        return;
+      default:
+        throw response.statusCode;
+    }
   }
 
   @override
@@ -55,15 +77,15 @@ class _AbuseReportState extends State<AbuseReport> {
                   width: 100,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text(
                   'Type of abuse',
                   style: emphasisTextStyle,
                 ),
               ),
               ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _abuseMap.length,
                 itemBuilder: (context, index) {
@@ -72,25 +94,25 @@ class _AbuseReportState extends State<AbuseReport> {
                     value: AbuseType.values[index],
                     title: Text(
                       _abuseMap.keys.elementAt(index),
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                     groupValue: _abuseType,
-                    onChanged: (AbuseType value) =>
+                    onChanged: (AbuseType? value) =>
                         setState(() => _abuseType = value),
                   );
                 },
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Text(
-                  'Our policy on ${_abuseMap.keys.elementAt(_abuseType.index).toLowerCase()}',
+                  'Our policy on ${_abuseMap.keys.elementAt(_abuseType!.index).toLowerCase()}',
                   style: emphasisTextStyle),
-              SizedBox(height: 18),
+              const SizedBox(height: 18),
               SelectableText(
-                _abuseMap.values.elementAt(_abuseType.index),
-                style: TextStyle(fontSize: 16),
+                _abuseMap.values.elementAt(_abuseType!.index),
+                style: const TextStyle(fontSize: 16),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 18),
                 child: Text(
                   'Profile link to be reported',
                   style: emphasisTextStyle,
@@ -101,30 +123,28 @@ class _AbuseReportState extends State<AbuseReport> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.grey.shade100),
-                  child: SelectableText(widget.profileLink)),
-              SizedBox(height: 23),
+                  child: SelectableText(widget.profileLink!)),
+              const SizedBox(height: 23),
               Row(
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('CANCEL'),
+                    child: const Text('CANCEL'),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _isProcess
                         ? null
-                        : () {
+                        : () async {
                             setState(() => _isProcess = true);
-                            _collectionReference.add({
-                              'Timestamp': FieldValue.serverTimestamp(),
-                              'Category':
-                                  _abuseMap.keys.elementAt(_abuseType.index),
-                              'Profile Link': widget.profileLink
-                            }).then((value) {
+                            try {
+                              await _sendReport(
+                                  category: _abuseMap.keys
+                                      .elementAt(_abuseType!.index));
                               CustomSnack.showSnack(context,
                                   message:
-                                      'Thank your report. We will review your report as soon as possible.\nYour case ID is ${value.id}:',
-                                  duration: Duration(seconds: 5),
+                                      'Thank your report. We will review your report as soon as possible',
+                                  duration: const Duration(seconds: 5),
                                   barAction: SnackBarAction(
                                       label: 'OK',
                                       onPressed: () =>
@@ -132,23 +152,25 @@ class _AbuseReportState extends State<AbuseReport> {
                                               .hideCurrentSnackBar()));
                               setState(() => _isProcess = false);
                               Navigator.of(context).pop();
-                            }).catchError((e) {
+                            } catch (e) {
                               CustomSnack.showErrorSnack(context,
                                   message: 'Error: $e');
                               setState(() => _isProcess = false);
-                            });
+                            }
                           },
-                    child: Text(
+                    child: const Text(
                       'SUBMIT ABUSE REPORT',
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
-                  _isProcess ? LoadingIndicator() : SizedBox.shrink(),
+                  _isProcess
+                      ? const LoadingIndicator()
+                      : const SizedBox.shrink(),
                 ],
               ),
-              SizedBox(height: 125),
+              const SizedBox(height: 125),
             ],
           ),
         ),

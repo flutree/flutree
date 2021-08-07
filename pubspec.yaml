@@ -3,10 +3,10 @@ description: Flutree project.
 
 publish_to: "none"
 
-version: 3.7.37-web+32
+version: 3.8.0-web+33
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -17,17 +17,18 @@ dependencies:
   url_launcher: ^6.0.3
   dough: ^1.0.1
   fluttertoast: ^8.0.4
-  cloud_firestore: ^2.2.0
   dotted_border: ^2.0.0
   share_plus: ^2.0.3
   package_info_plus: ^1.0.0
   url_strategy: ^0.2.0
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_native_splash: ^1.2.0
+  flutter_lints: ^1.0.4
 
 flutter:
   # uses-material-design: true
