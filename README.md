@@ -3,16 +3,19 @@
 ![Works with Android](https://img.shields.io/badge/Works_with-Android-green?style=flat-square)
 ![Ready on PWA](https://img.shields.io/badge/Ready%20on-PWA-5a0fc8)
 ![Maintenance](https://img.shields.io/maintenance/yes/2021?style=flat-square)
-![Installs](https://img.shields.io/badge/installs-50k+-orange)
+![Installs](https://img.shields.io/badge/installs-51k+-orange)
 ![Twitter Follow](https://img.shields.io/twitter/follow/iqfareez?label=Follow&style=social)
 
 Your personalized social cards. Put your social medias link in one place. Easy peasy!
 
-## Download on [Google Play Store](https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter)
+## Download on Google Play Store
 
-## Flutree Create
+<a href='https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter&utm_source=Github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-[flutreecreate.web.app](https://flutreecreate.web.app) or [flutree.studio](https://flutree.studio)
+## Flutree Create (for non-Android users)
+
+- [flutreecreate.web.app](https://flutreecreate.web.app) or
+- [flutree.studio](https://flutree.studio)
 
 ## Devlog
 
@@ -35,7 +38,9 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 
    ```
 
-2. Run `flutter run`
+2. Create project on **Firebase console**, make sure the auth and Firestore is enabled.
+3. Download your **`google_service.json`** from Firebase console, put the file in `android/app/`
+4. Run `flutter run`
 
 \
 :star::star::star::star::star:
