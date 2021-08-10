@@ -28,17 +28,19 @@ class _UserCardState extends State<UserCard> {
     List<Values>? socialsList =
         widget.snapshot.fields?.socials?.arrayValue?.values;
 
-    datas.addAll(
-      socialsList!.map(
-        (e) => LinkCard(
-          linkcardModel: LinkcardModel(
-            e.mapValue?.fields?.exactName?.stringValue,
-            displayName: e.mapValue?.fields?.displayName?.stringValue,
-            link: e.mapValue?.fields?.link?.stringValue,
+    if (socialsList != null) {
+      datas.addAll(
+        socialsList.map(
+          (e) => LinkCard(
+            linkcardModel: LinkcardModel(
+              e.mapValue?.fields?.exactName?.stringValue,
+              displayName: e.mapValue?.fields?.displayName?.stringValue,
+              link: e.mapValue?.fields?.link?.stringValue,
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
