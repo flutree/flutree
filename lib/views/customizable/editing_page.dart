@@ -3,12 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
@@ -41,8 +40,6 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  Mode mode;
-  final picker = ImagePicker();
   final FirebaseStorage _storageInstance = FirebaseStorage.instance;
   final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
   final _authInstance = FirebaseAuth.instance;
@@ -52,6 +49,7 @@ class _EditPageState extends State<EditPage> {
   DocumentReference<Map<String, dynamic>> _userDocument;
   CollectionReference<Map<String, dynamic>> _reportCollection;
   DocumentSnapshot<Map<String, dynamic>> _documentSnapshotData;
+  Mode mode;
   String _userCode;
   bool _isdpLoading = false;
   bool _isReorderable = false;
@@ -155,7 +153,7 @@ class _EditPageState extends State<EditPage> {
     XFile pickedFile;
 
     try {
-      pickedFile = await picker.pickImage(
+      pickedFile = await ImagePicker().pickImage(
           source: option == 0 ? ImageSource.camera : ImageSource.gallery,
           imageQuality: 70,
           maxWidth: 300,
