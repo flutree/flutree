@@ -45,9 +45,7 @@ class _EditPageState extends State<EditPage> {
   final _authInstance = FirebaseAuth.instance;
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
-  final _reportController = TextEditingController();
   DocumentReference<Map<String, dynamic>> _userDocument;
-  CollectionReference<Map<String, dynamic>> _reportCollection;
   DocumentSnapshot<Map<String, dynamic>> _documentSnapshotData;
   Mode mode;
   String _userCode;
@@ -66,7 +64,6 @@ class _EditPageState extends State<EditPage> {
     mode = Mode.edit;
     _userCode = _authInstance.currentUser.uid.substring(0, 5);
     _userDocument = _firestoreInstance.collection('users').doc(_userCode);
-    _reportCollection = _firestoreInstance.collection('reports');
     initFirestore();
     _createBannerAd();
   }
@@ -300,90 +297,6 @@ class _EditPageState extends State<EditPage> {
                     },
                   );
                   break;
-                case 'ProbReport':
-                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      bool _isReportLoading = false;
-                      bool _includeEmail = true;
-                      return StatefulBuilder(
-                        builder: (context, setDialogState) {
-                          return AlertDialog(
-                            contentPadding: const EdgeInsets.fromLTRB(
-                                24.0, 20.0, 24.0, 1.0),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ReportTextField(
-                                  reportController: _reportController,
-                                  showAnonymousMessage: !_includeEmail,
-                                ),
-                                CheckboxListTile(
-                                  value: _includeEmail,
-                                  onChanged: (value) => setDialogState(
-                                      () => _includeEmail = value),
-                                  title: const Text('  Include my email'),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              _isReportLoading
-                                  ? const LoadingIndicator()
-                                  : const SizedBox.shrink(),
-                              TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('Cancel')),
-                              TextButton(
-                                onPressed: () async {
-                                  if (_reportController.text.isNotEmpty) {
-                                    setDialogState(
-                                        () => _isReportLoading = true);
-                                    try {
-                                      await _reportCollection.doc().set({
-                                        'date reported':
-                                            FieldValue.serverTimestamp(),
-                                        'App Version': packageInfo.version,
-                                        'Build Number': int.parse(
-                                            packageInfo.buildNumber ?? '0'),
-                                        'messsage: ':
-                                            _reportController.text.trim(),
-                                        'email': _includeEmail
-                                            ? _authInstance.currentUser.email
-                                            : null
-                                      });
-                                      setDialogState(
-                                          () => _reportController.clear());
-                                      Fluttertoast.showToast(
-                                          msg: 'Report sent.');
-                                      Navigator.pop(context); //pop the dialog
-
-                                    } on FirebaseException catch (e) {
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Error: ${e.message}');
-                                      setDialogState(
-                                          () => _isReportLoading = false);
-                                    } catch (e) {
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Error. Please try again');
-                                      setDialogState(
-                                          () => _isReportLoading = false);
-                                      rethrow;
-                                    }
-                                  }
-                                },
-                                child: const Text('Send'),
-                              )
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  );
-
-                  break;
                 case 'Donate':
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (builder) => Donate()));
@@ -400,10 +313,6 @@ class _EditPageState extends State<EditPage> {
                 const PopupMenuItem(
                   child: Text('Log out'),
                   value: 'Logout',
-                ),
-                const PopupMenuItem(
-                  value: 'ProbReport',
-                  child: Text('Report a problem...'),
                 ),
                 kIsWeb
                     ? const PopupMenuItem(
@@ -456,7 +365,6 @@ class _EditPageState extends State<EditPage> {
                   ),
                 );
               }
-
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(32.0, 0, 32.0, 0),
