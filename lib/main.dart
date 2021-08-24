@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:linktree_iqfareez_flutter/views/sunset_page.dart';
 import 'constants.dart';
 import 'views/auth/auth_home.dart';
 import 'views/customizable/editing_page.dart';
@@ -35,7 +36,20 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
-      home: _authUser == null ? const AuthHome() : const EditPage(),
+      home: Builder(builder: (context) {
+        if (DateTime.now().isAfter(DateTime(
+          2021,
+          8,
+          31,
+        ))) {
+          return const SunsetPage();
+        }
+        if (_authUser == null) {
+          return const AuthHome();
+        } else {
+          return const EditPage();
+        }
+      }),
     );
   }
 }

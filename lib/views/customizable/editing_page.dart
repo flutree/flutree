@@ -8,13 +8,11 @@ import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import '../../PRIVATE.dart';
 import '../screens/consent_screen.dart';
 import '../screens/donate.dart';
@@ -432,7 +430,6 @@ class _EditPageState extends State<EditPage> {
                                   context: context,
                                   builder: (context) {
                                     bool _isNicknameLoading = false;
-
                                     return StatefulBuilder(
                                       builder: (context, setDialogState) {
                                         return AlertDialog(
