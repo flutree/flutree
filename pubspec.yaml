@@ -1,4 +1,4 @@
-name: linktree_iqfareez_flutter
+name: flutree
 description: Flutree project.
 
 publish_to: "none"
@@ -17,18 +17,17 @@ dependencies:
   url_launcher: ^6.0.3
   dough: ^1.0.1
   fluttertoast: ^8.0.6
-  giffy_dialog: ^1.8.0
   firebase_core: ^1.0.4
-  google_mobile_ads: ^0.13.0
+  google_mobile_ads: ^1.1.0
   firebase_auth: ^3.0.1
   google_sign_in: ^5.0.2
-  cloud_firestore: ^2.2.0
+  cloud_firestore: ^3.1.10
   firebase_storage: ^10.0.1
-  firebase_analytics: ^8.0.2
-  firebase_dynamic_links: ^2.0.2
+  firebase_analytics: ^9.1.2
+  firebase_dynamic_links: ^4.1.0
   image_picker: ^0.8.0+3
   dotted_border: ^2.0.0
-  share_plus: ^2.0.1
+  share_plus: ^3.1.0
   package_info_plus: ^1.0.0
   qr_flutter: ^4.0.0
   dio: ^4.0.0

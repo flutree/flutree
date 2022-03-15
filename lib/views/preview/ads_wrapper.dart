@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../constants.dart';
 import '../../PRIVATE.dart';
@@ -49,11 +48,11 @@ class _PreviewPageState extends State<PreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!_alreadyShowDialog) {
-        showWelcomeDialog(context);
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (!_alreadyShowDialog) {
+    //     showWelcomeDialog(context);
+    //   }
+    // });
 
     //FIXME: https://pub.dev/packages/google_mobile_ads/changelog
 
@@ -136,19 +135,20 @@ class _PreviewPageState extends State<PreviewPage> {
     }
   }
 
-  showWelcomeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => AssetGiffyDialog(
-        onlyOkButton: true,
-        onOkButtonPressed: () {
-          setState(() => _alreadyShowDialog = true);
-          Navigator.pop(context);
-        },
-        image: Image.asset('images/intro.gif'),
-        title: const Text('Try this!\nSquishable, doughy UI elements'),
-      ),
-      barrierDismissible: false,
-    );
-  }
+  // TODO: enabled balik nanti
+  // showWelcomeDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) => AssetGiffyDialog(
+  //       onlyOkButton: true,
+  //       onOkButtonPressed: () {
+  //         setState(() => _alreadyShowDialog = true);
+  //         Navigator.pop(context);
+  //       },
+  //       image: Image.asset('images/intro.gif'),
+  //       title: const Text('Try this!\nSquishable, doughy UI elements'),
+  //     ),
+  //     barrierDismissible: false,
+  //   );
+  // }
 }

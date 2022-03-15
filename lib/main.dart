@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:linktree_iqfareez_flutter/views/sunset_page.dart';
+
 import 'constants.dart';
 import 'views/auth/auth_home.dart';
 import 'views/customizable/editing_page.dart';
@@ -18,14 +17,14 @@ void main() async {
   GetStorage.init();
   MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
-      RequestConfiguration(testDeviceIds: [kTestDeviceId1, kTestDeviceId2]));
+      RequestConfiguration(testDeviceIds: [kTestDeviceId2, kTestDeviceId3]));
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
   final _authUser = FirebaseAuth.instance.currentUser;
-  final FirebaseAnalytics _analytics = FirebaseAnalytics();
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +35,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.karlaTextTheme(),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
-      home: Builder(builder: (context) {
-        if (DateTime.now().isAfter(DateTime(
-          2021,
-          8,
-          31,
-        ))) {
-          return const SunsetPage();
-        }
-        if (_authUser == null) {
-          return const AuthHome();
-        } else {
-          return const EditPage();
-        }
-      }),
+      home: _authUser == null ? const AuthHome() : const EditPage(),
     );
   }
 }

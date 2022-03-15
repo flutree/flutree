@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:linktree_iqfareez_flutter/constants.dart';
+
+import '../../constants.dart';
 
 class ConsentScreen extends StatefulWidget {
   const ConsentScreen({Key key}) : super(key: key);

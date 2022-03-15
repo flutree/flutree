@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../PRIVATE.dart';
 import '../model/bitly_click_summary_model.dart';
 import '../model/bitly_shorten_model.dart';
-import '../PRIVATE.dart';
 
 const authority = 'https://api-ssl.bitly.com/v4';
 

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
+
+import '../../utils/snackbar.dart';
 import '../customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 

@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../constants.dart';
+
 import '../../PRIVATE.dart';
+import '../../constants.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
-import '../widgets/reuseable.dart';
 import '../screens/qr_code_page.dart';
+import '../widgets/reuseable.dart';
 import 'advanced_link.dart';
 
 class LiveGuide extends StatefulWidget {
@@ -122,103 +121,95 @@ class _LiveGuideState extends State<LiveGuide> {
 
   @override
   Widget build(BuildContext context) {
-    print('_adsIsLoaded is $_isIntersAdLoaded');
-    return WillPopScope(
-      onWillPop: () async {
-        // if (kIsWeb) return true else false;
-        _showInterstitialAd();
-        return kIsWeb;
-      },
-      child: GestureDetector(
-        //to dismiss selectable text
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          appBar: AppBar(
-            shadowColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            iconTheme: const IconThemeData(color: Colors.blueGrey),
-            actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
-            elevation: 0.0,
-            title: Text(
-              'Share your Flutree profile',
-              style: TextStyle(color: Colors.blueGrey.shade700),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const FaIcon(FontAwesomeIcons.shareAlt),
-                onPressed: () {
-                  Share.share(
-                      'Hey. Visit my profile page on https://$_profileLink',
-                      subject: 'Sharing my Flutree profile');
-                },
-              )
-            ],
+    return GestureDetector(
+      //to dismiss selectable text
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.blueGrey),
+          actionsIconTheme: const IconThemeData(color: Colors.blueGrey),
+          elevation: 0.0,
+          title: Text(
+            'Share your Flutree profile',
+            style: TextStyle(color: Colors.blueGrey.shade700),
           ),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: OrientationBuilder(
-                  builder: (context, orientation) {
-                    if (orientation == Orientation.portrait) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 25),
-                            infoWidget(),
-                            const SizedBox(height: 5),
-                            advancedLinkButton(context),
-                            const SizedBox(height: 5),
-                            AskSquishCard(context: context),
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: generateQrCode(_profileLink),
-                            ),
-                            _isBannerAdLoaded
-                                ? bannerAdWidget()
-                                : const SizedBox.shrink(),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Column(
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const FaIcon(FontAwesomeIcons.shareAlt),
+              onPressed: () {
+                Share.share(
+                    'Hey. Visit my profile page on https://$_profileLink',
+                    subject: 'Sharing my Flutree profile');
+              },
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: OrientationBuilder(
+                builder: (context, orientation) {
+                  if (orientation == Orientation.portrait) {
+                    return SingleChildScrollView(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: Column(
-                                children: [
-                                  infoWidget(),
-                                  const SizedBox(height: 5),
-                                  advancedLinkButton(context),
-                                  _isBannerAdLoaded
-                                      ? bannerAdWidget()
-                                      : const SizedBox.shrink(),
-                                ],
-                              )),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      AskSquishCard(context: context),
-                                      generateQrCode(_profileLink),
-                                    ],
-                                  ),
+                          const SizedBox(height: 25),
+                          infoWidget(),
+                          const SizedBox(height: 5),
+                          advancedLinkButton(context),
+                          // const SizedBox(height: 5),
+                          // AskSquishCard(context: context),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: generateQrCode(_profileLink),
+                          ),
+                          _isBannerAdLoaded
+                              ? bannerAdWidget()
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Column(
+                              children: [
+                                infoWidget(),
+                                const SizedBox(height: 5),
+                                advancedLinkButton(context),
+                                _isBannerAdLoaded
+                                    ? bannerAdWidget()
+                                    : const SizedBox.shrink(),
+                              ],
+                            )),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    // AskSquishCard(context: context),
+                                    generateQrCode(_profileLink),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -327,37 +318,38 @@ class _LiveGuideState extends State<LiveGuide> {
   }
 }
 
-class AskSquishCard extends StatelessWidget {
-  const AskSquishCard({
-    Key key,
-    @required this.context,
-  }) : super(key: key);
+// TODO: enabled balik nanti
+// class AskSquishCard extends StatelessWidget {
+//   const AskSquishCard({
+//     Key key,
+//     @required this.context,
+//   }) : super(key: key);
 
-  final BuildContext context;
+//   final BuildContext context;
 
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AssetGiffyDialog(
-              onlyOkButton: true,
-              onOkButtonPressed: () => Navigator.pop(context),
-              image: Image.asset(
-                'images/intro.gif',
-              ),
-              title: const Text(
-                  'Try this out!\nSquishable (or dough effect) UI elements'),
-            );
-          },
-        );
-      },
-      child: Text(
-        'Ask others to squish the cards 👀',
-        style: dottedUnderlinedStyle(),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextButton(
+//       onPressed: () {
+//         showDialog(
+//           context: context,
+//           builder: (context) {
+//             return AssetGiffyDialog(
+//               onlyOkButton: true,
+//               onOkButtonPressed: () => Navigator.pop(context),
+//               image: Image.asset(
+//                 'images/intro.gif',
+//               ),
+//               title: const Text(
+//                   'Try this out!\nSquishable (or dough effect) UI elements'),
+//             );
+//           },
+//         );
+//       },
+//       child: Text(
+//         'Ask others to squish the cards 👀',
+//         style: dottedUnderlinedStyle(),
+//       ),
+//     );
+//   }
+// }

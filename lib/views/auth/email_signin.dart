@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/views/customizable/editing_page.dart';
+
+import '../../utils/snackbar.dart';
+import '../customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 
 class EmailSignIn extends StatefulWidget {

@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:linktree_iqfareez_flutter/utils/snackbar.dart';
-import 'package:linktree_iqfareez_flutter/views/auth/email_auth.dart';
+
 import '../../constants.dart';
+import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
 import '../customizable/editing_page.dart';
 import '../preview/ads_wrapper.dart';
 import '../widgets/reuseable.dart';
+import 'email_auth.dart';
 
 class AuthHome extends StatefulWidget {
   const AuthHome({Key key}) : super(key: key);

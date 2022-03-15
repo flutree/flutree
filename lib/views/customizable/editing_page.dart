@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
@@ -7,21 +6,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show PlatformException;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../PRIVATE.dart';
-import '../screens/consent_screen.dart';
-import '../screens/donate.dart';
-import '../widgets/help_dialog.dart';
+
 import '../../constants.dart';
 import '../../utils/linkcard_model.dart';
+import '../../utils/profile_builder_helper.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
 import '../auth/auth_home.dart';
+import '../screens/consent_screen.dart';
+import '../screens/donate.dart';
+import '../widgets/help_dialog.dart';
 import '../widgets/link_card.dart';
 import '../widgets/reuseable.dart';
 import 'add_edit_card.dart';
@@ -53,7 +52,6 @@ class _EditPageState extends State<EditPage> {
   bool _isShowSubtitle;
   BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
-  File _image;
   String _userImageUrl;
 
   @override
@@ -88,7 +86,7 @@ class _EditPageState extends State<EditPage> {
 
   void _createBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: kEditPageBannerUnitId,
+      adUnitId: 'ca-app-pub-1896379146653594/7250471616',
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
@@ -107,68 +105,6 @@ class _EditPageState extends State<EditPage> {
     );
 
     _bannerAd.load();
-  }
-
-  Future updateProfilePicture() async {
-    String url;
-    setState(() => _isdpLoading = true);
-    Reference reference =
-        _storageInstance.ref('userdps').child(_authInstance.currentUser.uid);
-
-    try {
-      // if already exist, it will be overwritten
-      await reference.putFile(_image);
-      url = await reference.getDownloadURL();
-    } on FirebaseException catch (e) {
-      setState(() => _isdpLoading = false);
-      CustomSnack.showErrorSnack(context, message: 'Error: ${e.message}');
-      return;
-    } catch (e) {
-      setState(() => _isdpLoading = false);
-      rethrow;
-    }
-
-    try {
-      _userDocument.update({'dpUrl': url}).then((_) {
-        CustomSnack.showSnack(context, message: 'Profile picture updated');
-        setState(() => _isdpLoading = false);
-      });
-    } on FirebaseException catch (e) {
-      CustomSnack.showErrorSnack(context, message: 'Error: ${e.message}');
-      setState(() => _isdpLoading = false);
-    } catch (e) {
-      CustomSnack.showErrorSnack(context,
-          message: 'Unexpected error. Please try again.');
-      setState(() => _isdpLoading = false);
-      rethrow;
-    }
-  }
-
-  Future getImage(int option) async {
-    XFile pickedFile;
-
-    try {
-      pickedFile = await ImagePicker().pickImage(
-          source: option == 0 ? ImageSource.camera : ImageSource.gallery,
-          imageQuality: 70,
-          maxWidth: 300,
-          maxHeight: 200);
-    } on PlatformException catch (e) {
-      //catch error when no camera available for example hahha
-      // i think this is most useless catching error bcs
-      // all phones has camera amiright? (Emulator sometimes
-      // can't access laptop's camera)
-      CustomSnack.showErrorSnack(context, message: e.message);
-    }
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      updateProfilePicture();
-    } else {
-      CustomSnack.showSnack(context, message: 'No image selected');
-    }
   }
 
   @override
@@ -384,14 +320,22 @@ class _EditPageState extends State<EditPage> {
                                     }))
                             : mode == Mode.edit
                                 ? () async {
-                                    int response = await showDialog(
+                                    ImageSource response = await showDialog(
                                       context: context,
                                       builder: (context) {
                                         return const ChooseImageDialog();
                                       },
                                     );
                                     if (response != null) {
-                                      getImage(response);
+                                      var url = await ProfileBuilderHelper
+                                          .updateProfilePicture(response);
+
+                                      _userDocument
+                                          .update({'dpUrl': url}).then((_) {
+                                        CustomSnack.showSnack(context,
+                                            message: 'Profile picture updated');
+                                      });
+                                      //TODO: platform & firebase exception
                                     }
                                   }
                                 : null,
@@ -914,32 +858,14 @@ class ChooseImageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
-            child: Text(
-              'Choose source',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-          ListTile(
-            title: const Text(
-              'Camera',
-            ),
-            trailing: const FaIcon(FontAwesomeIcons.camera),
-            onTap: () => Navigator.of(context).pop(0),
-          ),
-          ListTile(
-            title: const Text('Gallery'),
-            trailing: const FaIcon(FontAwesomeIcons.images),
-            onTap: () => Navigator.of(context).pop(1),
-          ),
-        ],
+    return SimpleDialog(title: const Text("Choose source"), children: [
+      SimpleDialogOption(
+        child: const Text("Take picture"),
+        onPressed: () => Navigator.of(context).pop(ImageSource.camera),
       ),
-    );
+      SimpleDialogOption(
+          child: const Text("Pick from Gallery"),
+          onPressed: () => Navigator.of(context).pop(ImageSource.gallery))
+    ]);
   }
 }
