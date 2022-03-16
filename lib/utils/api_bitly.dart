@@ -9,7 +9,7 @@ import '../model/bitly_shorten_model.dart';
 const authority = 'https://api-ssl.bitly.com/v4';
 
 class BitlyApi {
-  static Future<BitlyShortenModel> shorten({String url}) async {
+  static Future<BitlyShortenModel> shorten({String? url}) async {
     var _jsonBody = {
       "long_url": url,
       "domain": "bit.ly",
@@ -37,7 +37,7 @@ class BitlyApi {
     }
   }
 
-  static Future<BitlyClickSummaryModel> clickSummary({String url}) async {
+  static Future<BitlyClickSummaryModel> clickSummary({String? url}) async {
     var apiResponse = await Dio().get('$authority/bitlinks/$url/clicks/summary',
         options: Options(headers: {'Authorization': 'Bearer $kBitlyApiToken'}));
     switch (apiResponse.statusCode) {

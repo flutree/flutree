@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutree/utils/auth_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ import '../widgets/reuseable.dart';
 import 'email_auth.dart';
 
 class AuthHome extends StatefulWidget {
-  const AuthHome({Key key}) : super(key: key);
+  const AuthHome({Key? key}) : super(key: key);
   @override
   _AuthHomeState createState() => _AuthHomeState();
 }
@@ -151,35 +152,18 @@ class _AuthHomeState extends State<AuthHome> {
               setState(() => _isGoogleLoading = true);
               try {
                 // Trigger the authentication flow
-                final GoogleSignInAccount googleUser =
-                    await GoogleSignIn().signIn();
-
-                // Obtain the auth details from the request
-                final GoogleSignInAuthentication googleAuth =
-                    await googleUser.authentication;
-
-                // Create a new credential
-                final GoogleAuthCredential credential =
-                    GoogleAuthProvider.credential(
-                  accessToken: googleAuth.accessToken,
-                  idToken: googleAuth.idToken,
-                );
-
-                // Once signed in, return the UserCredential
-                await FirebaseAuth.instance
-                    .signInWithCredential(credential)
-                    .then(
-                  (value) {
+                AuthHelper.signInWithGoogle().then(
+                  (_) {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EditPage(),
+                          builder: (_) => const EditPage(),
                         ));
                   },
                 );
               } on FirebaseAuthException catch (e) {
                 setState(() => _isGoogleLoading = false);
-                CustomSnack.showErrorSnack(context, message: e.message);
+                CustomSnack.showErrorSnack(context, message: e.message!);
               } catch (e) {
                 CustomSnack.showErrorSnack(context,
                     message: 'Failed to Sign in. Please try again');
@@ -200,7 +184,7 @@ class _AuthHomeState extends State<AuthHome> {
 
 class FlutreeLogo extends StatelessWidget {
   const FlutreeLogo({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -214,7 +198,7 @@ class FlutreeLogo extends StatelessWidget {
 
 class PlayStoreButton extends StatelessWidget {
   const PlayStoreButton({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

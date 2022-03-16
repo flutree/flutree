@@ -3,7 +3,7 @@ import 'email_register.dart';
 import 'email_signin.dart';
 
 class EmailAuth extends StatefulWidget {
-  const EmailAuth({Key key}) : super(key: key);
+  const EmailAuth({Key? key}) : super(key: key);
 
   @override
   State<EmailAuth> createState() => _EmailAuthState();
@@ -11,7 +11,7 @@ class EmailAuth extends StatefulWidget {
 
 class _EmailAuthState extends State<EmailAuth>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   @override
   void initState() {
     super.initState();
@@ -53,8 +53,8 @@ class _EmailAuthState extends State<EmailAuth>
                 ),
               );
             } else {
-              _tabController.addListener(() {
-                if (_tabController.indexIsChanging) {
+              _tabController!.addListener(() {
+                if (_tabController!.indexIsChanging) {
                   setState(() {});
                 }
               });
@@ -78,7 +78,7 @@ class _EmailAuthState extends State<EmailAuth>
                         child: [
                       Register(tabController: _tabController),
                       EmailSignIn(tabController: _tabController)
-                    ][_tabController.index])
+                    ][_tabController!.index])
                   ],
                 ),
               );

@@ -6,8 +6,8 @@ import '../customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 
 class EmailSignIn extends StatefulWidget {
-  const EmailSignIn({Key key, @required this.tabController}) : super(key: key);
-  final TabController tabController;
+  const EmailSignIn({Key? key, required this.tabController}) : super(key: key);
+  final TabController? tabController;
   @override
   _EmailSignInState createState() => _EmailSignInState();
 }
@@ -37,7 +37,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                 onPressed: _isSignInLoading
                     ? null
                     : () {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           FocusScope.of(context).unfocus();
                           setState(() => _isSignInLoading = true);
                           _authInstance
@@ -129,7 +129,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                                                     false);
                                             Navigator.pop(context);
                                             CustomSnack.showErrorSnack(context,
-                                                message: e.message);
+                                                message: e.message!);
                                           } catch (e) {
                                             setDialogState(() =>
                                                 _isResetPasswordLoading =
@@ -156,7 +156,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                   ),
                   TextButton(
                     onPressed: () {
-                      widget.tabController.animateTo(0);
+                      widget.tabController!.animateTo(0);
                     },
                     child: const Text(
                       'Need an account? Register',

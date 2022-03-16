@@ -1,13 +1,13 @@
 # Flutree
 
 ![Works with Android](https://img.shields.io/badge/Works_with-Android-green?style=flat-square)
-![Maintenance](https://img.shields.io/maintenance/no/2021?style=flat-square)
+![Maintenance](https://img.shields.io/maintenance/yes/2022?style=flat-square)
 ![Installs](https://img.shields.io/badge/installs-53k+-orange)
 ![Twitter Follow](https://img.shields.io/twitter/follow/iqfareez?label=Follow&style=social)
 
 Your personalized social cards. Put your social medias link in one place. Easy peasy!
 
-# Flutree has been sunsetted since 31 August 2021. No longer available to downloads.
+# Flutree might be coming back soon.
 
 ## Download on Google Play Store
 

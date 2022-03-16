@@ -126,7 +126,7 @@ class HelpDialogs {
 }
 
 class UnorderedListItem extends StatelessWidget {
-  const UnorderedListItem(this.text, {Key key}) : super(key: key);
+  const UnorderedListItem(this.text, {Key? key}) : super(key: key);
   final TextSpan text;
 
   @override

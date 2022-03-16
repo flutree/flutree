@@ -5,7 +5,7 @@ import '../../utils/social_list.dart';
 import '../widgets/link_card.dart';
 
 class PreviewAppPage extends StatefulWidget {
-  const PreviewAppPage({Key key}) : super(key: key);
+  const PreviewAppPage({Key? key}) : super(key: key);
   @override
   _PreviewAppPageState createState() => _PreviewAppPageState();
 }

@@ -4,7 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import '../../constants.dart';
 
 class ConsentScreen extends StatefulWidget {
-  const ConsentScreen({Key key}) : super(key: key);
+  const ConsentScreen({Key? key}) : super(key: key);
 
   @override
   _ConsentScreenState createState() => _ConsentScreenState();
@@ -21,7 +21,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     "No sharing of private and confidential information":
         "We do not allow the posting of another person's personal and confidential account or identification information.",
   };
-  final List<bool> _state = List.generate(4, (index) => false);
+  final List<bool?> _state = List.generate(4, (index) => false);
   bool _countinueButtonActive = false;
 
   bool checkIfAllAreChecked() {

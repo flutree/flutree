@@ -1,8 +1,8 @@
 class BitlyClickSummaryModel {
-  String unitReference;
-  int totalClicks;
-  int units;
-  String unit;
+  String? unitReference;
+  int? totalClicks;
+  int? units;
+  String? unit;
 
   BitlyClickSummaryModel(
       {this.unitReference, this.totalClicks, this.units, this.unit});

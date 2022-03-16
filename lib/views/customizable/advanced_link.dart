@@ -17,11 +17,11 @@ import '../widgets/reuseable.dart';
 import '../screens/qr_code_page.dart';
 
 class AdvancedLink extends StatelessWidget {
-  const AdvancedLink({Key key, this.userInfo, this.uniqueLink, this.uniqueCode})
+  const AdvancedLink({Key? key, this.userInfo, this.uniqueLink, this.uniqueCode})
       : super(key: key);
-  final DocumentSnapshot userInfo;
-  final String uniqueLink;
-  final String uniqueCode;
+  final DocumentSnapshot? userInfo;
+  final String? uniqueLink;
+  final String? uniqueCode;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -90,19 +90,19 @@ class AdvancedLink extends StatelessWidget {
 }
 
 class FdlWidget extends StatefulWidget {
-  const FdlWidget({Key key, @required this.uniqueLink, @required this.userInfo})
+  const FdlWidget({Key? key, required this.uniqueLink, required this.userInfo})
       : super(key: key);
 
-  final String uniqueLink;
-  final DocumentSnapshot userInfo;
+  final String? uniqueLink;
+  final DocumentSnapshot? userInfo;
 
   @override
   _FdlWidgetState createState() => _FdlWidgetState();
 }
 
 class _FdlWidgetState extends State<FdlWidget> {
-  String _fdlLink;
-  bool _hasGeneratedFdlLink;
+  String? _fdlLink;
+  bool? _hasGeneratedFdlLink;
   bool _waitForFdl = false;
 
   @override
@@ -141,9 +141,9 @@ class _FdlWidgetState extends State<FdlWidget> {
                   ),
                   children: [
                     TextSpan(
-                        text: _fdlLink.substring(0, _fdlLink.indexOf('/') + 1)),
+                        text: _fdlLink!.substring(0, _fdlLink!.indexOf('/') + 1)),
                     TextSpan(
-                      text: _fdlLink.substring(_fdlLink.indexOf('/') + 1),
+                      text: _fdlLink!.substring(_fdlLink!.indexOf('/') + 1),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ]),
@@ -155,7 +155,7 @@ class _FdlWidgetState extends State<FdlWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: _hasGeneratedFdlLink,
+              visible: _hasGeneratedFdlLink!,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: OutlinedButton.icon(
@@ -175,7 +175,7 @@ class _FdlWidgetState extends State<FdlWidget> {
               ),
             ),
             Visibility(
-              visible: _hasGeneratedFdlLink,
+              visible: _hasGeneratedFdlLink!,
               child: buildCopyButton('https://$_fdlLink'),
             ),
             Padding(
@@ -183,7 +183,7 @@ class _FdlWidgetState extends State<FdlWidget> {
               child: ElevatedButton.icon(
                 onPressed: _waitForFdl
                     ? null
-                    : _hasGeneratedFdlLink
+                    : _hasGeneratedFdlLink!
                         ? () => Share.share(
                             'Visit my profile on https://$_fdlLink',
                             subject: 'My Flutree profile link')
@@ -192,8 +192,8 @@ class _FdlWidgetState extends State<FdlWidget> {
                             try {
                               String fdLink =
                                   await DynamicLinkApi.generateShortUrl(
-                                      profileUrl: widget.uniqueLink,
-                                      userInfo: widget.userInfo);
+                                      profileUrl: widget.uniqueLink!,
+                                      userInfo: widget.userInfo as DocumentSnapshot<Map<String, dynamic>>);
 
                               setState(() {
                                 _fdlLink = fdLink.substring(8);
@@ -213,9 +213,9 @@ class _FdlWidgetState extends State<FdlWidget> {
                           },
                 label: _waitForFdl
                     ? const LoadingIndicator()
-                    : Text(_hasGeneratedFdlLink ? 'Share' : 'Generate'),
+                    : Text(_hasGeneratedFdlLink! ? 'Share' : 'Generate'),
                 icon: FaIcon(
-                    _hasGeneratedFdlLink
+                    _hasGeneratedFdlLink!
                         ? FontAwesomeIcons.share
                         : FontAwesomeIcons.checkCircle,
                     size: 14),
@@ -229,15 +229,15 @@ class _FdlWidgetState extends State<FdlWidget> {
 }
 
 class BitlyWidget extends StatefulWidget {
-  const BitlyWidget({Key key, @required this.uniqueLink}) : super(key: key);
-  final String uniqueLink;
+  const BitlyWidget({Key? key, required this.uniqueLink}) : super(key: key);
+  final String? uniqueLink;
   @override
   _BitlyWidgetState createState() => _BitlyWidgetState();
 }
 
 class _BitlyWidgetState extends State<BitlyWidget> {
-  bool _hasGeneratedBitlyLink;
-  String _bitlyLink;
+  late bool _hasGeneratedBitlyLink;
+  String? _bitlyLink;
   bool _waitForBitly = false;
   @override
   void initState() {
@@ -265,10 +265,10 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                   style: const TextStyle(fontSize: 21),
                   children: [
                     TextSpan(
-                        text: _bitlyLink.substring(
-                            0, _bitlyLink.indexOf('/') + 1)),
+                        text: _bitlyLink!.substring(
+                            0, _bitlyLink!.indexOf('/') + 1)),
                     TextSpan(
-                      text: _bitlyLink.substring(_bitlyLink.indexOf('/') + 1),
+                      text: _bitlyLink!.substring(_bitlyLink!.indexOf('/') + 1),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -295,7 +295,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                           );
                         } else if (snapshot.hasData) {
                           return Text(
-                            snapshot.data.totalClicks.toString(),
+                            snapshot.data!.totalClicks.toString(),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           );
                         } else {
@@ -343,7 +343,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                         ? () => Share.share(
                             'Visit my Flutree profile on https://$_bitlyLink')
                         : () async {
-                            bool response = await showDialog(
+                            bool? response = await showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
@@ -405,7 +405,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
 
 class BitlyConsents extends StatelessWidget {
   const BitlyConsents({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

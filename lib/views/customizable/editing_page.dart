@@ -31,7 +31,7 @@ const _bottomSheetStyle = RoundedRectangleBorder(
 enum Mode { edit, preview }
 
 class EditPage extends StatefulWidget {
-  const EditPage({Key key}) : super(key: key);
+  const EditPage({Key? key}) : super(key: key);
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -42,23 +42,23 @@ class _EditPageState extends State<EditPage> {
   final _authInstance = FirebaseAuth.instance;
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
-  DocumentReference<Map<String, dynamic>> _userDocument;
-  DocumentSnapshot<Map<String, dynamic>> _documentSnapshotData;
-  Mode mode;
-  String _userCode;
+  late DocumentReference<Map<String, dynamic>> _userDocument;
+  DocumentSnapshot<Map<String, dynamic>>? _documentSnapshotData;
+  Mode? mode;
+  String? _userCode;
   bool _isdpLoading = false;
   bool _isReorderable = false;
-  String _subtitleText;
-  bool _isShowSubtitle;
-  BannerAd _bannerAd;
+  late String _subtitleText;
+  late bool _isShowSubtitle;
+  late BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
-  String _userImageUrl;
+  String? _userImageUrl;
 
   @override
   void initState() {
     super.initState();
     mode = Mode.edit;
-    _userCode = _authInstance.currentUser.uid.substring(0, 5);
+    _userCode = _authInstance.currentUser!.uid.substring(0, 5);
     _userDocument = _firestoreInstance.collection('users').doc(_userCode);
     initFirestore();
     _createBannerAd();
@@ -67,20 +67,20 @@ class _EditPageState extends State<EditPage> {
   void initFirestore() async {
     var snapshot = await _userDocument.get();
 
-    if (snapshot == null || !snapshot.exists) {
+    if (!snapshot.exists) {
       print('Document not exist. Creating...');
       // Document with id == docId doesn't exist.
       _userDocument.set({
         'creationDate': FieldValue.serverTimestamp(),
-        'authUid': _authInstance.currentUser.uid,
-        'dpUrl': _authInstance.currentUser.photoURL ??
+        'authUid': _authInstance.currentUser!.uid,
+        'dpUrl': _authInstance.currentUser!.photoURL ??
             'https://picsum.photos/seed/$_userCode/200',
-        'nickname': _authInstance.currentUser.displayName,
+        'nickname': _authInstance.currentUser!.displayName,
       });
-      _nameController.text = _authInstance.currentUser.displayName;
+      _nameController.text = _authInstance.currentUser!.displayName!;
     } else {
-      _subtitleController.text = snapshot.data()["subtitle"];
-      _nameController.text = snapshot.data()["nickname"];
+      _subtitleController.text = snapshot.data()!["subtitle"];
+      _nameController.text = snapshot.data()!["nickname"];
     }
   }
 
@@ -127,7 +127,7 @@ class _EditPageState extends State<EditPage> {
               Mode.edit: Text('EDIT'),
               Mode.preview: Text('PREVIEW'),
             },
-            onValueChanged: (value) {
+            onValueChanged: (dynamic value) {
               setState(() => mode = value);
             },
           ),
@@ -141,11 +141,11 @@ class _EditPageState extends State<EditPage> {
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ConsentScreen()))) {
+                          builder: (_) => const ConsentScreen()))) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LiveGuide(
+                    builder: (_) => LiveGuide(
                       userCode: _userCode,
                       docs: _documentSnapshotData,
                     ),
@@ -195,7 +195,7 @@ class _EditPageState extends State<EditPage> {
                                   setDialogState(() => isLoading = true);
                                   try {
                                     _storageInstance
-                                        .refFromURL(_userImageUrl)
+                                        .refFromURL(_userImageUrl!)
                                         .delete();
                                   } catch (e) {
                                     print('Unable to delete image: $e');
@@ -248,12 +248,11 @@ class _EditPageState extends State<EditPage> {
                   child: Text('Log out'),
                   value: 'Logout',
                 ),
-                kIsWeb
-                    ? const PopupMenuItem(
-                        value: 'dwApp',
-                        child: Text('Download Android app...'),
-                      )
-                    : null,
+                if (kIsWeb)
+                  const PopupMenuItem(
+                    value: 'dwApp',
+                    child: Text('Download Android app...'),
+                  ),
                 const PopupMenuItem(
                   value: 'Donate',
                   child: Text(
@@ -278,17 +277,17 @@ class _EditPageState extends State<EditPage> {
           stream: _userDocument.snapshots(),
           builder: (context,
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot.hasData && snapshot.data.exists) {
+            if (snapshot.hasData && snapshot.data!.exists) {
               _documentSnapshotData = snapshot.data;
 
-              _subtitleText = _documentSnapshotData.data()['subtitle'] ??
+              _subtitleText = _documentSnapshotData!.data()!['subtitle'] ??
                   'Something about yourself';
               _isShowSubtitle =
-                  _documentSnapshotData.data()['showSubtitle'] ?? false;
-              _userImageUrl = _documentSnapshotData.data()['dpUrl'];
+                  _documentSnapshotData!.data()!['showSubtitle'] ?? false;
+              _userImageUrl = _documentSnapshotData!.data()!['dpUrl'];
 
-              List<dynamic> socialsList =
-                  _documentSnapshotData.data()['socials'];
+              List<dynamic>? socialsList =
+                  _documentSnapshotData!.data()!['socials'];
               List<LinkcardModel> datas = [];
               for (var item in socialsList ?? []) {
                 datas.add(
@@ -320,7 +319,7 @@ class _EditPageState extends State<EditPage> {
                                     }))
                             : mode == Mode.edit
                                 ? () async {
-                                    ImageSource response = await showDialog(
+                                    ImageSource? response = await showDialog(
                                       context: context,
                                       builder: (context) {
                                         return const ChooseImageDialog();
@@ -357,7 +356,7 @@ class _EditPageState extends State<EditPage> {
                                       )
                                     : null,
                                 backgroundColor: Colors.transparent,
-                                backgroundImage: NetworkImage(_userImageUrl),
+                                backgroundImage: NetworkImage(_userImageUrl!),
                               ),
                               mode == Mode.edit
                                   ? buildChangeDpIcon()
@@ -423,7 +422,7 @@ class _EditPageState extends State<EditPage> {
                               }
                             : null,
                         child: Text(
-                          '${_documentSnapshotData.data()['nickname']}',
+                          '${_documentSnapshotData!.data()!['nickname']}',
                           style: mode == Mode.preview
                               ? const TextStyle(fontSize: 22)
                               : const TextStyle(
@@ -570,7 +569,7 @@ class _EditPageState extends State<EditPage> {
                                   final LinkcardModel item =
                                       datas.removeAt(oldIndex);
                                   datas.insert(newIndex, item);
-                                  List<Map<String, String>> tempData = [];
+                                  List<Map<String, String?>> tempData = [];
                                   for (var item in datas) {
                                     tempData.add(item.toMap());
                                   }
@@ -801,7 +800,7 @@ class _EditPageState extends State<EditPage> {
 class DeleteCardWidget extends StatelessWidget {
   const DeleteCardWidget(
     this.linkcard, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final LinkcardModel linkcard;
@@ -853,7 +852,7 @@ class DeleteCardWidget extends StatelessWidget {
 
 class ChooseImageDialog extends StatelessWidget {
   const ChooseImageDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

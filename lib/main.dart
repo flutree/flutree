@@ -22,7 +22,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
   final _authUser = FirebaseAuth.instance.currentUser;
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 

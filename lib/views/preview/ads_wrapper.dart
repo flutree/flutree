@@ -6,16 +6,16 @@ import '../../PRIVATE.dart';
 import 'preview_app_page.dart';
 
 class PreviewPage extends StatefulWidget {
-  const PreviewPage({Key key}) : super(key: key);
+  const PreviewPage({Key? key}) : super(key: key);
   @override
   _PreviewPageState createState() => _PreviewPageState();
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-  InterstitialAd _exitAd;
+  InterstitialAd? _exitAd;
   bool _alreadyShowDialog = false;
   int _numInterstitialLoadAttempts = 0;
-  bool isInterstitialAdReady;
+  late bool isInterstitialAdReady;
 
   void createExitAd() {
     InterstitialAd.load(
@@ -76,7 +76,7 @@ class _PreviewPageState extends State<PreviewPage> {
       print('Warning: attempt to show interstitial before loaded.');
       Navigator.pop(context);
     }
-    _exitAd.fullScreenContentCallback = FullScreenContentCallback(
+    _exitAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdShowedFullScreenContent.');
       },
@@ -94,12 +94,12 @@ class _PreviewPageState extends State<PreviewPage> {
         Navigator.of(context).pop();
       },
     );
-    _exitAd.show();
+    _exitAd!.show();
     _exitAd = null;
   }
 
   onExitPreview() async {
-    bool wantToExit = await showDialog(
+    bool? wantToExit = await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(

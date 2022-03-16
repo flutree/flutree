@@ -8,8 +8,8 @@ import '../../utils/url_launcher.dart';
 class LinkCard extends StatelessWidget {
   ///This linkcard will be the one showing in appPage
   const LinkCard(
-      {Key key,
-      @required this.linkcardModel,
+      {Key? key,
+      required this.linkcardModel,
       this.isSample = false,
       this.isEditing = false})
       : super(key: key);
@@ -34,7 +34,7 @@ class LinkCard extends StatelessWidget {
         onTap: !isEditing
             ? () {
                 !isSample
-                    ? launchURL(context, linkcardModel.link)
+                    ? launchURL(context, linkcardModel.link!)
                     : ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
             : null,
@@ -44,7 +44,7 @@ class LinkCard extends StatelessWidget {
             color: Colors.white,
           ),
           title: Text(
-            linkcardModel.displayName,
+            linkcardModel.displayName!,
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white),
           ),

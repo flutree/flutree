@@ -10,7 +10,7 @@ class CustomSnack {
   }
 
   static void showSnack(BuildContext context,
-      {@required String message, SnackBarAction barAction}) {
+      {required String message, SnackBarAction? barAction}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       action: barAction,
       behavior: SnackBarBehavior.floating,

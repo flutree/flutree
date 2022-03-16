@@ -5,5 +5,5 @@ class SocialModel {
   final IconData icon;
   final Color colour;
 
-  const SocialModel(this.name, {@required this.icon, @required this.colour});
+  const SocialModel(this.name, {required this.icon, required this.colour});
 }

@@ -5,13 +5,13 @@ class HorizontalOrLine extends StatelessWidget {
   /// In auth page
   /// https://stackoverflow.com/a/61304861/13617136
   const HorizontalOrLine({
-    Key key,
+    Key? key,
     this.label,
     this.height,
   }) : super(key: key);
 
-  final String label;
-  final double height;
+  final String? label;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class HorizontalOrLine extends StatelessWidget {
                 height: height,
               )),
         ),
-        Text(label),
+        Text(label!),
         Expanded(
           child: Container(
               margin: const EdgeInsets.only(left: 15.0, right: 10.0),
@@ -56,15 +56,15 @@ Container buildChangeDpIcon() {
 TextStyle linkTextStyle =
     const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold);
 
-TextStyle dottedUnderlinedStyle({Color color}) => TextStyle(
+TextStyle dottedUnderlinedStyle({Color? color}) => TextStyle(
     color: color,
     decorationStyle: TextDecorationStyle.dotted,
     decoration: TextDecoration.underline);
 
 class EmailTextField extends StatelessWidget {
   const EmailTextField({
-    Key key,
-    @required TextEditingController emailController,
+    Key? key,
+    required TextEditingController emailController,
   })  : _emailController = emailController,
         super(key: key);
 
@@ -74,7 +74,7 @@ class EmailTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       validator: (value) =>
-          value.isEmpty ? 'Please enter your valid email address' : null,
+          value!.isEmpty ? 'Please enter your valid email address' : null,
       controller: _emailController,
       decoration: InputDecoration(
         isDense: true,
@@ -91,14 +91,14 @@ class EmailTextField extends StatelessWidget {
 
 class ReportTextField extends StatelessWidget {
   const ReportTextField(
-      {Key key,
-      @required TextEditingController reportController,
+      {Key? key,
+      required TextEditingController reportController,
       this.showAnonymousMessage})
       : _reportController = reportController,
         super(key: key);
 
   final TextEditingController _reportController;
-  final bool showAnonymousMessage;
+  final bool? showAnonymousMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class ReportTextField extends StatelessWidget {
       controller: _reportController,
       decoration: InputDecoration(
         labelText: 'Report a bug or problem',
-        helperText: showAnonymousMessage ? 'Your message is anonymous' : null,
+        helperText: showAnonymousMessage! ? 'Your message is anonymous' : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
         ),
@@ -119,8 +119,8 @@ class ReportTextField extends StatelessWidget {
 
 class NameTextField extends StatelessWidget {
   const NameTextField(
-      {Key key,
-      @required TextEditingController nameController,
+      {Key? key,
+      required TextEditingController nameController,
       TextInputAction keyboardAction = TextInputAction.next})
       : _nameController = nameController,
         _keyboardAction = keyboardAction,
@@ -132,7 +132,7 @@ class NameTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) => value.isEmpty ? 'Please enter your name' : null,
+      validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
       controller: _nameController,
       decoration: InputDecoration(
         helperText: 'Nickname must not be empty',
@@ -150,8 +150,8 @@ class NameTextField extends StatelessWidget {
 
 class SubtitleTextField extends StatelessWidget {
   const SubtitleTextField({
-    Key key,
-    @required TextEditingController subsController,
+    Key? key,
+    required TextEditingController subsController,
   })  : _subsController = subsController,
         super(key: key);
 
@@ -176,8 +176,8 @@ class SubtitleTextField extends StatelessWidget {
 
 class PasswordTextField extends StatelessWidget {
   const PasswordTextField({
-    Key key,
-    @required TextEditingController passwordController,
+    Key? key,
+    required TextEditingController passwordController,
   })  : _passwordController = passwordController,
         super(key: key);
 
@@ -188,7 +188,7 @@ class PasswordTextField extends StatelessWidget {
     return TextFormField(
       controller: _passwordController,
       validator: (value) =>
-          value.length < 7 ? 'Please enter more than 7 character' : null,
+          value!.length < 7 ? 'Please enter more than 7 character' : null,
       decoration: InputDecoration(
         isDense: true,
         labelText: 'Password',
@@ -204,7 +204,7 @@ class PasswordTextField extends StatelessWidget {
 
 class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -220,8 +220,8 @@ class LoadingIndicator extends StatelessWidget {
 }
 
 class LinkContainer extends StatelessWidget {
-  const LinkContainer({Key key, this.child}) : super(key: key);
-  final Widget child;
+  const LinkContainer({Key? key, this.child}) : super(key: key);
+  final Widget? child;
   @override
   Widget build(BuildContext context) {
     return Container(

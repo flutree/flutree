@@ -14,19 +14,19 @@ import '../widgets/reuseable.dart';
 import 'advanced_link.dart';
 
 class LiveGuide extends StatefulWidget {
-  const LiveGuide({Key key, this.userCode, this.docs}) : super(key: key);
-  final String userCode;
-  final DocumentSnapshot<Map<String, dynamic>> docs;
+  const LiveGuide({Key? key, this.userCode, this.docs}) : super(key: key);
+  final String? userCode;
+  final DocumentSnapshot<Map<String, dynamic>>? docs;
 
   @override
   _LiveGuideState createState() => _LiveGuideState();
 }
 
 class _LiveGuideState extends State<LiveGuide> {
-  InterstitialAd _interstitialAd;
-  BannerAd _bannerAd;
+  InterstitialAd? _interstitialAd;
+  BannerAd? _bannerAd;
   int _numInterstitialLoadAttempts = 0;
-  String _profileLink;
+  String? _profileLink;
   bool _isIntersAdLoaded = false;
   bool _isBannerAdLoaded = false;
 
@@ -34,7 +34,7 @@ class _LiveGuideState extends State<LiveGuide> {
   void initState() {
     super.initState();
     _profileLink = '$kWebappUrl/${widget.userCode}';
-    _createInterstitialAd();
+    // _createInterstitialAd();
     _createBannerAd();
   }
 
@@ -89,7 +89,7 @@ class _LiveGuideState extends State<LiveGuide> {
       ),
     );
 
-    _bannerAd.load();
+    _bannerAd!.load();
   }
 
   void _showInterstitialAd() async {
@@ -97,7 +97,7 @@ class _LiveGuideState extends State<LiveGuide> {
       print('Warning: attempt to show interstitial before loaded.');
       Navigator.pop(context);
     }
-    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdShowedFullScreenContent.');
       },
@@ -115,7 +115,7 @@ class _LiveGuideState extends State<LiveGuide> {
         Navigator.of(context).pop();
       },
     );
-    _interstitialAd.show();
+    _interstitialAd!.show();
     _interstitialAd = null;
   }
 
@@ -235,7 +235,7 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
-  Widget generateQrCode(String url) {
+  Widget generateQrCode(String? url) {
     return GestureDetector(
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => QrPage(url: url))),
@@ -302,8 +302,8 @@ class _LiveGuideState extends State<LiveGuide> {
   Widget bannerAdWidget() {
     return StatefulBuilder(
       builder: (context, setState) => Container(
-        child: AdWidget(ad: _bannerAd),
-        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+        width: _bannerAd!.size.width.toDouble(),
         height: 100.0,
         alignment: Alignment.center,
       ),

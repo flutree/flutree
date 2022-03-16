@@ -1,13 +1,13 @@
 class BitlyShortenModel {
-  String createdAt;
-  String id;
-  String link;
-  List<dynamic> customBitlinks;
-  String longUrl;
-  bool archived;
-  List<dynamic> tags;
-  List<dynamic> deeplinks;
-  References references;
+  String? createdAt;
+  String? id;
+  String? link;
+  List<dynamic>? customBitlinks;
+  String? longUrl;
+  bool? archived;
+  List<dynamic>? tags;
+  List<dynamic>? deeplinks;
+  References? references;
 
   BitlyShortenModel(
       {this.createdAt,
@@ -51,14 +51,14 @@ class BitlyShortenModel {
       data["deeplinks"] = deeplinks;
     }
     if (references != null) {
-      data["references"] = references.toJson();
+      data["references"] = references!.toJson();
     }
     return data;
   }
 }
 
 class References {
-  String group;
+  String? group;
 
   References({this.group});
 

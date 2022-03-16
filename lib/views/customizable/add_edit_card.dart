@@ -6,9 +6,9 @@ import '../../utils/social_list.dart';
 
 class AddCard extends StatefulWidget {
   /// If linkcardModel is not null, edit mode is triggered
-  const AddCard({Key key, this.linkcardModel}) : super(key: key);
+  const AddCard({Key? key, this.linkcardModel}) : super(key: key);
 
-  final LinkcardModel linkcardModel;
+  final LinkcardModel? linkcardModel;
 
   @override
   _AddCardState createState() => _AddCardState();
@@ -24,9 +24,9 @@ class _AddCardState extends State<AddCard> {
       borderRadius: BorderRadius.circular(18),
     ),
   );
-  bool _isNew;
-  int _inputType;
-  String _socialModelName;
+  late bool _isNew;
+  int? _inputType;
+  String? _socialModelName;
   // bool _keyboardVisible = false;
 
   final Map<String, String> _urlTextBox = {
@@ -36,7 +36,7 @@ class _AddCardState extends State<AddCard> {
     'SMS': '60182xxxxxxx'
   };
 
-  final Map<int, String> _prefixUrlText = {
+  final Map<int, String?> _prefixUrlText = {
     0: null,
     1: 'tel:',
     2: 'mailto:',
@@ -61,9 +61,9 @@ class _AddCardState extends State<AddCard> {
           _socialModelName = SocialLists.socialList.first.name;
       _inputType = 0; // url by default
     } else {
-      _socialModelName = widget.linkcardModel.exactName;
-      _titleController.text = widget.linkcardModel.displayName;
-      _urlController.text = widget.linkcardModel.link;
+      _socialModelName = widget.linkcardModel!.exactName;
+      _titleController.text = widget.linkcardModel!.displayName!;
+      _urlController.text = widget.linkcardModel!.link!;
       if (_urlController.text.contains(RegExp(r'tel:'))) {
         _inputType = 1;
         _urlController.text = _urlController.text.substring(4);
@@ -108,7 +108,7 @@ class _AddCardState extends State<AddCard> {
                             //only change title when not editing
                             setState(() {
                               if (_isNew) {
-                                _titleController.text = value;
+                                _titleController.text = value!;
                               }
                               _socialModelName = value;
                             });
@@ -186,7 +186,7 @@ class _AddCardState extends State<AddCard> {
                         child: DropdownButtonFormField(
                             isExpanded: true,
                             value: _inputType,
-                            onChanged: (value) =>
+                            onChanged: (dynamic value) =>
                                 setState(() => _inputType = value),
                             decoration: dropdownInputDecoration,
                             items: _dropdownType.map((value) {
@@ -207,20 +207,20 @@ class _AddCardState extends State<AddCard> {
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
                           validator: (value) =>
-                              value.isEmpty ? 'Cannot be empty' : null,
+                              value!.isEmpty ? 'Cannot be empty' : null,
                           controller: _urlController,
                           decoration: InputDecoration(
                             isDense: true,
                             prefixText:
-                                _prefixUrlText.values.elementAt(_inputType),
-                            labelText: _urlTextBox.keys.elementAt(_inputType),
-                            hintText: _urlTextBox.values.elementAt(_inputType),
+                                _prefixUrlText.values.elementAt(_inputType!),
+                            labelText: _urlTextBox.keys.elementAt(_inputType!),
+                            hintText: _urlTextBox.values.elementAt(_inputType!),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
                           textInputAction: TextInputAction.done,
-                          keyboardType: _keyboardType[_inputType],
+                          keyboardType: _keyboardType[_inputType!],
                         ),
                       ),
                     ),
@@ -247,7 +247,7 @@ class _AddCardState extends State<AddCard> {
                   style: OutlinedButton.styleFrom(
                       primary: Colors.white, backgroundColor: Colors.blueGrey),
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       String inputUrl = _urlController.text.trim();
                       switch (_inputType) {
                         case 1:

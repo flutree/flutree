@@ -4,8 +4,8 @@ import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 
 class QrPage extends StatelessWidget {
-  const QrPage({Key key, this.url}) : super(key: key);
-  final String url;
+  const QrPage({Key? key, this.url}) : super(key: key);
+  final String? url;
 
   @override
   Widget build(BuildContext context) {

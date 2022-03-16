@@ -6,8 +6,8 @@ import '../customizable/editing_page.dart';
 import '../widgets/reuseable.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key key, @required this.tabController}) : super(key: key);
-  final TabController tabController;
+  const Register({Key? key, required this.tabController}) : super(key: key);
+  final TabController? tabController;
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
                 onPressed: _isRegisterLoading
                     ? null
                     : () async {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           FocusScope.of(context).unfocus();
                           setState(() => _isRegisterLoading = true);
                           try {
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
                                     email: _emailController.text.trim(),
                                     password: _passwordController.text.trim());
 
-                            await user.user
+                            await user.user!
                                 .updateDisplayName(_nameController.text.trim());
 
                             Navigator.of(context).pushAndRemoveUntil(
@@ -59,7 +59,7 @@ class _RegisterState extends State<Register> {
                           } on FirebaseAuthException catch (e) {
                             setState(() => _isRegisterLoading = false);
                             CustomSnack.showErrorSnack(context,
-                                message: e.message);
+                                message: e.message!);
                           } catch (e) {
                             setState(() => _isRegisterLoading = false);
                             CustomSnack.showErrorSnack(context,
@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
               const Spacer(flex: 3),
               TextButton(
                 onPressed: () {
-                  widget.tabController.animateTo(1);
+                  widget.tabController!.animateTo(1);
                 },
                 child: const Text(
                   'Already have an account? Login here.',

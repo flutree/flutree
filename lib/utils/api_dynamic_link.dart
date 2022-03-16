@@ -4,8 +4,8 @@ import '../constants.dart';
 
 class DynamicLinkApi {
   static Future<String> generateShortUrl(
-      {String profileUrl,
-      DocumentSnapshot<Map<String, dynamic>> userInfo}) async {
+      {required String profileUrl,
+      required DocumentSnapshot<Map<String, dynamic>> userInfo}) async {
     var parameters = DynamicLinkParameters(
       uriPrefix: 'https://$kPageUrl',
       link: Uri.parse(profileUrl),
@@ -15,10 +15,10 @@ class DynamicLinkApi {
         source: 'app',
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
-          title: '${userInfo.data()["nickname"]}',
+          title: '${userInfo.data()!["nickname"]}',
           description:
               'Flutree. Connect audiences to all of your content with just one link.',
-          imageUrl: Uri.parse(userInfo.data()["dpUrl"])),
+          imageUrl: Uri.parse(userInfo.data()!["dpUrl"])),
     );
 
     var shortLink =
