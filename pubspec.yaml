@@ -1,12 +1,12 @@
 name: flutree
-description: Flutree project.
+description: Profile links builder.
 
 publish_to: "none"
 
-version: 3.12.0-final+30
+version: 4.0.0-pre.1+31
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -31,7 +31,9 @@ dependencies:
   package_info_plus: ^1.0.0
   qr_flutter: ^4.0.0
   dio: ^4.0.0
-  get_storage: ^2.0.2
+  provider: ^6.0.2
+  hive: ^2.0.6
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^1.0.4
@@ -43,5 +45,5 @@ flutter:
 
   assets:
     - images/sample.jpg
-    - images/intro.gif
+    # - images/intro.gif
     - images/logo/

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../../utils/linkcard_model.dart';
 import '../../utils/social_list.dart';
 import '../../utils/social_model.dart';

@@ -28,7 +28,6 @@ class BitlyApi {
       case HttpStatus.ok:
       case HttpStatus.created:
         return BitlyShortenModel.fromJson(json.decode(apiResponse.toString()));
-        break;
       default:
         String errMessage =
             'Error: ${apiResponse.statusCode}: ${apiResponse.statusMessage}';
@@ -44,7 +43,6 @@ class BitlyApi {
       case HttpStatus.ok:
         return BitlyClickSummaryModel.fromJson(
             json.decode(apiResponse.toString()));
-        break;
       default:
         var errMessage =
             'Error: ${apiResponse.statusCode}: ${apiResponse.statusMessage}';

@@ -1,14 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
+final FirebaseStorage _storageInstance = FirebaseStorage.instance;
+final FirebaseAuth _authInstance = FirebaseAuth.instance;
+
 class ProfileBuilderHelper {
   /// Allows pick/capture image, upload to Storage bucket, and returns `url`.
   static Future<String?> updateProfilePicture(ImageSource source) async {
-    FirebaseAuth _authInstance = FirebaseAuth.instance;
-    FirebaseStorage _storageInstance = FirebaseStorage.instance;
     XFile? pickedFile;
 
     pickedFile = await ImagePicker().pickImage(
@@ -26,5 +28,16 @@ class ProfileBuilderHelper {
     url = await reference.getDownloadURL();
 
     return url;
+  }
+
+  static Future<void> resetAccountData(
+      String imageUrl, DocumentReference userDocument) async {
+    try {
+      _storageInstance.refFromURL(imageUrl).delete();
+    } catch (e) {
+      print("Can't delete profile picture, ignoring..");
+    }
+
+    await userDocument.delete();
   }
 }

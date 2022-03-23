@@ -1,5 +1,6 @@
 import 'package:dough/dough.dart';
 import 'package:flutter/material.dart';
+
 import '../../utils/linkcard_model.dart';
 import '../../utils/social_list.dart';
 import '../widgets/link_card.dart';

@@ -4,14 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import '../../constants.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
-import '../customizable/editing_page.dart';
 import '../preview/ads_wrapper.dart';
+import '../profilebuilder/editing_page.dart';
 import '../widgets/reuseable.dart';
 import 'email_auth.dart';
 
@@ -27,8 +26,11 @@ class _AuthHomeState extends State<AuthHome> {
   @override
   void initState() {
     super.initState();
-    GetStorage().erase(); //to make sure it sign in as a new user.
+    _clearHiveData();
   }
+
+  ///to make sure it sign in as a new user.
+  Future<void> _clearHiveData() async => await Hive.box(kMainBoxName).clear();
 
   @override
   Widget build(BuildContext context) {

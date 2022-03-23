@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../model/bitly_click_summary_model.dart';
 import '../../model/bitly_shorten_model.dart';
@@ -16,8 +16,11 @@ import '../../utils/url_launcher.dart';
 import '../widgets/reuseable.dart';
 import '../screens/qr_code_page.dart';
 
+var box = Hive.box(kMainBoxName);
+
 class AdvancedLink extends StatelessWidget {
-  const AdvancedLink({Key? key, this.userInfo, this.uniqueLink, this.uniqueCode})
+  const AdvancedLink(
+      {Key? key, this.userInfo, this.uniqueLink, this.uniqueCode})
       : super(key: key);
   final DocumentSnapshot? userInfo;
   final String? uniqueLink;
@@ -101,15 +104,15 @@ class FdlWidget extends StatefulWidget {
 }
 
 class _FdlWidgetState extends State<FdlWidget> {
+  late bool _hasGeneratedFdlLink;
   String? _fdlLink;
-  bool? _hasGeneratedFdlLink;
   bool _waitForFdl = false;
 
   @override
   void initState() {
     super.initState();
-    _hasGeneratedFdlLink = GetStorage().read(kHasFdlLink) ?? false;
-    _fdlLink = GetStorage().read(kFdlLink) ?? "";
+    _hasGeneratedFdlLink = box.get(kHasFdlLink) ?? false;
+    _fdlLink = box.get(kFdlLink) ?? '';
   }
 
   @override
@@ -141,7 +144,8 @@ class _FdlWidgetState extends State<FdlWidget> {
                   ),
                   children: [
                     TextSpan(
-                        text: _fdlLink!.substring(0, _fdlLink!.indexOf('/') + 1)),
+                        text:
+                            _fdlLink!.substring(0, _fdlLink!.indexOf('/') + 1)),
                     TextSpan(
                       text: _fdlLink!.substring(_fdlLink!.indexOf('/') + 1),
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -155,7 +159,7 @@ class _FdlWidgetState extends State<FdlWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: _hasGeneratedFdlLink!,
+              visible: _hasGeneratedFdlLink,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: OutlinedButton.icon(
@@ -175,7 +179,7 @@ class _FdlWidgetState extends State<FdlWidget> {
               ),
             ),
             Visibility(
-              visible: _hasGeneratedFdlLink!,
+              visible: _hasGeneratedFdlLink,
               child: buildCopyButton('https://$_fdlLink'),
             ),
             Padding(
@@ -183,7 +187,7 @@ class _FdlWidgetState extends State<FdlWidget> {
               child: ElevatedButton.icon(
                 onPressed: _waitForFdl
                     ? null
-                    : _hasGeneratedFdlLink!
+                    : _hasGeneratedFdlLink
                         ? () => Share.share(
                             'Visit my profile on https://$_fdlLink',
                             subject: 'My Flutree profile link')
@@ -193,16 +197,17 @@ class _FdlWidgetState extends State<FdlWidget> {
                               String fdLink =
                                   await DynamicLinkApi.generateShortUrl(
                                       profileUrl: widget.uniqueLink!,
-                                      userInfo: widget.userInfo as DocumentSnapshot<Map<String, dynamic>>);
+                                      userInfo: widget.userInfo
+                                          as DocumentSnapshot<
+                                              Map<String, dynamic>>);
 
                               setState(() {
                                 _fdlLink = fdLink.substring(8);
                                 _hasGeneratedFdlLink = true;
                                 _waitForFdl = false;
                               });
-                              GetStorage().write(kFdlLink, _fdlLink);
-                              GetStorage()
-                                  .write(kHasFdlLink, _hasGeneratedFdlLink);
+                              box.put(kFdlLink, _fdlLink);
+                              box.put(kHasFdlLink, _hasGeneratedFdlLink);
                             } catch (e) {
                               print(e);
                               setState(() => _waitForFdl = false);
@@ -213,9 +218,9 @@ class _FdlWidgetState extends State<FdlWidget> {
                           },
                 label: _waitForFdl
                     ? const LoadingIndicator()
-                    : Text(_hasGeneratedFdlLink! ? 'Share' : 'Generate'),
+                    : Text(_hasGeneratedFdlLink ? 'Share' : 'Generate'),
                 icon: FaIcon(
-                    _hasGeneratedFdlLink!
+                    _hasGeneratedFdlLink
                         ? FontAwesomeIcons.share
                         : FontAwesomeIcons.checkCircle,
                     size: 14),
@@ -242,8 +247,8 @@ class _BitlyWidgetState extends State<BitlyWidget> {
   @override
   void initState() {
     super.initState();
-    _hasGeneratedBitlyLink = GetStorage().read(kHasBitlyLink) ?? false;
-    _bitlyLink = GetStorage().read(kBitlyLink) ?? '';
+    _hasGeneratedBitlyLink = box.get(kHasBitlyLink) ?? false;
+    _bitlyLink = box.get(kBitlyLink) ?? '';
   }
 
   @override
@@ -265,8 +270,8 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                   style: const TextStyle(fontSize: 21),
                   children: [
                     TextSpan(
-                        text: _bitlyLink!.substring(
-                            0, _bitlyLink!.indexOf('/') + 1)),
+                        text: _bitlyLink!
+                            .substring(0, _bitlyLink!.indexOf('/') + 1)),
                     TextSpan(
                       text: _bitlyLink!.substring(_bitlyLink!.indexOf('/') + 1),
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -372,8 +377,8 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                                   _bitlyLink = link.id;
                                   _hasGeneratedBitlyLink = true;
                                 });
-                                GetStorage().write(kHasBitlyLink, true);
-                                GetStorage().write(kBitlyLink, _bitlyLink);
+                                box.put(kHasBitlyLink, true);
+                                box.put(kBitlyLink, _bitlyLink);
                               } catch (e) {
                                 CustomSnack.showErrorSnack(context,
                                     message: 'Bitly error: $e');

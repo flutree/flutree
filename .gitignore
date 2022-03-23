@@ -46,5 +46,6 @@ app.*.map.json
 # password
 key.properties
 
-# some private key (admob etc)
+# private files
+android/app/google-services.json
 PRIVATE.dart

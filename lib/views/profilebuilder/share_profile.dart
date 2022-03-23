@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../PRIVATE.dart';
 import '../../constants.dart';
+import '../../model/my_user.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/url_launcher.dart';
 import '../screens/qr_code_page.dart';
@@ -14,8 +15,7 @@ import '../widgets/reuseable.dart';
 import 'advanced_link.dart';
 
 class LiveGuide extends StatefulWidget {
-  const LiveGuide({Key? key, this.userCode, this.docs}) : super(key: key);
-  final String? userCode;
+  const LiveGuide({Key? key, this.docs}) : super(key: key);
   final DocumentSnapshot<Map<String, dynamic>>? docs;
 
   @override
@@ -33,7 +33,7 @@ class _LiveGuideState extends State<LiveGuide> {
   @override
   void initState() {
     super.initState();
-    _profileLink = '$kWebappUrl/${widget.userCode}';
+    _profileLink = '$kWebappUrl/${MyUser.profileCode}';
     // _createInterstitialAd();
     _createBannerAd();
   }
@@ -226,7 +226,7 @@ class _LiveGuideState extends State<LiveGuide> {
           builder: (context) => AdvancedLink(
             userInfo: widget.docs,
             uniqueLink: 'https://$_profileLink',
-            uniqueCode: widget.userCode,
+            uniqueCode: MyUser.profileCode,
           ),
         ),
       ),
@@ -268,7 +268,7 @@ class _LiveGuideState extends State<LiveGuide> {
                 children: [
                   const TextSpan(text: '$kWebappUrl/'),
                   TextSpan(
-                      text: widget.userCode,
+                      text: MyUser.profileCode,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ]),
             textAlign: TextAlign.center,

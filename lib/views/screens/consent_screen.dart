@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import '../../constants.dart';
 
@@ -113,7 +113,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
                             ),
                             onPressed: _countinueButtonActive
                                 ? () {
-                                    GetStorage().write(kHasAgreeConsent, true);
+                                    Hive.box(kMainBoxName)
+                                        .put(kHasAgreeConsent, true);
                                     Navigator.pop(context, true);
                                   }
                                 : null,

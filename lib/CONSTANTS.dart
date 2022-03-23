@@ -17,7 +17,8 @@ const kTestDeviceId2 = 'DF693493239FEF390746FE861B201FC3'; //YES
 const kTestDeviceId3 = '5BF49B5666B0C509C03B9E26F4DA9DDD'; // Note 11
 const kMaxFailedLoadAttempts = 3;
 
-// Get Storage
+// Hive
+const kMainBoxName = "app";
 const kHasFdlLink = 'hasFdlLink';
 const kFdlLink = 'fdlLink';
 const kHasBitlyLink = 'hasBitlyLink';

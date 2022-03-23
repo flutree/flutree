@@ -2,24 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutree/views/profilebuilder/action_popup_menu.dart';
 import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../constants.dart';
+import '../../model/my_user.dart';
 import '../../utils/linkcard_model.dart';
 import '../../utils/profile_builder_helper.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
-import '../auth/auth_home.dart';
 import '../screens/consent_screen.dart';
-import '../screens/donate.dart';
 import '../widgets/help_dialog.dart';
 import '../widgets/link_card.dart';
 import '../widgets/reuseable.dart';
@@ -29,6 +27,7 @@ import 'share_profile.dart';
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
 enum Mode { edit, preview }
+var box = Hive.box(kMainBoxName);
 
 class EditPage extends StatefulWidget {
   const EditPage({Key? key}) : super(key: key);
@@ -37,29 +36,25 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  final FirebaseStorage _storageInstance = FirebaseStorage.instance;
-  final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
   final _authInstance = FirebaseAuth.instance;
   final _nameController = TextEditingController();
   final _subtitleController = TextEditingController();
   late DocumentReference<Map<String, dynamic>> _userDocument;
   DocumentSnapshot<Map<String, dynamic>>? _documentSnapshotData;
   Mode? mode;
-  String? _userCode;
   bool _isdpLoading = false;
   bool _isReorderable = false;
   late String _subtitleText;
   late bool _isShowSubtitle;
   late BannerAd _bannerAd;
   bool _isBannerAdLoaded = false;
-  String? _userImageUrl;
 
   @override
   void initState() {
     super.initState();
     mode = Mode.edit;
-    _userCode = _authInstance.currentUser!.uid.substring(0, 5);
-    _userDocument = _firestoreInstance.collection('users').doc(_userCode);
+    _userDocument =
+        MyUser.userDocument as DocumentReference<Map<String, dynamic>>;
     initFirestore();
     _createBannerAd();
   }
@@ -70,13 +65,7 @@ class _EditPageState extends State<EditPage> {
     if (!snapshot.exists) {
       print('Document not exist. Creating...');
       // Document with id == docId doesn't exist.
-      _userDocument.set({
-        'creationDate': FieldValue.serverTimestamp(),
-        'authUid': _authInstance.currentUser!.uid,
-        'dpUrl': _authInstance.currentUser!.photoURL ??
-            'https://picsum.photos/seed/$_userCode/200',
-        'nickname': _authInstance.currentUser!.displayName,
-      });
+      MyUser.setupInitialDoc();
       _nameController.text = _authInstance.currentUser!.displayName!;
     } else {
       _subtitleController.text = snapshot.data()!["subtitle"];
@@ -137,7 +126,7 @@ class _EditPageState extends State<EditPage> {
             onPressed: () async {
               /// Check whether the getstorage was not true or the user hasn't
               /// agree with the consent yet
-              if (GetStorage().read(kHasAgreeConsent) ||
+              if ((box.get(kHasAgreeConsent) ?? false) ||
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -146,129 +135,17 @@ class _EditPageState extends State<EditPage> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => LiveGuide(
-                      userCode: _userCode,
                       docs: _documentSnapshotData,
                     ),
                   ),
                 );
               } else {}
+              // TODO: Why need empty else here?
             },
             label: const Text('Share profile'),
             icon: const FaIcon(FontAwesomeIcons.share, size: 20),
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) async {
-              switch (value) {
-                case 'Logout':
-                  await FirebaseAuth.instance.signOut();
-                  await GoogleSignIn().signOut();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AuthHome()));
-                  break;
-                case 'dwApp':
-                  launchURL(context, kPlayStoreUrl);
-                  break;
-                case 'DeleteAcc':
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      bool isLoading = false;
-                      return StatefulBuilder(
-                        builder: (context, setDialogState) {
-                          return AlertDialog(
-                            title: const Text('Reset all data in this account'),
-                            content: const Text(
-                                'You\'ll be signed out automatically'),
-                            actions: [
-                              isLoading
-                                  ? const LoadingIndicator()
-                                  : const SizedBox.shrink(),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Cancel')),
-                              TextButton(
-                                onPressed: () async {
-                                  setDialogState(() => isLoading = true);
-                                  try {
-                                    _storageInstance
-                                        .refFromURL(_userImageUrl!)
-                                        .delete();
-                                  } catch (e) {
-                                    print('Unable to delete image: $e');
-                                  }
-                                  try {
-                                    await _userDocument.delete();
-                                    Navigator.pop(context); //pop the dialog
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const AuthHome()));
-                                  } on FirebaseException catch (e) {
-                                    CustomSnack.showErrorSnack(context,
-                                        message: 'Error: ${e.message}');
-                                    setDialogState(() => isLoading = false);
-                                  } catch (e) {
-                                    CustomSnack.showErrorSnack(context,
-                                        message: 'Error. Please try again');
-                                    setDialogState(() => isLoading = false);
-                                    rethrow;
-                                  }
-                                },
-                                child: const Text(
-                                  'Confirm',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  );
-                  break;
-                case 'Donate':
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (builder) => Donate()));
-              }
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.ellipsisV,
-              size: 14,
-              color: Colors.blueGrey,
-            ),
-            tooltip: 'Your account',
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  child: Text('Log out'),
-                  value: 'Logout',
-                ),
-                if (kIsWeb)
-                  const PopupMenuItem(
-                    value: 'dwApp',
-                    child: Text('Download Android app...'),
-                  ),
-                const PopupMenuItem(
-                  value: 'Donate',
-                  child: Text(
-                    'Support Flutree...',
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'DeleteAcc',
-                  child: Text(
-                    'Delete account data...',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ];
-            },
-          ),
+          const ActionPopupMenu(),
         ],
       ),
       body: SafeArea(
@@ -284,7 +161,7 @@ class _EditPageState extends State<EditPage> {
                   'Something about yourself';
               _isShowSubtitle =
                   _documentSnapshotData!.data()!['showSubtitle'] ?? false;
-              _userImageUrl = _documentSnapshotData!.data()!['dpUrl'];
+              MyUser.imageUrl = _documentSnapshotData!.data()!['dpUrl'];
 
               List<dynamic>? socialsList =
                   _documentSnapshotData!.data()!['socials'];
@@ -326,15 +203,23 @@ class _EditPageState extends State<EditPage> {
                                       },
                                     );
                                     if (response != null) {
-                                      var url = await ProfileBuilderHelper
-                                          .updateProfilePicture(response);
+                                      setState(() => _isdpLoading = true);
+                                      String? url;
+                                      try {
+                                        url = await ProfileBuilderHelper
+                                            .updateProfilePicture(response);
 
-                                      _userDocument
-                                          .update({'dpUrl': url}).then((_) {
+                                        await _userDocument
+                                            .update({'dpUrl': url});
                                         CustomSnack.showSnack(context,
                                             message: 'Profile picture updated');
-                                      });
-                                      //TODO: platform & firebase exception
+                                      } on FirebaseException catch (e) {
+                                        CustomSnack.showErrorSnack(context,
+                                            message:
+                                                e.message ?? "Firebase Error");
+                                      } finally {
+                                        setState(() => _isdpLoading = false);
+                                      }
                                     }
                                   }
                                 : null,
@@ -356,7 +241,7 @@ class _EditPageState extends State<EditPage> {
                                       )
                                     : null,
                                 backgroundColor: Colors.transparent,
-                                backgroundImage: NetworkImage(_userImageUrl!),
+                                backgroundImage: NetworkImage(MyUser.imageUrl!),
                               ),
                               mode == Mode.edit
                                   ? buildChangeDpIcon()
