@@ -566,54 +566,55 @@ class _EditPageState extends State<EditPage> {
                         visible: mode == Mode.edit,
                         child: Transform.scale(
                           scale: 0.97,
-                          child: DottedBorder(
-                            dashPattern: const [6, 5],
-                            color: Colors.black54,
-                            child: Card(
-                              color: Theme.of(context).canvasColor,
-                              margin: EdgeInsets.zero,
-                              shadowColor: Colors.transparent,
-                              child: ListTile(
-                                onTap: () async {
-                                  dynamic result = await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: _bottomSheetStyle,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: const AddCard(),
-                                      );
-                                    },
-                                  );
+                          child: Opacity(
+                            opacity: .75,
+                            child: DottedBorder(
+                              dashPattern: const [6, 5],
+                              color: Theme.of(context).iconTheme.color!,
+                              child: Card(
+                                color: Theme.of(context).canvasColor,
+                                margin: EdgeInsets.zero,
+                                shadowColor: Colors.transparent,
+                                child: ListTile(
+                                  onTap: () async {
+                                    dynamic result = await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      shape: _bottomSheetStyle,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
+                                          child: const AddCard(),
+                                        );
+                                      },
+                                    );
 
-                                  if (result != null) {
-                                    print('Adding ${result.toMap()}');
-                                    _userDocument.update({
-                                      'socials': FieldValue.arrayUnion(
-                                          [result.toMap()])
-                                    }).then((value) {
-                                      setState(() {});
-                                    }).catchError((Object error) {
-                                      print(error);
-                                      CustomSnack.showErrorSnack(context,
-                                          message: 'Unable to sync');
-                                    });
-                                  }
-                                },
-                                leading: const FaIcon(
-                                  FontAwesomeIcons.plus,
-                                  color: Colors.black54,
+                                    if (result != null) {
+                                      print('Adding ${result.toMap()}');
+                                      _userDocument.update({
+                                        'socials': FieldValue.arrayUnion(
+                                            [result.toMap()])
+                                      }).then((value) {
+                                        setState(() {});
+                                      }).catchError((Object error) {
+                                        print(error);
+                                        CustomSnack.showErrorSnack(context,
+                                            message: 'Unable to sync');
+                                      });
+                                    }
+                                  },
+                                  leading: const FaIcon(
+                                    FontAwesomeIcons.plus,
+                                  ),
+                                  title: const Text(
+                                    'Add card',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  trailing: const Icon(null),
                                 ),
-                                title: const Text(
-                                  'Add card',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                                trailing: const Icon(null),
                               ),
                             ),
                           ),

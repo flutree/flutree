@@ -65,10 +65,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     padding: EdgeInsets.all(
                       6.0,
                     ),
-                    child: Text(
-                      'To ensure safety for all users and visitors, please make sure your Flutree profile adhere to the following conditions. Failure to do so may result in content or/and account ban.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black87),
+                    child: Opacity(
+                      opacity: .8,
+                      child: Text(
+                        'To ensure safety for all users and visitors, please make sure your Flutree profile adhere to the following conditions. Failure to do so may result in content or/and account ban.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                   ListView.builder(

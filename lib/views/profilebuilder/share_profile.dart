@@ -24,60 +24,30 @@ class LiveGuide extends StatefulWidget {
 
 class _LiveGuideState extends State<LiveGuide> {
   InterstitialAd? _interstitialAd;
-  BannerAd? _bannerAd;
-  int _numInterstitialLoadAttempts = 0;
+  BannerAd? _bannerAdPotrait;
+  BannerAd? _bannerAdLandscape; // Smaller height ad
   String? _profileLink;
-  bool _isIntersAdLoaded = false;
-  bool _isBannerAdLoaded = false;
+  bool _isPotraitBannerAdLoaded = false;
+  bool _isLandscapeBannerAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _profileLink = '$kWebappUrl/${MyUser.profileCode}';
     // _createInterstitialAd();
-    _createBannerAd();
+    _createPotraitBannerAd();
+    _createLandscapeBannerAd();
   }
 
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: kInterstitialShareUnitId,
-      request: const AdRequest(keywords: [
-        'share',
-        'profile',
-        'social',
-        'online',
-        'social media',
-        'engagement',
-        'business'
-      ]),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          print('$ad loaded');
-          _interstitialAd = ad;
-          _isIntersAdLoaded = true;
-          _numInterstitialLoadAttempts = 0;
-        },
-        onAdFailedToLoad: (error) {
-          print('InterstitialAd failed to load: $error.');
-          _numInterstitialLoadAttempts += 1;
-          _interstitialAd = null;
-          if (_numInterstitialLoadAttempts <= kMaxFailedLoadAttempts) {
-            _createInterstitialAd();
-          }
-        },
-      ),
-    );
-  }
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
+  void _createPotraitBannerAd() {
+    _bannerAdPotrait = BannerAd(
       adUnitId: kShareBannerUnitId,
       size: AdSize.largeBanner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
-            _isBannerAdLoaded = true;
+            _isPotraitBannerAdLoaded = true;
           });
         },
         onAdFailedToLoad: (ad, error) {
@@ -89,34 +59,30 @@ class _LiveGuideState extends State<LiveGuide> {
       ),
     );
 
-    _bannerAd!.load();
+    _bannerAdPotrait!.load();
   }
 
-  void _showInterstitialAd() async {
-    if (_interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded.');
-      Navigator.pop(context);
-    }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdShowedFullScreenContent.');
-      },
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
+  void _createLandscapeBannerAd() {
+    _bannerAdLandscape = BannerAd(
+      adUnitId: kShareBannerUnitId,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isLandscapeBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Releases an ad resource when it fails to load
+          ad.dispose();
 
-        _createInterstitialAd();
-        Navigator.of(context).pop();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createInterstitialAd();
-        Navigator.of(context).pop();
-      },
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
     );
-    _interstitialAd!.show();
-    _interstitialAd = null;
+
+    _bannerAdLandscape!.load();
   }
 
   @override
@@ -155,26 +121,25 @@ class _LiveGuideState extends State<LiveGuide> {
               child: OrientationBuilder(
                 builder: (context, orientation) {
                   if (orientation == Orientation.portrait) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 25),
-                          infoWidget(),
-                          const SizedBox(height: 5),
-                          advancedLinkButton(context),
-                          // const SizedBox(height: 5),
-                          // AskSquishCard(context: context),
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: generateQrCode(_profileLink),
-                          ),
-                          _isBannerAdLoaded
-                              ? bannerAdWidget()
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 25),
+                        InfoWidget(profileLink: _profileLink!),
+                        const SizedBox(height: 5),
+                        AdvancedLinkButton(
+                            userDocs: widget.docs, profileLink: _profileLink!),
+                        // const SizedBox(height: 5),
+                        // AskSquishCard(context: context),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: ProfileQrCode(profileLink: _profileLink!),
+                        ),
+                        const Spacer(),
+                        if (_isPotraitBannerAdLoaded)
+                          MyBannerAd(_bannerAdPotrait!),
+                      ],
                     );
                   } else {
                     return Column(
@@ -185,12 +150,13 @@ class _LiveGuideState extends State<LiveGuide> {
                             Expanded(
                                 child: Column(
                               children: [
-                                infoWidget(),
+                                InfoWidget(profileLink: _profileLink!),
                                 const SizedBox(height: 5),
-                                advancedLinkButton(context),
-                                _isBannerAdLoaded
-                                    ? bannerAdWidget()
-                                    : const SizedBox.shrink(),
+                                AdvancedLinkButton(
+                                    userDocs: widget.docs,
+                                    profileLink: _profileLink!),
+                                if (_isLandscapeBannerAdLoaded)
+                                  MyBannerAd(_bannerAdLandscape!),
                               ],
                             )),
                             Expanded(
@@ -199,7 +165,7 @@ class _LiveGuideState extends State<LiveGuide> {
                                 child: Column(
                                   children: [
                                     // AskSquishCard(context: context),
-                                    generateQrCode(_profileLink),
+                                    ProfileQrCode(profileLink: _profileLink!),
                                   ],
                                 ),
                               ),
@@ -218,102 +184,10 @@ class _LiveGuideState extends State<LiveGuide> {
     );
   }
 
-  Widget advancedLinkButton(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AdvancedLink(
-            userInfo: widget.docs,
-            uniqueLink: 'https://$_profileLink',
-            uniqueCode: MyUser.profileCode,
-          ),
-        ),
-      ),
-      label: const Text('Advanced link...'),
-      icon: const FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
-    );
-  }
-
-  Widget generateQrCode(String? url) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => QrPage(url: url))),
-      child: QrImage(
-        data: 'https://$url',
-        size: 210,
-        embeddedImage: const AssetImage(
-          'images/logo/qrlogo.png',
-        ),
-      ),
-    );
-  }
-
-  Widget infoWidget() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text(
-          'Your profile link:',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16),
-        ),
-        const SizedBox(height: 5),
-        LinkContainer(
-          child: Text.rich(
-            TextSpan(
-                style: const TextStyle(
-                  fontSize: 21,
-                ),
-                children: [
-                  const TextSpan(text: '$kWebappUrl/'),
-                  TextSpan(
-                      text: MyUser.profileCode,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ]),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton.icon(
-              label: const Text('Copy'),
-              onPressed: () => CopyLink.copy(url: 'https://$_profileLink'),
-              icon: const FaIcon(
-                FontAwesomeIcons.copy,
-                size: 18,
-              ),
-            ),
-            TextButton.icon(
-              label: const Text('Open'),
-              onPressed: () => launchURL(context, 'https://$_profileLink'),
-              icon: const FaIcon(
-                FontAwesomeIcons.externalLinkAlt,
-                size: 18,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget bannerAdWidget() {
-    return StatefulBuilder(
-      builder: (context, setState) => Container(
-        child: AdWidget(ad: _bannerAd!),
-        width: _bannerAd!.size.width.toDouble(),
-        height: 100.0,
-        alignment: Alignment.center,
-      ),
-    );
-  }
-
   @override
   void dispose() {
     _interstitialAd?.dispose();
-    _bannerAd?.dispose();
+    _bannerAdPotrait?.dispose();
     super.dispose();
   }
 }
@@ -353,3 +227,129 @@ class _LiveGuideState extends State<LiveGuide> {
 //     );
 //   }
 // }
+
+class InfoWidget extends StatelessWidget {
+  const InfoWidget({Key? key, required this.profileLink}) : super(key: key);
+
+  final String profileLink;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Your profile link:',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 5),
+        LinkContainer(
+          child: Text.rich(
+            TextSpan(
+                style: const TextStyle(
+                  fontSize: 21,
+                ),
+                children: [
+                  const TextSpan(text: '$kWebappUrl/'),
+                  TextSpan(
+                      text: MyUser.profileCode,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ]),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton.icon(
+              label: const Text('Copy'),
+              onPressed: () => CopyLink.copy(url: 'https://$profileLink'),
+              icon: const FaIcon(
+                FontAwesomeIcons.copy,
+                size: 18,
+              ),
+            ),
+            TextButton.icon(
+              label: const Text('Open'),
+              onPressed: () => launchURL(context, 'https://$profileLink'),
+              icon: const FaIcon(
+                FontAwesomeIcons.externalLinkAlt,
+                size: 18,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class AdvancedLinkButton extends StatelessWidget {
+  const AdvancedLinkButton(
+      {Key? key, required this.userDocs, required this.profileLink})
+      : super(key: key);
+
+  final DocumentSnapshot<Map<String, dynamic>>? userDocs;
+  final String profileLink;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdvancedLink(
+            userInfo: userDocs,
+            uniqueLink: 'https://$profileLink',
+            uniqueCode: MyUser.profileCode,
+          ),
+        ),
+      ),
+      label: const Text('Advanced link...'),
+      icon: const FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
+    );
+  }
+}
+
+class ProfileQrCode extends StatelessWidget {
+  const ProfileQrCode({Key? key, required this.profileLink}) : super(key: key);
+
+  final String profileLink;
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QrPage(url: profileLink)),
+        ),
+        child: QrImage(
+          data: 'https://$profileLink',
+          size: 210,
+          embeddedImage: const AssetImage(
+            'images/logo/qrlogo.png',
+          ),
+        ),
+      );
+}
+
+class MyBannerAd extends StatefulWidget {
+  const MyBannerAd(this.bannerAd, {Key? key}) : super(key: key);
+
+  final BannerAd bannerAd;
+
+  @override
+  State<MyBannerAd> createState() => _MyBannerAdState();
+}
+
+class _MyBannerAdState extends State<MyBannerAd> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: AdWidget(ad: widget.bannerAd),
+      width: widget.bannerAd.size.width.toDouble(),
+      height: 100.0,
+      alignment: Alignment.center,
+    );
+  }
+}

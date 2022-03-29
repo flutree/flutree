@@ -15,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
-  Hive.openBox(kMainBoxName);
+  await Hive.openBox(kMainBoxName);
   MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(testDeviceIds: [kTestDeviceId2, kTestDeviceId3]));
@@ -32,8 +32,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: kIsWeb ? 'Flutree Create' : 'Flutree',
       theme: ThemeData(
+        fontFamily: GoogleFonts.karla().fontFamily,
         primarySwatch: Colors.blueGrey,
-        textTheme: GoogleFonts.karlaTextTheme(),
+        appBarTheme: AppBarTheme(
+          titleTextStyle:
+              GoogleFonts.karla(color: Colors.blueGrey.shade700, fontSize: 18),
+        ),
       ),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: _analytics)],
       home: _authUser == null ? const AuthHome() : const EditPage(),
