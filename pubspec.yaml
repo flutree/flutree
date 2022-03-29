@@ -17,6 +17,7 @@ dependencies:
   url_launcher: ^6.0.3
   dough: ^1.0.1
   fluttertoast: ^8.0.6
+  flutter_markdown: ^0.6.9+1
   firebase_core: ^1.0.4
   google_mobile_ads: ^1.1.0
   firebase_auth: ^3.0.1
@@ -31,7 +32,6 @@ dependencies:
   package_info_plus: ^1.0.0
   qr_flutter: ^4.0.0
   dio: ^4.0.0
-  provider: ^6.0.2
   hive: ^2.0.6
   hive_flutter: ^1.1.0
 
