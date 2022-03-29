@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../../utils/url_launcher.dart';
 
 class Donate extends StatelessWidget {
@@ -47,13 +48,13 @@ class Donate extends StatelessWidget {
                     '\nYour donation can be utilized in a number of way such as site hosting and maintainance.'),
                 DonateCard(
                   label: 'Paypal',
-                  link: _links['paypal'],
+                  link: _links['paypal']!.replaceAll("https://", ""),
                   onTapFun: () => launchURL(context, _links['paypal']!),
                   onLongTapFun: () => copyToClipboard(_links['paypal']),
                   faIcon: FontAwesomeIcons.paypal,
                 ),
                 DonateCard(
-                  link: _links['patreon'],
+                  link: _links['patreon']!.replaceAll("https://", ""),
                   faIcon: FontAwesomeIcons.patreon,
                   onTapFun: () => launchURL(context, _links['patreon']!),
                   onLongTapFun: () => copyToClipboard(_links['patreon']),
@@ -61,7 +62,7 @@ class Donate extends StatelessWidget {
                 ),
                 DonateCard(
                     label: 'Buy me a coffee',
-                    link: _links['buymeacoffee'],
+                    link: _links['buymeacoffee']!.replaceAll("https://", ""),
                     faIcon: FontAwesomeIcons.mugHot,
                     onTapFun: () => launchURL(context, _links['buymeacoffee']!),
                     onLongTapFun: () =>
@@ -70,7 +71,7 @@ class Donate extends StatelessWidget {
                     '\nThe least thing you can do is to share this app among your family and friends.'),
                 DonateCard(
                   label: 'Share the app',
-                  link: _links['getapp'],
+                  link: _links['getapp']!.replaceAll("https://", ""),
                   faIcon: FontAwesomeIcons.shareAlt,
                   onTapFun: () => Share.share(
                       'Get Flutree now! Available on Android and web. ${_links['getapp']}'),
@@ -111,6 +112,7 @@ class DonateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
         onLongPress: _onLongTapFun,
         onTap: _onTapFun,
