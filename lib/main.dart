@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutree/views/profilebuilder/editing_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -35,6 +36,10 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.karla().fontFamily,
         primarySwatch: Colors.blueGrey,
         appBarTheme: AppBarTheme(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+          ),
           titleTextStyle:
               GoogleFonts.karla(color: Colors.blueGrey.shade700, fontSize: 18),
         ),
