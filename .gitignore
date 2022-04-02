@@ -47,5 +47,4 @@ app.*.map.json
 key.properties
 
 # private files
-android/app/google-services.json
 PRIVATE.dart
