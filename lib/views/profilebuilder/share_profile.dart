@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -14,15 +15,15 @@ import '../screens/qr_code_page.dart';
 import '../widgets/reuseable.dart';
 import 'advanced_link.dart';
 
-class LiveGuide extends StatefulWidget {
-  const LiveGuide({Key? key, this.docs}) : super(key: key);
+class ShareProfile extends StatefulWidget {
+  const ShareProfile({Key? key, this.docs}) : super(key: key);
   final DocumentSnapshot<Map<String, dynamic>>? docs;
 
   @override
-  _LiveGuideState createState() => _LiveGuideState();
+  _ShareProfileState createState() => _ShareProfileState();
 }
 
-class _LiveGuideState extends State<LiveGuide> {
+class _ShareProfileState extends State<ShareProfile> {
   InterstitialAd? _interstitialAd;
   BannerAd? _bannerAdPotrait;
   BannerAd? _bannerAdLandscape; // Smaller height ad
@@ -245,18 +246,13 @@ class InfoWidget extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         LinkContainer(
-          child: Text.rich(
-            TextSpan(
-                style: const TextStyle(
-                  fontSize: 21,
-                ),
-                children: [
-                  const TextSpan(text: '$kWebappUrl/'),
-                  TextSpan(
-                      text: MyUser.profileCode,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ]),
-            textAlign: TextAlign.center,
+          child: MarkdownBody(
+            data: '$kWebappUrl/**${MyUser.profileCode}**',
+            styleSheet: MarkdownStyleSheet(
+              p: const TextStyle(
+                fontSize: 21,
+              ),
+            ),
           ),
         ),
         Row(

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_plus/share_plus.dart';
@@ -180,7 +180,7 @@ class _FdlWidgetState extends State<FdlWidget> {
             ),
             Visibility(
               visible: _hasGeneratedFdlLink,
-              child: buildCopyButton('https://$_fdlLink'),
+              child: CopyButton(url: 'https://$_fdlLink'),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -337,7 +337,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
             ),
             Visibility(
               visible: _hasGeneratedBitlyLink,
-              child: buildCopyButton('https://$_bitlyLink'),
+              child: CopyButton(url: 'https://$_bitlyLink'),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -415,35 +415,35 @@ class BitlyConsents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        text: 'By using Bitly services, you agree to Bitly\'s ',
-        children: [
-          TextSpan(
-              text: 'Terms of Service',
-              style: linkTextStyle,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => launchURL(context, kBitlyTermsOfService)),
-          const TextSpan(text: ' and '),
-          TextSpan(
-              text: 'Privacy Policy',
-              style: linkTextStyle,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => launchURL(context, kBitlyPrivacyPolicyLink)),
-          const TextSpan(text: '.')
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        MarkdownBody(
+          data:
+              'By using Bitly services, you agree to Bitly\'s [**Terms of Service**]($kBitlyTermsOfService) and [**Privacy Policy**]($kBitlyPrivacyPolicyLink).',
+          onTapLink: (String text, String? href, String title) =>
+              launchURL(context, href!),
+          shrinkWrap: true,
+        ),
+      ],
     );
   }
 }
 
-Padding buildCopyButton(String url) {
-  return Padding(
-    padding: const EdgeInsets.all(4.0),
-    child: OutlinedButton.icon(
-      onPressed: () => CopyLink.copy(url: url),
-      label: const Text('Copy'),
-      icon: const FaIcon(FontAwesomeIcons.copy, size: 14),
-    ),
-  );
+class CopyButton extends StatelessWidget {
+  const CopyButton({Key? key, required this.url}) : super(key: key);
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: OutlinedButton.icon(
+        onPressed: () => CopyLink.copy(url: url),
+        label: const Text('Copy'),
+        icon: const FaIcon(FontAwesomeIcons.copy, size: 14),
+      ),
+    );
+  }
 }

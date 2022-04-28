@@ -134,13 +134,12 @@ class _EditPageState extends State<EditPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => LiveGuide(
+                    builder: (_) => ShareProfile(
                       docs: _documentSnapshotData,
                     ),
                   ),
                 );
-              } else {}
-              // TODO: Why need empty else here?
+              }
             },
             label: const Text('Share profile'),
             icon: const FaIcon(FontAwesomeIcons.share, size: 20),
