@@ -7,7 +7,7 @@
 
 Your personalized social cards. Put your social medias link in one place. Easy peasy!
 
-# Flutree might be coming back soon.
+# Flutree is back!!
 
 ## Download on Google Play Store
 
