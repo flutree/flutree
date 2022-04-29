@@ -397,7 +397,7 @@ class _EditPageState extends State<EditPage> {
                                           });
                                     },
                                     icon: const FaIcon(
-                                        FontAwesomeIcons.questionCircle,
+                                        FontAwesomeIcons.circleQuestion,
                                         size: 16),
                                     label: const Text('Help')),
                                 Tooltip(
@@ -433,7 +433,7 @@ class _EditPageState extends State<EditPage> {
                                         });
                                   },
                                   icon: const FaIcon(
-                                      FontAwesomeIcons.questionCircle,
+                                      FontAwesomeIcons.circleQuestion,
                                       size: 16),
                                   label: const Text('Help')),
                             );
@@ -469,14 +469,15 @@ class _EditPageState extends State<EditPage> {
                                             [datas[index].toMap()])
                                       });
                                     },
-                                    direction: DismissDirection.startToEnd,
+                                    direction: !_isReorderable
+                                        ? DismissDirection.startToEnd
+                                        : DismissDirection.none,
                                     confirmDismiss: (direction) async {
                                       return await showModalBottomSheet(
                                         shape: _bottomSheetStyle,
                                         context: context,
-                                        builder: (context) {
-                                          return DeleteCardWidget(datas[index]);
-                                        },
+                                        builder: (_) =>
+                                            DeleteCardWidget(datas[index]),
                                       );
                                     },
                                     background: Container(
@@ -484,7 +485,7 @@ class _EditPageState extends State<EditPage> {
                                       child: Row(
                                         children: const <Widget>[
                                           SizedBox(width: 8),
-                                          FaIcon(FontAwesomeIcons.trashAlt,
+                                          FaIcon(FontAwesomeIcons.trashCan,
                                               size: 20,
                                               color: Colors.redAccent),
                                           SizedBox(width: 10),
@@ -708,7 +709,7 @@ class DeleteCardWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: const FaIcon(FontAwesomeIcons.times, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.xmark, size: 14),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -717,7 +718,7 @@ class DeleteCardWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: const FaIcon(FontAwesomeIcons.trashAlt, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.trashCan, size: 14),
                     style: OutlinedButton.styleFrom(
                         primary: Colors.white,
                         backgroundColor: Colors.redAccent),

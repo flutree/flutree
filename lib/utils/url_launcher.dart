@@ -5,7 +5,7 @@ import 'snackbar.dart';
 ///lauch URL to a new web browser
 launchURL(BuildContext context, String url) async {
   try {
-    launch(url);
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   } catch (e) {
     CustomSnack.showErrorSnack(context,
         message: 'Could not launch $url. Please check url');

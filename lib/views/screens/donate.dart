@@ -72,7 +72,7 @@ class Donate extends StatelessWidget {
                 DonateCard(
                   label: 'Share the app',
                   link: _links['getapp']!.replaceAll("https://", ""),
-                  faIcon: FontAwesomeIcons.shareAlt,
+                  faIcon: FontAwesomeIcons.shareNodes,
                   onTapFun: () => Share.share(
                       'Get Flutree now! Available on Android and web. ${_links['getapp']}'),
                   onLongTapFun: () => copyToClipboard(

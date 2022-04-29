@@ -222,7 +222,7 @@ class _FdlWidgetState extends State<FdlWidget> {
                 icon: FaIcon(
                     _hasGeneratedFdlLink
                         ? FontAwesomeIcons.share
-                        : FontAwesomeIcons.checkCircle,
+                        : FontAwesomeIcons.circleCheck,
                     size: 14),
               ),
             ),

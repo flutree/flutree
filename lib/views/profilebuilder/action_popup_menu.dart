@@ -86,7 +86,7 @@ class ActionPopupMenu extends StatelessWidget {
         }
       },
       icon: const FaIcon(
-        FontAwesomeIcons.ellipsisV,
+        FontAwesomeIcons.ellipsisVertical,
         size: 14,
         color: Colors.blueGrey,
       ),

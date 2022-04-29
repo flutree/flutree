@@ -105,7 +105,7 @@ class _ShareProfileState extends State<ShareProfile> {
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const FaIcon(FontAwesomeIcons.shareAlt),
+              icon: const FaIcon(FontAwesomeIcons.shareNodes),
               onPressed: () {
                 Share.share(
                     'Hey. Visit my profile page on https://$_profileLink',
@@ -270,7 +270,7 @@ class InfoWidget extends StatelessWidget {
               label: const Text('Open'),
               onPressed: () => launchURL(context, 'https://$profileLink'),
               icon: const FaIcon(
-                FontAwesomeIcons.externalLinkAlt,
+                FontAwesomeIcons.upRightFromSquare,
                 size: 18,
               ),
             ),
@@ -303,7 +303,7 @@ class AdvancedLinkButton extends StatelessWidget {
         ),
       ),
       label: const Text('Advanced link...'),
-      icon: const FaIcon(FontAwesomeIcons.angleDoubleRight, size: 11),
+      icon: const FaIcon(FontAwesomeIcons.anglesRight, size: 11),
     );
   }
 }

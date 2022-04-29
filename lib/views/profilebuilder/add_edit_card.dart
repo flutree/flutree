@@ -236,7 +236,7 @@ class _AddCardState extends State<AddCard> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlinedButton.icon(
-                    icon: const FaIcon(FontAwesomeIcons.times, size: 14),
+                    icon: const FaIcon(FontAwesomeIcons.xmark, size: 14),
                     onPressed: () => Navigator.pop(context),
                     label: Text(_isNew ? 'Discard' : 'Cancel')),
               ),
@@ -261,8 +261,8 @@ class _AddCardState extends State<AddCard> {
                           break;
                         default:
                           inputUrl = inputUrl;
-                          if (!await canLaunch(inputUrl)) {
-                            inputUrl = 'http://$inputUrl';
+                          if (!await canLaunchUrl(Uri.parse(inputUrl))) {
+                            inputUrl = 'https://$inputUrl';
                           }
                           break;
                       }
