@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,14 +46,15 @@ class Donate extends StatelessWidget {
                 const Text(
                     'Thank you for interest in supporting Flutree. Your support could help keep Flutree running for free and provide a better experience.'),
                 const Text(
-                    '\nYour donation can be utilized in a number of way such as site hosting and maintainance.'),
-                DonateCard(
-                  label: 'Paypal',
-                  link: _links['paypal']!.replaceAll("https://", ""),
-                  onTapFun: () => launchURL(context, _links['paypal']!),
-                  onLongTapFun: () => copyToClipboard(_links['paypal']),
-                  faIcon: FontAwesomeIcons.paypal,
-                ),
+                    '\nYour support can be utilized in a number of way such as site hosting and maintainance.'),
+                if (kIsWeb)
+                  DonateCard(
+                    label: 'Paypal',
+                    link: _links['paypal']!.replaceAll("https://", ""),
+                    onTapFun: () => launchURL(context, _links['paypal']!),
+                    onLongTapFun: () => copyToClipboard(_links['paypal']),
+                    faIcon: FontAwesomeIcons.paypal,
+                  ),
                 DonateCard(
                   link: _links['patreon']!.replaceAll("https://", ""),
                   faIcon: FontAwesomeIcons.patreon,
