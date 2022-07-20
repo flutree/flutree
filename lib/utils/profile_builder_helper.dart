@@ -18,13 +18,13 @@ class ProfileBuilderHelper {
 
     if (pickedFile == null) return null;
 
-    File _image = File(pickedFile.path);
+    File image = File(pickedFile.path);
     String url;
     Reference reference =
         _storageInstance.ref('userdps').child(_authInstance.currentUser!.uid);
 
     // if already exist, it will be overwritten
-    await reference.putFile(_image);
+    await reference.putFile(image);
     url = await reference.getDownloadURL();
 
     return url;

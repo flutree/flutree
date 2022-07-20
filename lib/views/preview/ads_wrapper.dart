@@ -9,12 +9,12 @@ import 'preview_app_page.dart';
 class PreviewPage extends StatefulWidget {
   const PreviewPage({Key? key}) : super(key: key);
   @override
-  _PreviewPageState createState() => _PreviewPageState();
+  State<PreviewPage> createState() => _PreviewPageState();
 }
 
 class _PreviewPageState extends State<PreviewPage> {
   InterstitialAd? _exitAd;
-  bool _alreadyShowDialog = false;
+  // final bool _alreadyShowDialog = false;
   int _numInterstitialLoadAttempts = 0;
   late bool isInterstitialAdReady;
 
@@ -52,10 +52,9 @@ class _PreviewPageState extends State<PreviewPage> {
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (!_alreadyShowDialog) {
     //     showWelcomeDialog(context);
+    // TODO: enable balik?
     //   }
     // });
-
-    //FIXME: https://pub.dev/packages/google_mobile_ads/changelog
 
     return WillPopScope(
       onWillPop: () async {

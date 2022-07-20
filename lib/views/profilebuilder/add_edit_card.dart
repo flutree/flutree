@@ -11,7 +11,7 @@ class AddCard extends StatefulWidget {
   final LinkcardModel? linkcardModel;
 
   @override
-  _AddCardState createState() => _AddCardState();
+  State<AddCard> createState() => _AddCardState();
 }
 
 class _AddCardState extends State<AddCard> {

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutree/views/profilebuilder/action_popup_menu.dart';
+import 'action_popup_menu.dart';
 import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -26,13 +26,15 @@ import 'share_profile.dart';
 
 const _bottomSheetStyle = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)));
+
 enum Mode { edit, preview }
+
 var box = Hive.box(kMainBoxName);
 
 class EditPage extends StatefulWidget {
   const EditPage({Key? key}) : super(key: key);
   @override
-  _EditPageState createState() => _EditPageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
 class _EditPageState extends State<EditPage> {
@@ -228,6 +230,8 @@ class _EditPageState extends State<EditPage> {
                             children: [
                               CircleAvatar(
                                 radius: 50.0,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: NetworkImage(MyUser.imageUrl!),
                                 child: _isdpLoading
                                     ? Container(
                                         decoration: const BoxDecoration(
@@ -239,8 +243,6 @@ class _EditPageState extends State<EditPage> {
                                             const CircularProgressIndicator(),
                                       )
                                     : null,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: NetworkImage(MyUser.imageUrl!),
                               ),
                               mode == Mode.edit
                                   ? buildChangeDpIcon()
@@ -256,7 +258,7 @@ class _EditPageState extends State<EditPage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    bool _isNicknameLoading = false;
+                                    bool isNicknameLoading = false;
                                     return StatefulBuilder(
                                       builder: (context, setDialogState) {
                                         return AlertDialog(
@@ -267,7 +269,7 @@ class _EditPageState extends State<EditPage> {
                                                 TextInputAction.done,
                                           ),
                                           actions: [
-                                            _isNicknameLoading
+                                            isNicknameLoading
                                                 ? const LoadingIndicator()
                                                 : const SizedBox.shrink(),
                                             TextButton(
@@ -283,7 +285,7 @@ class _EditPageState extends State<EditPage> {
                                                     .text.isEmpty) return;
 
                                                 setDialogState(() =>
-                                                    _isNicknameLoading = true);
+                                                    isNicknameLoading = true);
                                                 await _userDocument.update({
                                                   'nickname': _nameController
                                                       .text
@@ -291,7 +293,7 @@ class _EditPageState extends State<EditPage> {
                                                 });
 
                                                 setState(() {
-                                                  _isNicknameLoading = false;
+                                                  isNicknameLoading = false;
                                                   Navigator.pop(context);
                                                 });
                                               },
@@ -319,18 +321,12 @@ class _EditPageState extends State<EditPage> {
                       Visibility(
                         visible: (mode == Mode.edit) || _isShowSubtitle,
                         child: GestureDetector(
-                          child: _isShowSubtitle
-                              ? Text(_subtitleText,
-                                  style: mode == Mode.edit
-                                      ? dottedUnderlinedStyle()
-                                      : null)
-                              : Text('Add bio', style: dottedUnderlinedStyle()),
                           onTap: mode == Mode.edit
                               ? () async {
                                   var res = await showDialog(
                                     context: context,
                                     builder: (context) {
-                                      bool _isSubtitleLoading = false;
+                                      bool isSubtitleLoading = false;
                                       return StatefulBuilder(
                                           builder: (context, setWidgetState) {
                                         return AlertDialog(
@@ -341,7 +337,7 @@ class _EditPageState extends State<EditPage> {
                                             subsController: _subtitleController,
                                           ),
                                           actions: [
-                                            _isSubtitleLoading
+                                            isSubtitleLoading
                                                 ? const LoadingIndicator()
                                                 : const SizedBox.shrink(),
                                             TextButton(
@@ -352,14 +348,14 @@ class _EditPageState extends State<EditPage> {
                                             TextButton(
                                                 onPressed: () async {
                                                   setWidgetState(() {
-                                                    _isSubtitleLoading = true;
+                                                    isSubtitleLoading = true;
                                                   });
                                                   await _userDocument.update({
                                                     'subtitle':
                                                         _subtitleController.text
                                                   });
                                                   setWidgetState(() {
-                                                    _isSubtitleLoading = true;
+                                                    isSubtitleLoading = true;
                                                   });
 
                                                   Navigator.pop(
@@ -379,6 +375,12 @@ class _EditPageState extends State<EditPage> {
                                       .update({'showSubtitle': res});
                                 }
                               : null,
+                          child: _isShowSubtitle
+                              ? Text(_subtitleText,
+                                  style: mode == Mode.edit
+                                      ? dottedUnderlinedStyle()
+                                      : null)
+                              : Text('Add bio', style: dottedUnderlinedStyle()),
                         ),
                       ),
                       Builder(
@@ -667,10 +669,10 @@ class _EditPageState extends State<EditPage> {
 
   Widget bannerAdWidget() {
     return Container(
-      child: AdWidget(ad: _bannerAd),
       width: _bannerAd.size.width.toDouble(),
       height: 72.0,
       alignment: Alignment.center,
+      child: AdWidget(ad: _bannerAd),
     );
   }
 

@@ -100,7 +100,7 @@ class FdlWidget extends StatefulWidget {
   final DocumentSnapshot? userInfo;
 
   @override
-  _FdlWidgetState createState() => _FdlWidgetState();
+  State<FdlWidget> createState() => _FdlWidgetState();
 }
 
 class _FdlWidgetState extends State<FdlWidget> {
@@ -237,7 +237,7 @@ class BitlyWidget extends StatefulWidget {
   const BitlyWidget({Key? key, required this.uniqueLink}) : super(key: key);
   final String? uniqueLink;
   @override
-  _BitlyWidgetState createState() => _BitlyWidgetState();
+  State<BitlyWidget> createState() => _BitlyWidgetState();
 }
 
 class _BitlyWidgetState extends State<BitlyWidget> {

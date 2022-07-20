@@ -20,7 +20,7 @@ class ShareProfile extends StatefulWidget {
   final DocumentSnapshot<Map<String, dynamic>>? docs;
 
   @override
-  _ShareProfileState createState() => _ShareProfileState();
+  State<ShareProfile> createState() => _ShareProfileState();
 }
 
 class _ShareProfileState extends State<ShareProfile> {
@@ -342,10 +342,10 @@ class _MyBannerAdState extends State<MyBannerAd> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: AdWidget(ad: widget.bannerAd),
       width: widget.bannerAd.size.width.toDouble(),
       height: 100.0,
       alignment: Alignment.center,
+      child: AdWidget(ad: widget.bannerAd),
     );
   }
 }

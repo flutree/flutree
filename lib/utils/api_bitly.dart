@@ -10,7 +10,7 @@ const authority = 'https://api-ssl.bitly.com/v4';
 
 class BitlyApi {
   static Future<BitlyShortenModel> shorten({String? url}) async {
-    var _jsonBody = {
+    var jsonBody = {
       "long_url": url,
       "domain": "bit.ly",
       "group_guid": "Bl4628jEmC1"
@@ -22,7 +22,7 @@ class BitlyApi {
             Headers.contentTypeHeader: Headers.jsonContentType
           },
         ),
-        data: _jsonBody);
+        data: jsonBody);
 
     switch (apiResponse.statusCode) {
       case HttpStatus.ok:

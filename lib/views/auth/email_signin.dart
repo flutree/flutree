@@ -9,7 +9,7 @@ class EmailSignIn extends StatefulWidget {
   const EmailSignIn({Key? key, required this.tabController}) : super(key: key);
   final TabController? tabController;
   @override
-  _EmailSignInState createState() => _EmailSignInState();
+  State<EmailSignIn> createState() => _EmailSignInState();
 }
 
 class _EmailSignInState extends State<EmailSignIn> {
@@ -59,14 +59,14 @@ class _EmailSignInState extends State<EmailSignIn> {
                           });
                         }
                       },
-                child: _isSignInLoading
-                    ? const LoadingIndicator()
-                    : const Text('Sign in'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
                 ),
+                child: _isSignInLoading
+                    ? const LoadingIndicator()
+                    : const Text('Sign in'),
               ),
               const Spacer(flex: 4),
               Column(
@@ -78,7 +78,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            bool _isResetPasswordLoading = false;
+                            bool isResetPasswordLoading = false;
 
                             return StatefulBuilder(
                               builder: (context, setDialogState) {
@@ -98,7 +98,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                                     ],
                                   ),
                                   actions: [
-                                    _isResetPasswordLoading
+                                    isResetPasswordLoading
                                         ? const LoadingIndicator()
                                         : const SizedBox.shrink(),
                                     TextButton(
@@ -111,29 +111,26 @@ class _EmailSignInState extends State<EmailSignIn> {
                                       onPressed: () async {
                                         if (_emailController.text.isNotEmpty) {
                                           setDialogState(() =>
-                                              _isResetPasswordLoading = true);
+                                              isResetPasswordLoading = true);
                                           try {
                                             await _authInstance
                                                 .sendPasswordResetEmail(
                                                     email: _emailController.text
                                                         .trim());
                                             setDialogState(() =>
-                                                _isResetPasswordLoading =
-                                                    false);
+                                                isResetPasswordLoading = false);
                                             Navigator.pop(context);
                                             CustomSnack.showSnack(context,
                                                 message: 'Email sent');
                                           } on FirebaseAuthException catch (e) {
                                             setDialogState(() =>
-                                                _isResetPasswordLoading =
-                                                    false);
+                                                isResetPasswordLoading = false);
                                             Navigator.pop(context);
                                             CustomSnack.showErrorSnack(context,
                                                 message: e.message!);
                                           } catch (e) {
                                             setDialogState(() =>
-                                                _isResetPasswordLoading =
-                                                    false);
+                                                isResetPasswordLoading = false);
                                             CustomSnack.showErrorSnack(context,
                                                 message: 'Unknown err');
                                             Navigator.pop(context);

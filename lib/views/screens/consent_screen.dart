@@ -7,7 +7,7 @@ class ConsentScreen extends StatefulWidget {
   const ConsentScreen({Key? key}) : super(key: key);
 
   @override
-  _ConsentScreenState createState() => _ConsentScreenState();
+  State<ConsentScreen> createState() => _ConsentScreenState();
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {

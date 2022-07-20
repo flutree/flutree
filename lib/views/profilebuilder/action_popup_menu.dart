@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutree/model/my_user.dart';
+import '../../model/my_user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -94,8 +94,8 @@ class ActionPopupMenu extends StatelessWidget {
       itemBuilder: (BuildContext context) {
         return [
           const PopupMenuItem(
-            child: Text('Log out'),
             value: 'Logout',
+            child: Text('Log out'),
           ),
           if (kIsWeb)
             const PopupMenuItem(

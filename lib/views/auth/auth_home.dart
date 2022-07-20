@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutree/utils/auth_helper.dart';
+import '../../utils/auth_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ import 'email_auth.dart';
 class AuthHome extends StatefulWidget {
   const AuthHome({Key? key}) : super(key: key);
   @override
-  _AuthHomeState createState() => _AuthHomeState();
+  State<AuthHome> createState() => _AuthHomeState();
 }
 
 class _AuthHomeState extends State<AuthHome> {

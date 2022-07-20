@@ -8,7 +8,7 @@ import '../widgets/link_card.dart';
 class PreviewAppPage extends StatefulWidget {
   const PreviewAppPage({Key? key}) : super(key: key);
   @override
-  _PreviewAppPageState createState() => _PreviewAppPageState();
+  State<PreviewAppPage> createState() => _PreviewAppPageState();
 }
 
 class _PreviewAppPageState extends State<PreviewAppPage> {

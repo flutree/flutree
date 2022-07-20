@@ -9,7 +9,7 @@ class Register extends StatefulWidget {
   const Register({Key? key, required this.tabController}) : super(key: key);
   final TabController? tabController;
   @override
-  _RegisterState createState() => _RegisterState();
+  State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
@@ -69,14 +69,14 @@ class _RegisterState extends State<Register> {
                           }
                         }
                       },
-                child: _isRegisterLoading
-                    ? const LoadingIndicator()
-                    : const Text('Register'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
                 ),
+                child: _isRegisterLoading
+                    ? const LoadingIndicator()
+                    : const Text('Register'),
               ),
               const Spacer(flex: 3),
               TextButton(
