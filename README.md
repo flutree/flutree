@@ -5,7 +5,7 @@
 ![Installs](https://img.shields.io/badge/installs-53k+-orange)
 ![Twitter Follow](https://img.shields.io/twitter/follow/iqfareez?label=Follow&style=social)
 
-Your personalized social cards. Put your social medias link in one place. Easy peasy!
+Your personalized social cards. Put your social media link in one place. Easy peasy!
 
 # Flutree is back!!
 
@@ -16,7 +16,6 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 ## Flutree Create (for non-Android users)
 
 - [flutreecreate.web.app](https://flutreecreate.web.app) or
-- [flutree.studio](https://flutree.studio)
 
 ## Devlog
 
@@ -29,7 +28,7 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 
    - Example:
 
-   ```
+   ```dart
    const kAdmobAppId = 'ca-app-pub-xxxxxxxxxxxxxxxxxxxxxxx';
    const kShareBannerUnitId = 'ca-app-pub-189637xxxxxxxx/3206521140';
    const kEditPageBannerUnitId = 'ca-app-pub-189637xxxxxxxx/7250471616';
@@ -39,8 +38,8 @@ Your personalized social cards. Put your social medias link in one place. Easy p
 
    ```
 
-2. Create project on **Firebase console**, make sure the auth and Firestore is enabled.
-3. Download your **`google_service.json`** from Firebase console, put the file in `android/app/`
+2. Create a project on **Firebase console**, and make sure the auth and Firestore are enabled.
+3. Download your **google_service.json** from the Firebase console, put the file in `android/app/` (I think you may also use the newer `flutterfire configure` but I'm not sure)
 4. Run `flutter run`
 
 \
