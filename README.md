@@ -15,7 +15,7 @@ Your personalized social cards. Put your social media link in one place. Easy pe
 
 ## Flutree Create (for non-Android users)
 
-- [flutreecreate.web.app](https://flutreecreate.web.app) or
+- [flutreecreate.web.app](https://flutreecreate.web.app)
 
 ## Devlog
 
