@@ -403,24 +403,25 @@ class _EditPageState extends State<EditPage> {
                                         FontAwesomeIcons.circleQuestion,
                                         size: 16),
                                     label: const Text('Help')),
-                                Tooltip(
-                                  message:
-                                      'Toggle whether the cards should be\nreordarable or locked in place.',
-                                  child: TextButton.icon(
-                                    icon: FaIcon(
-                                      !_isReorderable
-                                          ? FontAwesomeIcons.toggleOff
-                                          : FontAwesomeIcons.toggleOn,
-                                      size: 16,
+                                if (datas.isNotEmpty)
+                                  Tooltip(
+                                    message:
+                                        'Toggle whether the cards should be\nreordarable or locked in place.',
+                                    child: TextButton.icon(
+                                      icon: FaIcon(
+                                        !_isReorderable
+                                            ? FontAwesomeIcons.toggleOff
+                                            : FontAwesomeIcons.toggleOn,
+                                        size: 16,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isReorderable = !_isReorderable;
+                                        });
+                                      },
+                                      label: const Text('Reorder'),
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isReorderable = !_isReorderable;
-                                      });
-                                    },
-                                    label: const Text('Reorder'),
                                   ),
-                                ),
                               ],
                             );
                           } else {
