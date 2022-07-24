@@ -70,7 +70,7 @@ class _EditPageState extends State<EditPage> {
       MyUser.setupInitialDoc();
       _nameController.text = _authInstance.currentUser!.displayName!;
     } else {
-      _subtitleController.text = snapshot.data()!["subtitle"];
+      _subtitleController.text = snapshot.data()!["subtitle"] ?? "Flutree user";
       _nameController.text = snapshot.data()!["nickname"];
     }
   }
@@ -162,7 +162,8 @@ class _EditPageState extends State<EditPage> {
                   'Something about yourself';
               _isShowSubtitle =
                   _documentSnapshotData!.data()!['showSubtitle'] ?? false;
-              MyUser.imageUrl = _documentSnapshotData!.data()!['dpUrl'];
+              MyUser.imageUrl = _documentSnapshotData!.data()!['dpUrl'] ??
+                  'https://picsum.photos/200';
 
               List<dynamic>? socialsList =
                   _documentSnapshotData!.data()!['socials'];
