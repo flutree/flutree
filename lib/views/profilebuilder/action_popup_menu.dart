@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
-import '../../model/my_user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../constants.dart';
+import '../../model/my_user.dart';
 import '../../utils/auth_helper.dart';
 import '../../utils/profile_builder_helper.dart';
 import '../../utils/snackbar.dart';

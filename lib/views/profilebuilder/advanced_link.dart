@@ -5,16 +5,17 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../constants.dart';
 import '../../model/bitly_click_summary_model.dart';
 import '../../model/bitly_shorten_model.dart';
-import '../../constants.dart';
 import '../../utils/api_bitly.dart';
 import '../../utils/api_dynamic_link.dart';
 import '../../utils/copy_link.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
-import '../widgets/reuseable.dart';
 import '../screens/qr_code_page.dart';
+import '../widgets/reuseable.dart';
 
 var box = Hive.box(kMainBoxName);
 

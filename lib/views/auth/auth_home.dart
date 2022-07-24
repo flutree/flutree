@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../utils/auth_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../../constants.dart';
+import '../../utils/auth_helper.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
 import '../preview/ads_wrapper.dart';

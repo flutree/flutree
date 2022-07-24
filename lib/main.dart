@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'views/profilebuilder/editing_page.dart';
+import 'package:flutree/firebase_options.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +11,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'constants.dart';
 import 'views/auth/auth_home.dart';
+import 'views/profilebuilder/editing_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
   await Hive.openBox(kMainBoxName);
   MobileAds.instance.initialize();

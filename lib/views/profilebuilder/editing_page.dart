@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dough/dough.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'action_popup_menu.dart';
 import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -21,6 +20,7 @@ import '../screens/consent_screen.dart';
 import '../widgets/help_dialog.dart';
 import '../widgets/link_card.dart';
 import '../widgets/reuseable.dart';
+import 'action_popup_menu.dart';
 import 'add_edit_card.dart';
 import 'share_profile.dart';
 
