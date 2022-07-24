@@ -154,15 +154,13 @@ class _AuthHomeState extends State<AuthHome> {
               setState(() => _isGoogleLoading = true);
               try {
                 // Trigger the authentication flow
-                AuthHelper.signInWithGoogle().then(
-                  (_) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const EditPage(),
-                        ));
-                  },
-                );
+                await AuthHelper.signInWithGoogle();
+
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditPage(),
+                    ));
               } on FirebaseAuthException catch (e) {
                 setState(() => _isGoogleLoading = false);
                 CustomSnack.showErrorSnack(context, message: e.message!);
@@ -170,7 +168,6 @@ class _AuthHomeState extends State<AuthHome> {
                 CustomSnack.showErrorSnack(context,
                     message: 'Failed to Sign in. Please try again');
                 setState(() => _isGoogleLoading = false);
-                rethrow;
               }
             },
       icon: const FaIcon(FontAwesomeIcons.google, size: 15),
