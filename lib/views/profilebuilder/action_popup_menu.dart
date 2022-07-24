@@ -10,7 +10,6 @@ import '../../utils/profile_builder_helper.dart';
 import '../../utils/snackbar.dart';
 import '../../utils/url_launcher.dart';
 import '../auth/auth_home.dart';
-import '../screens/donate.dart';
 import '../widgets/reuseable.dart';
 
 class ActionPopupMenu extends StatelessWidget {
@@ -80,9 +79,6 @@ class ActionPopupMenu extends StatelessWidget {
                   context, MaterialPageRoute(builder: (_) => const AuthHome()));
             }
             break;
-          case 'Donate':
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (builder) => Donate()));
         }
       },
       icon: const FaIcon(
@@ -102,12 +98,6 @@ class ActionPopupMenu extends StatelessWidget {
               value: 'dwApp',
               child: Text('Download Android app...'),
             ),
-          const PopupMenuItem(
-            value: 'Donate',
-            child: Text(
-              'Support Flutree...',
-            ),
-          ),
           const PopupMenuItem(
             value: 'DeleteAcc',
             child: Text(
