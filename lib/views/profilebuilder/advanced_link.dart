@@ -168,6 +168,7 @@ class _FdlWidgetState extends State<FdlWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                            settings: const RouteSettings(name: 'QrcodePage'),
                             builder: (builder) => QrPage(url: _fdlLink),
                             fullscreenDialog: true),
                       );
@@ -326,6 +327,7 @@ class _BitlyWidgetState extends State<BitlyWidget> {
                     onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
+                              settings: const RouteSettings(name: 'QrcodePage'),
                               builder: (builder) => QrPage(url: _bitlyLink),
                               fullscreenDialog: true),
                         ),

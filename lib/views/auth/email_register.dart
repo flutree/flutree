@@ -54,6 +54,8 @@ class _RegisterState extends State<Register> {
 
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
+                                    settings: const RouteSettings(
+                                        name: 'EditingPage'),
                                     builder: (builder) => const EditPage()),
                                 (route) => false);
                           } on FirebaseAuthException catch (e) {

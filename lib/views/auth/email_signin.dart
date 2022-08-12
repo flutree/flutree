@@ -47,6 +47,8 @@ class _EmailSignInState extends State<EmailSignIn> {
                               .then((value) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
+                                    settings: const RouteSettings(
+                                        name: 'EditingPage'),
                                     builder: (builder) => const EditPage()),
                                 (route) => false);
                           }).catchError((error) {

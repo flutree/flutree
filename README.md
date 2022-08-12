@@ -1,9 +1,12 @@
 # Flutree
 
-![Works with Android](https://img.shields.io/badge/Works_with-Android-green?style=flat-square)
+[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat-square&logo=Flutter&logoColor=white)](https://flutter.dev/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFA000?style=flat-square&logo=Firebase&logoColor=white)](https://firebase.google.com/)
+[![Works with Android](https://img.shields.io/badge/Works_with-Android-green?style=flat-square)](https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter&utm_source=Github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
+[![Web](https://img.shields.io/badge/Available_on-Web-blue?style=flat-square)](https://flutreecreate.web.app/#/)
 ![Maintenance](https://img.shields.io/maintenance/yes/2022?style=flat-square)
-![Installs](https://img.shields.io/badge/installs-53k+-orange)
-![Twitter Follow](https://img.shields.io/twitter/follow/iqfareez?label=Follow&style=social)
+![Installs](https://img.shields.io/badge/installs-54k+-orange)
+[![Twitter Follow](https://img.shields.io/twitter/follow/iqfareez?label=Follow&style=social)](https://twitter.com/iqfareez)
 
 Your personalized social cards. Put your social media link in one place. Easy peasy!
 
@@ -40,7 +43,9 @@ Your personalized social cards. Put your social media link in one place. Easy pe
 
 2. Create a project on **Firebase console**, and make sure the auth and Firestore are enabled.
 3. Download your **google_service.json** from the Firebase console, put the file in `android/app/` (I think you may also use the newer `flutterfire configure` but I'm not sure)
-4. Run `flutter run`
+4. Run `flutter run --web-renderer html`\*
+
+\* Images won't load on **canvaskit**.
 
 \
 :star::star::star::star::star:

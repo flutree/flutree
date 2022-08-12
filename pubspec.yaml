@@ -3,7 +3,7 @@ description: Profile links builder.
 
 publish_to: "none"
 
-version: 4.1.0+34
+version: 4.1.1+35
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -19,7 +19,7 @@ dependencies:
   fluttertoast: ^8.0.6
   flutter_markdown: ^0.6.9+1
   firebase_core: ^1.0.4
-  google_mobile_ads: ^1.1.0
+  google_mobile_ads: ^2.0.0
   firebase_auth: ^3.0.1
   google_sign_in: ^5.0.2
   cloud_firestore: ^3.1.10

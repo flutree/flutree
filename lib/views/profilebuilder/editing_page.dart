@@ -130,12 +130,15 @@ class _EditPageState extends State<EditPage> {
               /// agree with the consent yet
               if ((box.get(kHasAgreeConsent) ?? false) ||
                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const ConsentScreen()))) {
+                    context,
+                    MaterialPageRoute(
+                        settings: const RouteSettings(name: 'ConsentScreen'),
+                        builder: (_) => const ConsentScreen()),
+                  )) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: const RouteSettings(name: 'ShareProfile'),
                     builder: (_) => ShareProfile(
                       docs: _documentSnapshotData,
                     ),

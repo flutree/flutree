@@ -109,6 +109,7 @@ class _AuthHomeState extends State<AuthHome> {
           Navigator.push(
               context,
               MaterialPageRoute(
+                settings: const RouteSettings(name: "PreviewPage"),
                 builder: (context) => const PreviewPage(),
               ));
         },
@@ -129,8 +130,9 @@ class _AuthHomeState extends State<AuthHome> {
       ),
       onPressed: () {
         // Page should slide right
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (_) => const EmailAuth()));
+        Navigator.of(context).push(CupertinoPageRoute(
+            settings: const RouteSettings(name: "EmailAuth"),
+            builder: (_) => const EmailAuth()));
       },
       icon: const FaIcon(FontAwesomeIcons.at, size: 15),
       label: const Text(
@@ -159,6 +161,7 @@ class _AuthHomeState extends State<AuthHome> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
+                      settings: const RouteSettings(name: "EditingPage"),
                       builder: (_) => const EditPage(),
                     ));
               } on FirebaseAuthException catch (e) {

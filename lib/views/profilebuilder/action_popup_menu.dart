@@ -22,8 +22,11 @@ class ActionPopupMenu extends StatelessWidget {
         switch (value) {
           case 'Logout':
             await AuthHelper.googleSignOut();
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const AuthHome()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    settings: const RouteSettings(name: 'AuthEntryPoint'),
+                    builder: (context) => const AuthHome()));
             break;
           case 'dwApp':
             launchURL(context, kPlayStoreUrl);
@@ -76,7 +79,11 @@ class ActionPopupMenu extends StatelessWidget {
 
             if (isDone ?? false) {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => const AuthHome()));
+                context,
+                MaterialPageRoute(
+                    settings: const RouteSettings(name: 'AuthEntryPoint'),
+                    builder: (_) => const AuthHome()),
+              );
             }
             break;
         }

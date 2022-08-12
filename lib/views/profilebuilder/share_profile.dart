@@ -295,6 +295,7 @@ class AdvancedLinkButton extends StatelessWidget {
       onPressed: () => Navigator.push(
         context,
         MaterialPageRoute(
+          settings: const RouteSettings(name: 'AdvancedLinkPage'),
           builder: (context) => AdvancedLink(
             userInfo: userDocs,
             uniqueLink: 'https://$profileLink',
@@ -317,7 +318,9 @@ class ProfileQrCode extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QrPage(url: profileLink)),
+          MaterialPageRoute(
+              settings: const RouteSettings(name: 'QrCodePage'),
+              builder: (context) => QrPage(url: profileLink)),
         ),
         child: QrImage(
           data: 'https://$profileLink',
