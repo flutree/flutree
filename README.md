@@ -10,20 +10,19 @@
 
 Your personalized social cards. Put your social media link in one place. Easy peasy!
 
-# Flutree is back!!
+![Flutree banner](https://imgur.com/fYHFTpy.png)
 
-## Download on Google Play Store
+[[Try the demo](https://flutree.web.app/NWfLo)]
 
-<a href='https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter&utm_source=Github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+## Get the app
 
-## Flutree Create (for non-Android users)
+### Download on Google Play Store
+
+<a href='https://play.google.com/store/apps/details?id=com.iqmal.linktreeflutter&utm_source=Github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=120/></a>
+
+### For non-Android users, Flutree also runs on the web
 
 - [flutreecreate.web.app](https://flutreecreate.web.app)
-
-## Devlog
-
-- [Part 1](https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTUzMDA3Njg0MTgyODA3)
-- [Part 2](https://www.instagram.com/s/aGlnaGxpZ2h0OjE3ODg1MzE2ODMzMjE5MDg5)
 
 ## To run
 
@@ -47,5 +46,9 @@ Your personalized social cards. Put your social media link in one place. Easy pe
 
 \* Images won't load on **canvaskit**.
 
-\
+## Devlog
+
+- [Part 1](https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTUzMDA3Njg0MTgyODA3)
+- [Part 2](https://www.instagram.com/s/aGlnaGxpZ2h0OjE3ODg1MzE2ODMzMjE5MDg5)
+
 :star::star::star::star::star:
