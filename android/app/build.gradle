@@ -47,7 +47,7 @@ android {
         
         applicationId "com.iqmal.linktreeflutter"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
