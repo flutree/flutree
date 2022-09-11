@@ -98,8 +98,8 @@ class _AuthHomeState extends State<AuthHome> {
   ElevatedButton previewButton(BuildContext context) {
     return ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          primary: Colors.grey[350],
-          onPrimary: Colors.black87,
+          backgroundColor: Colors.grey[350],
+          foregroundColor: Colors.black87,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),

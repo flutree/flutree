@@ -246,7 +246,8 @@ class _AddCardState extends State<AddCard> {
                 child: OutlinedButton.icon(
                   icon: const FaIcon(FontAwesomeIcons.check, size: 14),
                   style: OutlinedButton.styleFrom(
-                      primary: Colors.white, backgroundColor: Colors.blueGrey),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blueGrey),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       String inputUrl = _urlController.text.trim();
