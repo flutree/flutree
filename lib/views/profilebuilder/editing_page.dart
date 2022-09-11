@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart' show CupertinoSlidingSegmentedControl;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -453,6 +454,8 @@ class _EditPageState extends State<EditPage> {
                             return ReorderableListView.builder(
                                 buildDefaultDragHandles: _isReorderable,
                                 itemCount: datas.length,
+                                onReorderStart: (_) =>
+                                    HapticFeedback.lightImpact(),
                                 onReorder: (oldIndex, newIndex) {
                                   if (oldIndex < newIndex) {
                                     newIndex -= 1;
@@ -727,7 +730,7 @@ class DeleteCardWidget extends StatelessWidget {
                 child: OutlinedButton.icon(
                     icon: const FaIcon(FontAwesomeIcons.trashCan, size: 14),
                     style: OutlinedButton.styleFrom(
-                        primary: Colors.white,
+                        foregroundColor: Colors.white,
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
                       Navigator.of(context).pop(true);
