@@ -12,7 +12,8 @@ class HelpDialogs {
         mainAxisSize: MainAxisSize.min,
         children: const [
           UnorderedListItem('**Tap the card** to edit.'),
-          UnorderedListItem('**Swipe right** to delete card.'),
+          UnorderedListItem(
+              '**Swipe right** to delete card. *(Disabled when Reorderable function is on)*'),
           UnorderedListItem(
               'To reoder/rearrange the card, turn on the **Reoder toggle button**, then hold and drag a card to desired position.'),
           UnorderedListItem(

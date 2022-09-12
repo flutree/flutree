@@ -84,6 +84,7 @@ class EmailTextField extends StatelessWidget {
         ),
       ),
       textInputAction: TextInputAction.next,
+      autofillHints: const [AutofillHints.email],
       keyboardType: TextInputType.emailAddress,
     );
   }
@@ -143,6 +144,7 @@ class NameTextField extends StatelessWidget {
         ),
       ),
       textInputAction: _keyboardAction,
+      autofillHints: const [AutofillHints.name],
       keyboardType: TextInputType.name,
     );
   }

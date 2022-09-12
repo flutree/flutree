@@ -10,9 +10,11 @@
 
 Your personalized social cards. Put your social media link in one place. Easy peasy!
 
-![Flutree banner](https://imgur.com/fYHFTpy.png)
+This repo hosts Flutree for Android and flutreecreate on Web. If you're looking for the web implementation. Check it out [now](https://github.com/iqfareez/flutree/tree/web).
 
-[[Try the demo](https://flutree.web.app/NWfLo)]
+![Flutree banner](https://imgur.com/qvr10Xn.png)
+
+[[Demo profile](https://flutree.web.app/NWfLo)]
 
 ## Get the app
 
@@ -24,12 +26,11 @@ Your personalized social cards. Put your social media link in one place. Easy pe
 
 - [flutreecreate.web.app](https://flutreecreate.web.app)
 
-## To run
+## Getting started
 
-1. Create `PRIVATE.dart` in the lib folder. (I gitignored the file because it contains the admob id etc.) - You can use the test ad unit (https://developers.google.com/admob/android/test-ads#demo_ad_units)
-
-   - Example:
-
+1. Setup Flutter (if you haven't already)
+1. Clone this project and open with your code editor.
+1. Create `PRIVATE.dart` in the lib folder. Copy and paste the content just like the example below. For the admob part, you can create a new app in admob or use the test ad unit (https://developers.google.com/admob/android/test-ads#demo_ad_units). Also, register Bitly and get their API token.
    ```dart
    const kAdmobAppId = 'ca-app-pub-xxxxxxxxxxxxxxxxxxxxxxx';
    const kShareBannerUnitId = 'ca-app-pub-189637xxxxxxxx/3206521140';
@@ -37,12 +38,10 @@ Your personalized social cards. Put your social media link in one place. Easy pe
    const kInterstitialShareUnitId = 'ca-app-pub-189637xxxxxxxx/1721617881';
    const kInterstitialPreviewUnitId = 'ca-app-pub-189637xxxxxxxx/2819569063';
    const kBitlyApiToken = '85e8df908612276xxxxxxxxxxxxx36ee3d40e31';
-
    ```
-
-2. Create a project on **Firebase console**, and make sure the auth and Firestore are enabled.
-3. Download your **google_service.json** from the Firebase console, put the file in `android/app/` (I think you may also use the newer `flutterfire configure` but I'm not sure)
-4. Run `flutter run --web-renderer html`\*
+1. Create a project on **Firebase console**, enable Authentication & Firestorte.
+1. Run `flutterfire configure`. Details [here](https://firebase.google.com/docs/flutter/setup?platform=android).
+1. Run `flutter run --web-renderer html`\*
 
 \* Images won't load on **canvaskit**.
 
