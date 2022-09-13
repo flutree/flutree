@@ -10,8 +10,6 @@
 
 Your personalized social cards. Put your social media link in one place. Easy peasy!
 
-This repo hosts Flutree for Android and flutreecreate on Web. If you're looking for the web implementation. Check it out [now](https://github.com/iqfareez/flutree/tree/web).
-
 ![Flutree banner](https://imgur.com/qvr10Xn.png)
 
 [[Demo profile](https://flutree.web.app/NWfLo)]
@@ -27,6 +25,8 @@ This repo hosts Flutree for Android and flutreecreate on Web. If you're looking 
 - [flutreecreate.web.app](https://flutreecreate.web.app)
 
 ## Getting started
+
+Note: This repo hosts both editor (flutree main app) and viewer part (flutree.web.app). For the editor, it lives in this branch (v4). For the **viewer** part, it lives in [web](https://github.com/iqfareez/flutree/tree/web) branch.
 
 1. Setup Flutter (if you haven't already)
 1. Clone this project and open with your code editor.
